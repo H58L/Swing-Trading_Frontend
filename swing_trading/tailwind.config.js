@@ -34,7 +34,7 @@ module.exports = {
         1: "1px",
       },
       gridTemplateRows: {
-        7: "repeat(7, minmax(0, 1fr))",
+        7: "repeat(7, minmax(0, 1fr))",  //will create 7 equally sixed row, in the CSS grid
         8: "repeat(8, minmax(0, 1fr))",
       },
     },
