@@ -1,6 +1,7 @@
 import React,{useState} from 'react'
 import { mockSearchResults } from '../constants/mock';
 import {XIcon, SearchIcon} from "@heroicons/react/solid";
+import SearchResults from './SearchResults';
 
 const Search = () => {
 
@@ -38,7 +39,7 @@ const Search = () => {
       {/* X icon */}
       {/* Button is not displaye until there is text in the search box */}
       {input && (          
-        <button onClick={clear}>
+        <button onClick={clear} className='m-1'>
         <XIcon className = "h-4 w-4 fill-gray-509">
 
         </XIcon>
@@ -49,6 +50,9 @@ const Search = () => {
       <button onClick={updateBestMatches} className='h-8 w-8 bg-indigo-600 rounded-md flex justify-center items-center m-1 p-2'>
         <SearchIcon className='h-4 w-4 fill-gray-100' ></SearchIcon>
       </button>
+
+      {input && bestMatches.length>0 ? (<SearchResults results={bestMatches}></SearchResults>) 
+      : null}
 
     </div>
   )
