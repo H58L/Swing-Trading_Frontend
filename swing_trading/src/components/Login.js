@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import { GoogleLogin } from "@react-oauth/google";
-import "./Login.css"; // Import your CSS file for styling
+import "../style/Login.css"; // Import your CSS file for styling
 import { jwtDecode } from "jwt-decode";
 import { useGoogleLogin } from "@react-oauth/google";
 
