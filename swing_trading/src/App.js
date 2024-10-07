@@ -1,10 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
-import Dashboard from './components/Dashboard';
+import ChartContainer from './components/ChartContainer';
 
 function App() {
   return (
-   <Dashboard></Dashboard>
+   <ChartContainer></ChartContainer>
   );
 }
 
