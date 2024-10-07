@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Home from "./components/Home"; // Import your Home component
+import Login from "./components/Login"; // Import your Login component
+import Register from "./components/Register"; // Import your Register component
+import "./App.css"; // Import your global CSS
+import logo from "./logo.svg";
+import "./App.css";
+import ChartContainer from "./components/ChartContainer";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        {" "}
+        {/* Wrap everything in the App class */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<ChartContainer />} />; //Change
+          Register endpoint
+        </Routes>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
