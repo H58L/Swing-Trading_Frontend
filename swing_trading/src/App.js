@@ -18,7 +18,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/register" element={<ChartContainer />} />; //Change
+          <Route path="/Chart" element={<ChartContainer />} />; //Change
           Register endpoint
         </Routes>
       </div>
