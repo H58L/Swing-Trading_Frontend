@@ -1,5 +1,6 @@
 import React from 'react'
 import Search from './Search'
+import ThemeIcon from './ThemeIcon'
 import { mockCompanyDetails } from '../constants/mock'
 
 const Header = ({name}) => {
@@ -11,7 +12,7 @@ const Header = ({name}) => {
             <Search></Search>
         
     </div>  
-    {/* {<ThemeIcon></ThemeIcon> } */}
+    <ThemeIcon></ThemeIcon>
     </>
     
   )
