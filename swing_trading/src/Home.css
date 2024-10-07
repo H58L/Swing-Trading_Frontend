@@ -1,0 +1,27 @@
+.home-container {
+    text-align: center;
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f6f7fb; /* Use a solid color or specific image */
+    min-height: 100vh; /* Ensures it fills the viewport */
+  }
+  
+  .home-container h1 {
+    color: #333;
+  }
+  
+  .navigation {
+    margin-top: 20px;
+  }
+  
+  .navigation a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #007bff; /* Change to your desired color */
+    transition: color 0.3s;
+  }
+  
+  .navigation a:hover {
+    color: #0056b3; /* Change to your desired hover color */
+  }
+  

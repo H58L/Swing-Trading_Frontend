@@ -1,0 +1,209 @@
+.login-page {
+    background-color: #f6f7fb; /* Fallback color */
+    background-image: url('/public/bg3.jpg'); /* Correct reference to your image in public folder */
+    background-size: cover; /* Cover the entire viewport */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    font-family: 'Poppins', sans-serif; /* Use Google font */
+    margin: 0; /* Remove default margin */
+    height: auto;
+}
+
+.login-container {
+  max-width: 500px;
+  padding: 40px 60px;
+  padding-top: 100px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  height: auto;
+}
+
+
+h1 {
+    text-align: center;
+    color: #333;
+    font-weight: 600; 
+}
+
+.input-group {
+    padding-bottom: 20px;
+    width: 100%;
+}
+
+
+.input-group input {
+    width: 85%;
+    padding: 10px;
+    padding-left: 20px;
+    border: none;
+    border-radius: 25px;
+    background-color: #efefef;
+    height: 30px;
+    font-family: 'Poppins', sans-serif; 
+}
+
+.remember-forgot-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .remember-me {
+    display: flex;
+    align-items: center;
+  }
+
+  #rememberMe{
+    cursor: pointer;
+  }
+
+  .forgot-password {
+    margin-left: auto;
+  }
+
+  .forgot-password a {
+    text-decoration: underline;
+    color: #7d7d7d;
+    transition: color 0.3s ease; /* Add transition for color */
+  }
+  
+  .forgot-password a:hover {
+    text-decoration: underline;
+    color: #000000;
+  }  
+  
+
+.sign-in-button {
+    margin-top: 20px;
+    width: 90%;
+    padding: 10px;
+    background-color: #121212;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    height: 50px;
+}
+
+.sign-in-button:hover {
+    background-color: #000000;
+}
+
+.login-with {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.login-divider {
+    padding: 10px 0px;
+    display: flex;
+  }
+  
+  .login-divider hr {
+    flex-grow: 1; /* Allow the line to grow and fill the space */
+    border-top: 1px solid #d1d1d1; /* Add a custom top border */
+    margin: 15px 15px; /* Space around the text */
+  }
+  
+  .login-divider span {
+    color: #4f4a4a; /* Text color */
+    font-weight: 500; /* Text weight */
+  }
+
+
+.google-logo{
+  height: 40px;
+  width: 40px;
+  display: flex;
+  justify-content: flex-start;
+  padding: 10px;
+}
+
+.google-button {
+  display: flex; /* Align items in a row */
+  align-items: center; /* Vertically center the logo and text */
+  justify-content: center; /* Center the content horizontally */
+  height: 50px;
+  width: 90%;
+  border: 1px solid black;
+  border-radius: 40px;
+  font-family: 'Poppins', sans-serif;
+  background-color: white; /* Make the background white */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: 20px;
+}
+
+
+/* For tablets */
+@media (max-width: 968px) {
+  .login-page {
+      display: flex; /* Use flexbox to center the container */
+      justify-content: center;
+      align-items: center;
+      height: 100vh; /* Ensure body takes full viewport height */
+  }
+
+  .login-container {
+      width: 100vw; /* Make the login container take the full width */
+      height: 100vh; /* Make the login container take the full height */
+      padding: 120px; /* Adjust padding for smaller screens */
+      box-sizing: border-box; /* Ensure padding doesn't affect width */
+      max-width: none; /* Remove the max-width constraint */
+      background-color: #fff;
+  }
+}
+
+
+/* For phones */
+@media (max-width: 779px) {
+  .login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* height: 100vh; */
+    margin: 0;
+    padding: 0;
+  }
+
+  .login-container {
+    width: 85vw; /* Set the container width to 90% of the viewport */
+    max-width: 400px; /* Optional: Cap the max width for smaller devices */
+    padding: 20px; /* Add padding to provide spacing */
+    box-sizing: border-box; /* Ensure padding doesn't overflow */
+    background-color: #fff;
+    border-radius: 15px; /* Add some rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+  }
+
+  .input-group input {
+    width: 80%;
+    padding: 10px;
+    padding-left: 25px;
+    border-radius: 25px;
+    font-size: 14px;
+  }
+
+  .google-button h3{
+    font-size: 14px;
+  }
+
+  .google-logo {
+    height: 30px;
+    width: 30px;
+  }
+
+  .forgot-password, .sign-up-link, .remember-me
+ {
+    font-size: 12px;
+    text-align: center;
+    padding-right: 5px;
+  }
+
+  .remember-me
+ {
+    font-size: 12px;
+    padding-left: 15px;
+  }
+}
