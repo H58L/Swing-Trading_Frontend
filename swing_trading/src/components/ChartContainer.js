@@ -42,6 +42,7 @@ import Header from "./Header";
 import Details from "./Details";
 import { mockCompanyDetails } from "../constants/mock";
 import ThemeIcon from './ThemeIcon'; // import the ThemeIcon component
+import Overview from "./Overview";
 
 const ChartContainer = () => {
   return (
@@ -63,9 +64,9 @@ const ChartContainer = () => {
 
       {/* Overview box */}
       <div>
-        <Card>
-          Overview
-        </Card>
+        <Overview symbol ={mockCompanyDetails.ticker} price={300} change = {30} changePercent={10.8} currency={"USD"} >
+
+        </Overview>
       </div>
 
       {/* Company details */}
