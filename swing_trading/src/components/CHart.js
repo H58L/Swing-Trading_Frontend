@@ -109,7 +109,7 @@
 
 import React, { useState } from 'react';
 import { mockHistoricalData } from '../constants/mock';
-import { convertDateToUnixTimeStamp } from '../helpers/date-helper';
+import { convertDateToUnixTimeStamp, convertUnixTimeStampToDate } from '../helpers/date-helper';
 import Card from './Card';
 import { ResponsiveContainer, AreaChart, Area, Tooltip, XAxis, YAxis } from "recharts";
 
@@ -123,7 +123,7 @@ const Chart = () => {
     return data.c.map((item, index) => {
       return {
         value: parseFloat(item.toFixed(2)),   //Value of closing price up to 2 decimal places
-        date: convertDateToUnixTimeStamp(data.t[index]), //Convert ms to s
+        date: convertUnixTimeStampToDate(data.t[index]), //Convert ms to s
       };
     });
   };
