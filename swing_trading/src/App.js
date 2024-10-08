@@ -18,7 +18,9 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+
           <Route path="/chart" element={<ChartContainer />} />; //Change
+
           Register endpoint
         </Routes>
       </div>
