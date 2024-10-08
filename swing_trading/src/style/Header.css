@@ -1,0 +1,71 @@
+/* Header.css */
+*{
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+/* Custom Navbar Styles */
+.navbar-custom {
+    background-color: #0d1e30; /* Dark background color */
+    color: white; /* Text color for the navbar */
+    padding: 10px 40px; /* Padding for the navbar */
+  }
+  
+  .navbar-custom .navbar-brand {
+    color: white; /* Brand text color */
+  }
+  
+  .navbar-custom .navbar-brand:hover {
+    color: #ababab; /* Brand text color on hover */
+  }
+  
+  .navbar-custom .nav-link {
+    color: white; /* Navbar link color */
+    padding: 20px 20px; /* Padding for navbar links */
+  }
+  
+  .navbar-custom .nav-link:hover {
+    color: #6b94d2; /* Navbar link color on hover */
+  }
+  
+  .navbar-custom .dropdown-item {
+    color: black; /* Dropdown item color */
+  }
+  
+  .navbar-custom .dropdown-item:hover {
+    background-color: #28a745; /* Dropdown item hover color */
+    color: white; /* Dropdown item text color on hover */
+  }
+  
+  .navbar-custom .form-control {
+    width: 200px; /* Width for the search bar */
+    background-color: #495057; /* Background color for search input */
+    border: 1px solid #ced4da; /* Border color for search input */
+    color: white; /* Text color for search input */
+  }
+  
+  .navbar-custom .form-control::placeholder {
+    color: #b0b3b8; /* Placeholder text color */
+  }
+  
+  .navbar-custom .btn-outline-success {
+    border-color: #28a745; /* Border color for the search button */
+    color: #28a745; /* Text color for the search button */
+  }
+  
+  .navbar-custom .btn-outline-success:hover {
+    background-color: #28a745; /* Background color on hover */
+    color: white; /* Text color on hover */
+  }
+  
+  @media (max-width: 992px) {
+    /* Hide search bar on small screens */
+    .navbar-custom .d-lg-flex {
+      display: none !important; /* Ensures search bar is hidden on small screens */
+    }
+  }
+  
+  .navbar-expand-lg .navbar-nav .nav-link{
+    color: #ffffff;
+    padding: 20px 50px;
+  }
+ 
