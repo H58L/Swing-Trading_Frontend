@@ -4,13 +4,20 @@
   "private": true,
   "dependencies": {
 
-    "@react-oauth/google": "^0.12.1",
     "@heroicons/react": "^2.1.5",
+    "@mui/icons-material": "^6.1.2",
+    "@mui/material": "^6.1.2",
+    "@heroicons/react": "^1.0.6",
+
+    "@react-oauth/google": "^0.12.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "bootstrap": "^5.3.3",
     "jwt-decode": "^4.0.0",
+    "mdb-react-ui-kit": "^9.0.0",
     "react": "^18.3.1",
+    "react-bootstrap": "^2.10.5",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2",
     "react-scripts": "5.0.1",
