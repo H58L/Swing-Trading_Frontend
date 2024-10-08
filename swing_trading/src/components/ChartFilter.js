@@ -19,7 +19,7 @@ import React from 'react';
 const ChartFilter = ({ text, active, onClick }) => {
   return (
     <button 
-      className={`p-2 m-1 rounded ${active ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`} 
+      className={`p-2 m-1 rounded ${active ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-black'}`} 
       onClick={onClick}
     >
       {text}

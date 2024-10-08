@@ -7,8 +7,11 @@ import "./App.css"; // Import your global CSS
 import logo from "./logo.svg";
 import "./App.css";
 import ChartContainer from "./components/ChartContainer";
+import { useState } from "react";
 
 const App = () => {
+
+  const [darkMode, setDarkMode] = useState(false);
   return (
     <Router>
       <div className="App">
