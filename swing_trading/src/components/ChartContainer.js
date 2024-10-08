@@ -6,6 +6,7 @@ import { mockCompanyDetails } from "../constants/mock";
 import ThemeIcon from './ThemeIcon'; // import the ThemeIcon component
 import Overview from "./Overview";
 import Header_Stock from "./Header_Stock";
+import Chart from "./CHart";
 
 const ChartContainer = () => {
   return (
@@ -20,9 +21,7 @@ const ChartContainer = () => {
 
       {/* Chart box */}
       <div className="md:col-span-2 row-span-4">
-        <Card>
-          Chart
-        </Card>
+        <Chart></Chart>
       </div>
 
       {/* Overview box */}

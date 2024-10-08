@@ -1,5 +1,6 @@
 //COnverting from millisceonds to seconds, tranforimg data that comes from FinnHub API
 export const convertDateToUnixTimeStamp = (date) =>{
+    date = new Date(date);
 return Math.floor(date.getTime()/1000);
 }
 
@@ -15,3 +16,7 @@ export const convertUnixTimeStampToDate = (unixTimeStamp) =>{
         newDate.setDate(newDate.getMonth() + months);
         newDate.setDate(newDate.getFullYear() + years);
     };
+//==================================
+
+
+//====================================================================================================================================
