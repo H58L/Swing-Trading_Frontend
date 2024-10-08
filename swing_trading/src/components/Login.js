@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
-import { GoogleLogin } from "@react-oauth/google";
-import "../style/Login.css"; // Import your CSS file for styling
-import { jwtDecode } from "jwt-decode";
 import { useGoogleLogin } from "@react-oauth/google";
+import "../style/Login.css";
 
 const Login = () => {
   const login = useGoogleLogin({
@@ -15,13 +13,11 @@ const Login = () => {
   const [errors, setErrors] = useState({}); // Track validation errors
 
   const validateEmail = (email) => {
-    // Basic email format validation using regular expression
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
   const validatePassword = (password) => {
-    // Password should be at least 6 characters and contain at least one number
     const passwordRegex = /^(?=.*[0-9])(?=.{6,})/;
     return passwordRegex.test(password);
   };
@@ -47,99 +43,127 @@ const Login = () => {
     }
 
     if (Object.keys(validationErrors).length > 0) {
-      // If there are errors, update the state and stop form submission
       setErrors(validationErrors);
       return;
     }
 
-    // Clear errors if validation passes
     setErrors({});
 
-    // Handle successful login logic here
     console.log("Email:", email);
     console.log("Password:", password);
     console.log("Remember Me:", rememberMe);
-
-    // You can also add further logic such as sending the data to your backend API
   };
 
   return (
-    <div className="login-page">
-      <div className="image-container"></div>
-
+    <div
+      className="
+        bg-cover bg-center bg-no-repeat h-screen flex items-center justify-center
+        lg:justify-start lg:pl-16 login-page
+      "
+      style={{
+        backgroundImage: `url('/bg3.jpg')`,
+        height: "100vh", // Ensure height is set to the viewport
+        padding: "0px",
+        fontFamily: "'Poppins', sans-serif", // Apply Poppins font
+      }}
+    >
       <div className="login-container">
-        <h1>Sign in</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="input-group">
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            padding: "10px",
+            fontFamily: "'Poppins', sans-serif", // Apply Poppins font here as well
+          }}
+        >
+          <h1 className="text-center text-3xl font-semibold text-gray-700 mb-6">
+            Sign in
+          </h1>
+          <div className="mb-4">
             <input
               type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="w-full p-3 bg-gray-200 rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+              style={{ borderRadius: "40px" }} // Rounded corners
             />
-            {errors.email && <p className="error-message">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+            )}
           </div>
-          <div className="input-group">
+          <div className="mb-4">
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              className="w-full p-3 bg-gray-200 rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+              style={{ borderRadius: "40px" }} // Rounded corners
             />
             {errors.password && (
-              <p className="error-message">{errors.password}</p>
+              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
             )}
           </div>
-          <div className="remember-forgot-container">
-            <div className="remember-me">
+          <div className="flex items-center justify-between mb-4">
+            <label className="flex items-center space-x-2">
               <input
                 type="checkbox"
-                id="rememberMe"
                 checked={rememberMe}
                 onChange={() => setRememberMe(!rememberMe)}
+                className="form-checkbox text-blue-500"
               />
-              <label>Remember me</label>
-            </div>
-            <div className="forgot-password">
-              <a href="/forgot-password">Forgot Password?</a>
-            </div>
+              <span className="text-gray-600 text-sm remember-me">
+                Remember me
+              </span>
+            </label>
+            <Link
+              to="/forgot-password"
+              className="text-sm text-gray-500 hover:underline font-thin forgot-password"
+            >
+              Forgot Password?
+            </Link>
           </div>
 
-          <button type="submit" className="sign-in-button">
+          <button
+            type="submit"
+            className="w-full py-2 px-4 bg-black text-white rounded-lg hover:bg-gray-800 transition duration-200"
+            style={{ borderRadius: "40px" }} // Rounded corners
+          >
             Sign in
           </button>
 
-          <div className="login-with">
-            <div className="login-divider">
-              <hr />
-              <span>Or login with</span>
-              <hr />
+          <div className="mt-6 text-center">
+            <div className="flex items-center justify-center">
+              <hr className="w-1/3 border-gray-300" />
+              <span className="px-2 text-sm text-gray-500 login-with">
+                Or login with
+              </span>
+              <hr className="w-1/3 border-gray-300" />
             </div>
-            <button className="google-button" onClick={() => login()}>
+
+            <button
+              className="mt-4 flex items-center justify-center w-full py-2 border border-gray-300 rounded-full transition duration-200 hover:bg-gray-100"
+              onClick={() => login()}
+              style={{ borderRadius: "40px" }} // Rounded corners
+            >
               <img
-                className="google-logo"
+                className="h-6 w-6 mr-2"
                 src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
-                alt=""
+                alt="Google"
               />
-              <h3>Continue With Google</h3>
+              <span className="text-gray-600 text-sm font-bold">
+                Continue with Google
+              </span>
             </button>
-            {/* <GoogleLogin
-              className="google-button"
-              onSuccess={(credentialResponse) => {
-                const credentialResponseDecoded = jwtDecode(
-                  credentialResponse.credential
-                );
-                console.log(credentialResponseDecoded);
-              }}
-              onError={() => {
-                console.log("Login Failed");
-              }}
-            /> */}
           </div>
-          <p className="sign-up-link">
-            Don’t have an account? <Link to="/register">Register Here</Link>
+
+          <p className="mt-4 text-sm text-center text-gray-600">
+            Don’t have an account?{" "}
+            <Link to="/register" className="text-blue-500 hover:underline">
+              Register Here
+            </Link>
           </p>
         </form>
       </div>
