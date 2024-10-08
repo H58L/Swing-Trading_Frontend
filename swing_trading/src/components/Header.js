@@ -1,3 +1,4 @@
+
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
@@ -5,8 +6,11 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import "../style/Header.css"; // Import your custom CSS file
+import Search from './Search'
+import ThemeIcon from './ThemeIcon'
+import { mockCompanyDetails } from '../constants/mock'
 
-function Header() {
+const Header = ({name}) => {
   return (
     <Navbar expand="lg" className="navbar-custom">
       {" "}
@@ -51,6 +55,14 @@ function Header() {
             <Nav.Link className="nav-element" href="#" disabled>
               Link
             </Nav.Link>
+
+              <div className = "xl:px-32">
+            <h1 className="text-5xl">{name}</h1>
+            <Search></Search>
+        
+              </div>  
+            <ThemeIcon></ThemeIcon>
+
           </Nav>
         </Navbar.Collapse>
       </Container>
@@ -59,3 +71,26 @@ function Header() {
 }
 
 export default Header;
+
+// import React from 'react'
+// import Search from './Search'
+// import ThemeIcon from './ThemeIcon'
+// import { mockCompanyDetails } from '../constants/mock'
+
+// const Header = ({name}) => {
+//   return (
+//     <>
+//      <div className = "xl:px-32">
+      
+//       <h1 className="text-5xl">{name}</h1>
+//             <Search></Search>
+        
+//     </div>  
+//     <ThemeIcon></ThemeIcon>
+//     </>
+    
+//   )
+// }
+
+// export default Header
+
