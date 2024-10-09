@@ -6,16 +6,14 @@ import { mockCompanyDetails } from "../constants/mock";
 import ThemeIcon from "./ThemeIcon"; // import the ThemeIcon component
 import Overview from "./Overview";
 import Header_Stock from "./Header_Stock";
-import Chart from "./CHart";
+import Chart from "./Chart";
 
 const ChartContainer = () => {
   return (
-    <div className="h-screen grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 grid-rows-8 md:grid-rows-7 
-    xl:grid-rows-5 auto-rows-fr gap-6 p-10 font-quicksand relative bg-neutral-100"> 
-//     <div
-//       className="h-screen grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 grid-rows-8 md:grid-rows-7 
-//     xl:grid-rows-5 auto-rows-fr gap-6 p-10 font-quicksand relative"
-//     >
+    <div
+      className="h-screen grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 grid-rows-8 md:grid-rows-7 
+    xl:grid-rows-5 auto-rows-fr gap-6 p-10 font-quicksand relative bg-neutral-100"
+    >
       {/* Removed absolute positioning from ThemeIcon and added relative to container */}
 
       {/* Header row */}

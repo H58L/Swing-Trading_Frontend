@@ -7,8 +7,8 @@
   }
   
   .chart-container {
-    grid-column: 1 / 2; /* First column */
-    grid-row: 1 / 2; /* First row */
+    grid-column: 1; /* First column */
+    grid-row: 1 ; /* First row */
     background-color: #f1f1f1; /* Just for visual reference */
     padding: 20px;
     border: 1px solid black;
