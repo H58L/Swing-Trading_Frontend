@@ -1,76 +1,85 @@
-
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import "../style/Header.css"; // Import your custom CSS file
-import Search from './Search'
-import ThemeIcon from './ThemeIcon'
-import { mockCompanyDetails } from '../constants/mock'
+import { FaBell, FaUserCircle } from "react-icons/fa";
+import "../style/Header.css";
+import Search from "./Search";
+import Alerts from "./Alerts";
 
-const Header = ({name}) => {
+const Header = ({ name, isLoggedIn, onLogin, onLogout }) => {
+  const [showAlerts, setShowAlerts] = useState(false);
+  const navigate = useNavigate(); // Use navigate for programmatic navigation
+  const [alerts] = useState([
+    "New message from John",
+    "Your profile was updated",
+    "New friend request",
+  ]);
+
+  const handleBellClick = () => {
+    setShowAlerts(!showAlerts);
+  };
+
+  // Function for login that redirects to /login
+  const handleLogin = () => {
+    navigate("/login");
+  };
+
   return (
-    <Navbar expand="lg" className="navbar-custom">
-      {" "}
-      {/* Apply custom class */}
-      <Container fluid>
-        <Navbar.Brand href="#">Navbar scroll</Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbarScroll" />
-        {/* Search Bar only visible on larger screens */}
-        <div className="d-none d-lg-flex">
-          <Form className="d-flex">
-            <Form.Control
-              type="search"
-              placeholder="Search"
-              className="form-control me-2" // Use class for styling
-              aria-label="Search"
-            />
-            <Button variant="outline-success">Search</Button>
-          </Form>
-        </div>
-        <Navbar.Collapse id="navbarScroll">
-          <Nav
-            className="me-auto my-2 my-lg-0"
-            style={{ maxHeight: "100px" }} // You can keep this for max height
-            navbarScroll
-          >
-            <Nav.Link className="nav-element" href="#action1">
-              Home
-            </Nav.Link>
-            <Nav.Link className="nav-element" href="#action2">
-              Link
-            </Nav.Link>
-            <NavDropdown title="Link" id="navbarScrollingDropdown">
-              <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action4">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action5">
-                Something else here
-              </NavDropdown.Item>
+    <>
+      <Navbar expand="lg" className="navbar-custom">
+        <Container className="nav-container">
+          <Navbar.Brand className="brand-link" href="/">
+            TradingView
+          </Navbar.Brand>
+
+          <div className="d-none d-lg-flex">
+            <div className="xl:px-8">
+              <h1 className="text-5xl">{name}</h1>
+              <Search />
+            </div>
+          </div>
+
+          <FaBell
+            className="h-8 w-8 text-gray-700 mx-0 cursor-pointer"
+            onClick={handleBellClick}
+          />
+
+          <div className="d-flex align-items-center">
+            <NavDropdown
+              title={
+                <div className="flex items-center">
+                  <FaUserCircle className="h-8 w-8 text-gray-700" />
+                  <span className="sr-only">Profile Menu</span>
+                </div>
+              }
+              id="profile-dropdown"
+              align="end"
+              className="dropdown-no-arrow"
+            >
+              {isLoggedIn ? (
+                <NavDropdown.Item onClick={onLogout}>Logout</NavDropdown.Item>
+              ) : (
+                <NavDropdown.Item onClick={handleLogin}>Login</NavDropdown.Item> // Use handleLogin for redirect
+              )}
             </NavDropdown>
-            <Nav.Link className="nav-element" href="#" disabled>
-              Link
-            </Nav.Link>
-
-              <div className = "xl:px-32">
-            <h1 className="text-5xl">{name}</h1>
-            <Search></Search>
-        
-              </div>  
-            <ThemeIcon></ThemeIcon>
-
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+          </div>
+          <Navbar.Toggle aria-controls="navbarScroll" />
+          <Navbar.Collapse id="navbarScroll">
+            <Nav className="hamburger">
+              <Nav.Link href="#home">Home</Nav.Link>
+              <Nav.Link href="#features">Features</Nav.Link>
+              <Nav.Link href="#about">About</Nav.Link>
+              <Nav.Link href="#contact">Contact</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    </>
   );
-}
+};
 
 export default Header;
-
-
-

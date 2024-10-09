@@ -7,6 +7,7 @@ import "./App.css"; // Import your global CSS
 import logo from "./logo.svg";
 import "./App.css";
 import ChartContainer from "./components/ChartContainer";
+import Dashboard from "./components/Dashboard";
 
 const App = () => {
   return (
@@ -18,8 +19,8 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/chart" element={<ChartContainer />} />; //Change
-          Register endpoint
+          <Route path="/chart" element={<ChartContainer />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </div>
     </Router>

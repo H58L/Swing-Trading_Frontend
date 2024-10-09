@@ -1,0 +1,12 @@
+.search-results-dropdown{
+    background-color: #0d1e30 !important;
+    border: none;
+}
+
+.search-item{
+    background-color: #0d1e30;
+}
+
+.search-item:hover{
+    background-color: #3b4652;
+}
