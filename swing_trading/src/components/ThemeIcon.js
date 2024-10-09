@@ -12,7 +12,7 @@ const ThemeIcon = () => {
 
   return (
     <button className={`rounded-lg border border-neutral-400 p-2 absolute right-8 xl:right-32 shadow-lg 
-    ${darkMode ? "shadow-gray-100" : null}` }
+    ${darkMode ? "shadow-gray-800" : null}` }
     onClick={toggleDarkMode}>
       {/* Remove stroke and add a fill color for better visibility */}
       <MoonIcon className={`h-8 w-8 cursor-pointer text-neutral-400 

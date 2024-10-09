@@ -72,11 +72,14 @@ import {
 } from "recharts";
 import { chatConfig } from "../constants/config";
 import ChartFilter from "./ChartFilter";
+import ThemeContext from "../context/ThemeContex";
+import { useContext } from "react";
 
 const Chart = () => {
   // Creating state for data and filter
   const [data, setData] = useState(mockHistoricalData);
   const [filter, setFilter] = useState("1W"); // State for controlling the filter (1W, 1M, 1Y)
+  const {darkMode} = useContext(ThemeContext);
 
   // Function to format data for chart
   const formatData = () => {
@@ -89,6 +92,7 @@ const Chart = () => {
   };
 
   return (
+    // <div className={`${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-neutral-200 "  }`}>
     <Card>
       {/* Chart Filters */}
       <ul className="flex absolute top-2 right-2 z-40">
@@ -104,7 +108,10 @@ const Chart = () => {
       </ul>
 
       {/* Chart Rendering */}
-      <ResponsiveContainer width="100%" height={400}>
+     
+
+  
+      <ResponsiveContainer width="100%" height={400} >
         <AreaChart data={formatData()}>
           <defs>
             <linearGradient id="chartColor" x1="0" y1="0" x2="0" y2="1">
@@ -135,6 +142,7 @@ const Chart = () => {
         </AreaChart>
       </ResponsiveContainer>
     </Card>
+    // </div>
   );
 };
 
