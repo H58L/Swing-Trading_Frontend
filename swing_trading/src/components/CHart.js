@@ -92,7 +92,7 @@ const Chart = () => {
   };
 
   return (
-    // <div className={`${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-neutral-200 "  }`}>
+    
     <Card>
       {/* Chart Filters */}
       <ul className="flex absolute top-2 right-2 z-40">
@@ -117,10 +117,10 @@ const Chart = () => {
             <linearGradient id="chartColor" x1="0" y1="0" x2="0" y2="1">
               <stop
                 offset="5%"
-                stopColor="rgb(199 210 254)"
+                stopColor= {darkMode ? "#312e81" : "rgb(199 210 254"}
                 stopOpacity={0.8}
               />
-              <stop offset="95%" stopColor="rgb(199 210 254)" stopOpacity={0} />
+              <stop offset="95%" stopColor= {darkMode ? "#312e81" : "rgb(199 210 254"} stopOpacity={0} />
             </linearGradient>
           </defs>
 
@@ -138,11 +138,14 @@ const Chart = () => {
             fill="url(#chartColor)"
           />
 
-          <Tooltip />
+          <Tooltip 
+          contentStyle={darkMode ? {backgroundColor: "#111827"} : null}
+          itemStyle={darkMode ? {color : "#818cf8"} : null}
+          />
         </AreaChart>
       </ResponsiveContainer>
     </Card>
-    // </div>
+    
   );
 };
 
