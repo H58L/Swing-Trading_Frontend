@@ -4,7 +4,7 @@ import Alerts from "./Alerts";
 import StockWatchlist from "./StockWatchList";
 import "../style/Dashboard.css"; // CSS styles
 import Header from "./Header";
-import Card from "./Card";
+import Chart from "./Chart";
 
 const Dashboard = () => {
   return (
@@ -12,7 +12,7 @@ const Dashboard = () => {
       <Header />
       <div className="dashboard">
         <div className="chart-container">
-          <Card />
+          <Chart />
         </div>
         <div className="alerts-sidebar">
           <Alerts />

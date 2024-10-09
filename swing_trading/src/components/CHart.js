@@ -1,4 +1,3 @@
-
 // import React, { useState } from 'react';
 // import { mockHistoricalData } from '../constants/mock';
 // import { convertDateToUnixTimeStamp, convertUnixTimeStampToDate } from '../helpers/date-helper';
@@ -30,7 +29,7 @@
 //             <li key = {item}>
 //                 <ChartFilter text={item} active = {filter === item} onClick = {() =>{
 //                     // Changing the state of fileter by setting it to item
-//                     setFilter(item);     
+//                     setFilter(item);
 //                 } }></ChartFilter>
 //             </li>;
 //         }))}
@@ -42,12 +41,12 @@
 //             <stop offset="5%" stopColor="rgb(199 210 254)" stopOpacity={0.8}/>
 //             <stop offset="95%" stopColor="rgb(199 210 254" stopOpacity={0}/>
 //             </linearGradient>
-            
+
 //         </defs>
 //           <XAxis dataKey={"date"} />
 //           <YAxis domain={['auto', 'auto']} />
-//           <Area type="monotone" dataKey="value" stroke="#312e81" 
-//           fillOpacity={0.6} 
+//           <Area type="monotone" dataKey="value" stroke="#312e81"
+//           fillOpacity={0.6}
 //           strokeWidth={1}
 //           fill = "url(#chartColor)" />
 //           <Tooltip />
@@ -59,25 +58,31 @@
 
 // export default Chart;
 
-
-import React, { useState } from 'react';
-import { mockHistoricalData } from '../constants/mock';
-import { convertUnixTimeStampToDate } from '../helpers/date-helper';
-import Card from './Card';
-import { ResponsiveContainer, AreaChart, Area, Tooltip, XAxis, YAxis } from "recharts";
-import { chatConfig } from '../constants/config';
-import ChartFilter from './ChartFilter';
+import React, { useState } from "react";
+import { mockHistoricalData } from "../constants/mock";
+import { convertUnixTimeStampToDate } from "../helpers/date-helper";
+import Card from "./Card";
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { chatConfig } from "../constants/config";
+import ChartFilter from "./ChartFilter";
 
 const Chart = () => {
   // Creating state for data and filter
   const [data, setData] = useState(mockHistoricalData);
-  const [filter, setFilter] = useState("1W");  // State for controlling the filter (1W, 1M, 1Y)
+  const [filter, setFilter] = useState("1W"); // State for controlling the filter (1W, 1M, 1Y)
 
   // Function to format data for chart
   const formatData = () => {
     return data.c.map((item, index) => {
       return {
-        value: parseFloat(item.toFixed(2)),   // Value of closing price up to 2 decimal places
+        value: parseFloat(item.toFixed(2)), // Value of closing price up to 2 decimal places
         date: convertUnixTimeStampToDate(data.t[index]), // Convert Unix timestamp to readable date
       };
     });
@@ -89,9 +94,9 @@ const Chart = () => {
       <ul className="flex absolute top-2 right-2 z-40">
         {Object.keys(chatConfig).map((item) => (
           <li key={item}>
-            <ChartFilter 
-              text={item} 
-              active={filter === item} 
+            <ChartFilter
+              text={item}
+              active={filter === item}
               onClick={() => setFilter(item)} // Set the filter state when clicked
             />
           </li>
@@ -103,23 +108,27 @@ const Chart = () => {
         <AreaChart data={formatData()}>
           <defs>
             <linearGradient id="chartColor" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="rgb(199 210 254)" stopOpacity={0.8} />
+              <stop
+                offset="5%"
+                stopColor="rgb(199 210 254)"
+                stopOpacity={0.8}
+              />
               <stop offset="95%" stopColor="rgb(199 210 254)" stopOpacity={0} />
             </linearGradient>
           </defs>
 
           {/* XAxis and YAxis for the chart */}
           <XAxis dataKey={"date"} />
-          <YAxis domain={['auto', 'auto']} />
+          <YAxis domain={["auto", "auto"]} />
 
           {/* The area of the chart that is filled */}
-          <Area 
-            type="monotone" 
-            dataKey="value" 
-            stroke="#312e81" 
-            fillOpacity={0.6} 
-            strokeWidth={1} 
-            fill="url(#chartColor)" 
+          <Area
+            type="monotone"
+            dataKey="value"
+            stroke="#312e81"
+            fillOpacity={0.6}
+            strokeWidth={1}
+            fill="url(#chartColor)"
           />
 
           <Tooltip />
