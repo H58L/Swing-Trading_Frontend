@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { mockSearchResults } from "../constants/mock";
 import { XIcon, SearchIcon } from "@heroicons/react/solid";
 import SearchResults from "./SearchResults";
 import "../style/Search.css";
+import ThemeContext from "../context/ThemeContex";
+
 
 const Search = () => {
   //intialize both these states to the mock data that was copypastes gfrom Finn hub
   const [input, setInput] = useState(""); //Will track what the use ris searching for
   const [bestMatches, setBestMatches] = useState(mockSearchResults.result);
   //Will track the best matches being returned form the API
-
+ 
+  const {darkMode} = useContext(ThemeContext);
+  
   const clear = () => {
     //to clear the search bar
     setInput("");
@@ -21,11 +25,13 @@ const Search = () => {
   };
 
   return (
-    <div className="search-box flex items-center my-4 border-2 rounded-md relative z-50 w-96  border-neutral-200">
+    <div className={`search-box flex items-center my-4 border-2 rounded-md relative z-50 w-96  border-neutral-200
+    ${darkMode ? "bg-gray-900 border-gray-800" : null}`}>
       <input
         type="text"
         value={input}
-        className=" search-input w-full px-4 py-2 focus:outline-none rounded-md"
+        className={`search-input w-full px-4 py-2 focus:outline-none rounded-md
+        ${darkMode ? "bg-gray-900": null}`} 
         placeholder="Search Stock"
         onChange={(event) => {
           //Setting input to what is searchd in the bar
