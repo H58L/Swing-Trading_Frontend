@@ -8,6 +8,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import ChartContainer from "./components/ChartContainer";
 import { useState } from "react";
+import Dashboard from "./components/Dashboard";
 
 const App = () => {
 
@@ -21,10 +22,8 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-
-          <Route path="/chart" element={<ChartContainer />} />; //Change
-
-          Register endpoint
+          <Route path="/chart" element={<ChartContainer />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </div>
     </Router>
