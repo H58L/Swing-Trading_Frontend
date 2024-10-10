@@ -9,6 +9,7 @@ import Header_Stock from "./Header_Stock";
 import Chart from "./Chart";
 import ThemeContext from "../context/ThemeContex";
 import { useContext} from "react";
+import Search from "./Search";
 
 
 const ChartContainer = () => {
@@ -25,6 +26,7 @@ const ChartContainer = () => {
       {/* Header row */}
       <div className="col-span-1 md:col-span-2 xl:col-span-3 row-span-1 flex justify-start items-center">
         <Header_Stock name={mockCompanyDetails.name}></Header_Stock>
+        
       </div>
 
       {/* Chart box */}
