@@ -1,0 +1,26 @@
+/* Alerts container */
+.alerts-container {
+
+    height: 50vh; /* Adjust the height to fit your design */
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding: 10px;
+    border: 1px solid #ddd; /* Optional border */
+    background-color: #f9f9f9; /* Optional background */
+    border-radius: 5px; /* Rounded corners */
+    margin: 0px;
+  }
+  
+  /* Styling for the alerts list */
+  .alerts-list {
+    list-style-type: none; /* Remove default list styling */
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Individual alert items */
+  .alert-item {
+    background-color: white;
+    padding: 10px;
+    border-bottom: 1px solid #555454; /* Divider between alerts */
+  }
+

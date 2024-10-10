@@ -7,10 +7,18 @@ import "./App.css"; // Import your global CSS
 import logo from "./logo.svg";
 import "./App.css";
 import ChartContainer from "./components/ChartContainer";
+import { useState } from "react";
+import Dashboard from "./components/Dashboard";
+import ThemeContext from "./context/ThemeContex";
 
 const App = () => {
+
+  const [darkMode, setDarkMode] = useState(false); //state for theme,initliazed to false
+
   return (
-    <Router>
+    // Theme COntext for swtiching between dark and light modes
+    <ThemeContext.Provider value={{darkMode, setDarkMode}}>    
+      <Router>
       <div className="App">
         {" "}
         {/* Wrap everything in the App class */}
@@ -18,13 +26,13 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-
-          <Route path="/chart" element={<ChartContainer />} />; //Change
-
-          Register endpoint
+          <Route path="/chart" element={<ChartContainer />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </div>
     </Router>
+    </ThemeContext.Provider>
+    
   );
 };
 

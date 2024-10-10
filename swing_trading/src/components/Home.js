@@ -9,12 +9,12 @@ const Home = () => {
     <div className="home-container">
       <Header></Header>
       <div className="navigation">
-        <Link to="/login" className="mr-4">
+        {/* <Link to="/login" className="mr-4">
           Login
         </Link>
         <Link to="/register" className="mr-4">
           Register
-        </Link>
+        </Link> */}
 
         {/* Image with full width */}
         <img
