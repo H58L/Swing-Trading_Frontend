@@ -32,14 +32,18 @@ const Alerts = () => {
   ];
 
   return (
-    <div>
-      <h2>Alerts</h2>
-      <ul className="overflow-y-scroll">
+    <div className="p-0 h-full">
+      <ul className="h-full  border-gray-300">
         {alerts.map((alert, index) => (
-          <li key={index} className="alert-item mb-4 ">
-            <h3>{alert.title}</h3>
-            <p>{alert.description}</p>
-            <span>{new Date(alert.timestamp).toLocaleString()}</span>
+          <li
+            key={index}
+            className="alert-item mb-3 bg-white rounded p-4 shadow-sm border border-gray-300 w-full"
+          >
+            <h3 className="text-lg font-semibold">{alert.title}</h3>
+            <p className="text-gray-700">{alert.description}</p>
+            <span className="text-sm text-gray-500">
+              {new Date(alert.timestamp).toLocaleString()}
+            </span>
           </li>
         ))}
       </ul>
