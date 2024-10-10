@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+// XXXXXXXXXXXXXXXXXXXXXXXXORIGINAL CODE///////////
+
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -9,10 +11,21 @@ import { FaBell, FaUserCircle } from "react-icons/fa";
 import "../style/Header.css";
 import Search from "./Search";
 import Alerts from "./Alerts";
+import ThemeContext from "../context/ThemeContex";
+import ThemeIcon from "./ThemeIcon";
 
 const Header = ({ name, isLoggedIn, onLogin, onLogout }) => {
   const [showAlerts, setShowAlerts] = useState(false);
   const navigate = useNavigate(); // Use navigate for programmatic navigation
+  
+//FOr Dark Mode and Light Mode
+  const {darkMode, setDarkMode} = useContext(ThemeContext);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    console.log(darkMode);
+  }
+
   const [alerts] = useState([
     "New message from John",
     "Your profile was updated",
@@ -29,14 +42,14 @@ const Header = ({ name, isLoggedIn, onLogin, onLogout }) => {
   };
 
   return (
-    <>
+    <div className="">
       <Navbar expand="lg" className="navbar-custom">
         <Container className="nav-container">
           <Navbar.Brand className="brand-link" href="/">
             TradingView
           </Navbar.Brand>
 
-          <div className="d-none d-lg-flex">
+          <div className="d-none d-lg-flex ">
             <div className="xl:px-8">
               <h1 className="text-5xl">{name}</h1>
               <Search />
@@ -65,6 +78,11 @@ const Header = ({ name, isLoggedIn, onLogin, onLogout }) => {
               ) : (
                 <NavDropdown.Item onClick={handleLogin}>Login</NavDropdown.Item> // Use handleLogin for redirect
               )}
+              
+                {darkMode? (<NavDropdown.Item onClick={toggleDarkMode}>Light Mode</NavDropdown.Item>): 
+                (<NavDropdown.Item onClick={toggleDarkMode}>Dark Mode</NavDropdown.Item>)}
+              
+             
             </NavDropdown>
           </div>
           <Navbar.Toggle aria-controls="navbarScroll" />
@@ -78,8 +96,10 @@ const Header = ({ name, isLoggedIn, onLogin, onLogout }) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-    </>
+    </div>
   );
 };
 
 export default Header;
+
+

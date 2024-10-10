@@ -1,5 +1,6 @@
 /* Alerts container */
 .alerts-container {
+
     height: 50vh; /* Adjust the height to fit your design */
     overflow-y: auto; /* Enable vertical scrolling */
     padding: 10px;
@@ -22,3 +23,4 @@
     padding: 10px;
     border-bottom: 1px solid #555454; /* Divider between alerts */
   }
+
