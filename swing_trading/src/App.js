@@ -10,15 +10,18 @@ import ChartContainer from "./components/ChartContainer";
 import { useState } from "react";
 import Dashboard from "./components/Dashboard";
 import ThemeContext from "./context/ThemeContex";
+import StockContext from "./context/StockContext";
 
 const App = () => {
 
   const [darkMode, setDarkMode] = useState(false); //state for theme,initliazed to false
+  const[stockSymbol, setStockSymbol] = useState("FB");
 
   return (
     // Theme COntext for swtiching between dark and light modes
-    <ThemeContext.Provider value={{darkMode, setDarkMode}}>    
-      <Router>
+    <ThemeContext.Provider value={{darkMode, setDarkMode}}> 
+       <StockContext.Provider value = {{stockSymbol, setStockSymbol}}>
+        <Router>
       <div className="App">
         {" "}
         {/* Wrap everything in the App class */}
@@ -31,6 +34,8 @@ const App = () => {
         </Routes>
       </div>
     </Router>
+       </StockContext.Provider>
+      
     </ThemeContext.Provider>
     
   );
