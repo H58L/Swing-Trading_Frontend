@@ -4,12 +4,13 @@ import { XIcon, SearchIcon } from "@heroicons/react/solid";
 import SearchResults from "./SearchResults";
 import "../style/Search.css";
 import ThemeContext from "../context/ThemeContex";
+import { searchSymbols } from "../api/stock-api";
 
 
 const Search = () => {
   //intialize both these states to the mock data that was copypastes gfrom Finn hub
   const [input, setInput] = useState(""); //Will track what the use ris searching for
-  const [bestMatches, setBestMatches] = useState(mockSearchResults.result);
+  const [bestMatches, setBestMatches] = useState([]);
   //Will track the best matches being returned form the API
  
   const {darkMode} = useContext(ThemeContext);
@@ -20,8 +21,19 @@ const Search = () => {
     setBestMatches([]);
   };
 
-  const updateBestMatches = () => {
-    setBestMatches(mockSearchResults.result);
+  const updateBestMatches = async () => {
+    try {
+      if(input)  //If input in search box, then fetch data 
+      {
+        const searchResults = await searchSymbols(input);
+        const result = searchResults.result;   //actual array of results that will come from the API
+        setBestMatches(result);
+      }
+    }
+    catch (error){
+      setBestMatches([]);
+      console.log(error);
+    }
   };
 
   return (
