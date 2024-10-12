@@ -1,0 +1,68 @@
+
+.login-page {
+  background-color: #f6f7fb; /* Fallback color */
+  background-image: url('/public/bg3.jpg'); /* Correct reference to your image in public folder */
+  background-size: cover; /* Cover the entire viewport */
+  background-position: center; /* Center the background image */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  font-family: 'Poppins', sans-serif; /* Use Google font */
+  margin: 0; /* Remove default margin */
+  height: auto;
+}
+
+.login-container {
+width: 45%;
+padding: 0px 80px;
+padding-top: 100px;
+background-color: #fff;
+height: 100vh;
+}
+
+
+
+
+@media (max-width: 1020px) {
+  .login-page {
+      display: flex; /* Use flexbox to center the container */
+      justify-content: center;
+      align-items: center;
+      height: 100vh; /* Ensure body takes full viewport height */
+  }
+
+  .login-container {
+      width: 100vw; /* Make the login container take the full width */
+      height: 100vh; /* Make the login container take the full height */
+      padding: 120px; /* Adjust padding for smaller screens */
+      box-sizing: border-box; /* Ensure padding doesn't affect width */
+      max-width: none; /* Remove the max-width constraint */
+      background-color: #fff;
+  }
+}
+
+
+/* For phones */
+@media (max-width: 779px) {
+  .login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* height: 100vh; */
+    margin: 0;
+    padding: 0;
+  }
+
+  .login-container {
+    width: 85vw; /* Set the container width to 90% of the viewport */
+    max-width: 400px; /* Optional: Cap the max width for smaller devices */
+    padding: 40px; /* Add padding to provide spacing */
+    box-sizing: border-box; /* Ensure padding doesn't overflow */
+    background-color: #fff;
+    border-radius: 15px; /* Add some rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+    font-size: 12px
+  }
+  .remember-me, .forgot-password, .login-with{
+    font-size: 11px;
+  }
+}

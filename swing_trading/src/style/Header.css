@@ -1,0 +1,125 @@
+Header.css
+
+{
+
+font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+}
+
+/* Custom Navbar Styles */
+
+.navbar-custom {
+
+background-color: #0d1e30; /* Dark background color */
+
+height: 80px;
+
+color: white; /* Text color for the navbar */
+
+padding: 10px 40px; /* Padding for the navbar */
+
+position: sticky; /* Make the navbar sticky */
+
+top: 0; /* Stick it to the top */
+
+z-index: 1000; /* Ensure it stays above other content */
+
+}
+
+.navbar-custom .nav-link {
+
+color: white; /* Navbar link color */
+
+padding: 20px 20px; /* Padding for navbar links */
+
+}
+
+.navbar-expand-lg .navbar-nav .nav-link{
+
+color: #ffffff;
+
+padding: 10px 10px;
+
+width: 100%;
+
+background-color: #0d1e30;
+
+}
+
+.navbar-expand-lg .navbar-nav .nav-link:hover{
+
+color: #ffffff;
+
+padding: 10px 1px;
+
+width: 100%;
+
+background-color: #3b4652;
+
+border-radius: 30px;
+
+}
+
+.dropdown-no-arrow .dropdown-toggle::after {
+
+display: none; /* Hide the default caret icon */
+
+}
+
+.navbar-toggler-icon{
+
+color: white;
+
+background-color: #ffffff;
+
+}
+
+.hamburger{
+
+background-color: #0d1e30;
+
+width: 100%;
+
+padding: 0px;
+
+}
+
+.nav-container{
+
+display: flex;
+
+flex-wrap: nowrap;
+
+align-items: center;
+
+flex-direction: row;
+
+justify-content: flex-end;
+
+}
+
+.brand-link {
+
+color: white;
+
+font-size: 1.5rem;
+
+text-decoration: none;
+
+margin-right: auto; /* Align the brand link to the left */
+
+}
+
+.brand-link:hover {
+
+color: white;
+
+font-size: 1.5rem;
+
+text-decoration: none;
+
+margin-right: auto; /* Align the brand link to the left */
+
+font-family: 'Courier New', Courier, monospace;
+
+}
