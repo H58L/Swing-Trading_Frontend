@@ -15,7 +15,7 @@ import StockContext from "./context/StockContext";
 const App = () => {
 
   const [darkMode, setDarkMode] = useState(false); //state for theme,initliazed to false
-  const[stockSymbol, setStockSymbol] = useState("FB");
+  const[stockSymbol, setStockSymbol] = useState("");
 
   return (
     // Theme COntext for swtiching between dark and light modes
