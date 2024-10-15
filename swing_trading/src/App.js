@@ -11,9 +11,9 @@ import { useState } from "react";
 import Dashboard from "./components/Dashboard";
 import ThemeContext from "./context/ThemeContex";
 import StockContext from "./context/StockContext";
+import StockData from "./api/StockData";
 
 const App = () => {
-
   const [darkMode, setDarkMode] = useState(false); //state for theme,initliazed to false
   const[stockSymbol, setStockSymbol] = useState("");
 
@@ -31,13 +31,12 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/chart" element={<ChartContainer />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/data" element={<StockData />} />
         </Routes>
       </div>
     </Router>
        </StockContext.Provider>
-      
     </ThemeContext.Provider>
-    
   );
 };
 
