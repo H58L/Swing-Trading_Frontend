@@ -8,6 +8,7 @@ const StockChart = () => {
   const [chartType, setChartType] = useState("candlestick"); // Default to candlestick chart
   const [darkMode, setDarkMode] = useState(false); // Dark mode state
   const [period, setPeriod] = useState("1mo"); // Default to 1 month data
+  const [realTimePrice, setRealTimePrice] = useState(null); // Real-time stock price
 
   const stockTicker = "RELIANCE.NS"; // Hardcoded for now, but can be dynamic
 
@@ -23,6 +24,10 @@ const StockChart = () => {
           setError(data.error);
         } else {
           setStockData(data);
+          console.log(stockData);
+
+          // Set the real-time price to the most recent closing price
+          setRealTimePrice(data.close[data.close.length - 1]);
         }
         setLoading(false);
       })
@@ -32,21 +37,18 @@ const StockChart = () => {
       });
   };
 
-  // Fetch stock data when component mounts or when 'period' changes
+  // Fetch stock data initially and at regular intervals (real-time updates)
   useEffect(() => {
+    // Fetch initial stock data
     fetchStockData();
-  }, [period]);
 
-  if (loading)
-    return (
-      <div
-        className={`text-center ${
-          darkMode ? "text-gray-300" : "text-gray-500"
-        }`}
-      >
-        Loading stock data...
-      </div>
-    );
+    // Set up an interval for real-time updates every 1 second
+    const intervalId = setInterval(fetchStockData, 60000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [period]); // Re-run if period changes
+
   if (error)
     return (
       <div
@@ -66,6 +68,7 @@ const StockChart = () => {
 
   const handlePeriodChange = (e) => {
     setPeriod(e.target.value);
+    setLoading(true); // Set loading to true when period changes
   };
 
   // Generate dynamic chart title
@@ -75,11 +78,11 @@ const StockChart = () => {
 
   const candlestickData = [
     {
-      x: stockData.dates,
-      open: stockData.open,
-      high: stockData.high,
-      low: stockData.low,
-      close: stockData.close,
+      x: stockData?.dates,
+      open: stockData?.open,
+      high: stockData?.high,
+      low: stockData?.low,
+      close: stockData?.close,
       type: "candlestick",
       xaxis: "x",
       yaxis: "y",
@@ -88,8 +91,8 @@ const StockChart = () => {
 
   const lineChartData = [
     {
-      x: stockData.dates,
-      y: stockData.close,
+      x: stockData?.dates,
+      y: stockData?.close,
       type: "scatter",
       mode: "lines+markers",
       line: { color: "#4F46E5" }, // Blue color for line
@@ -114,6 +117,18 @@ const StockChart = () => {
         >
           Indian Stock Market Data
         </h1>
+
+        {/* Real-time stock price display */}
+        <div className="text-center mb-4">
+          <span
+            className={`text-xl font-bold ${
+              darkMode ? "text-gray-300" : "text-gray-800"
+            }`}
+          >
+            Current Price:{" "}
+            {realTimePrice ? `₹${realTimePrice.toFixed(2)}` : "Loading..."}
+          </span>
+        </div>
 
         {/* Dark Mode Toggle Button */}
         <div className="flex justify-end mb-4">
@@ -180,14 +195,17 @@ const StockChart = () => {
         {/* Conditionally render the chart */}
         <div
           className={`rounded-lg p-4 ${
-            darkMode ? "bg-gray-900 text-white" : "bg-gray-50"
+            darkMode ? "bg-gray-900" : "bg-gray-50"
           }`}
         >
           {chartType === "candlestick" ? (
             <Plot
               data={candlestickData}
               layout={{
-                title: chartTitle,
+                title: {
+                  text: chartTitle,
+                  font: { color: darkMode ? "white" : "black" }, // Set title color based on darkMode
+                },
                 xaxis: { title: "Date", color: darkMode ? "white" : "black" },
                 yaxis: {
                   title: "Price (INR)",
@@ -203,7 +221,10 @@ const StockChart = () => {
             <Plot
               data={lineChartData}
               layout={{
-                title: chartTitle,
+                title: {
+                  text: chartTitle,
+                  font: { color: darkMode ? "white" : "black" }, // Set title color based on darkMode
+                },
                 xaxis: { title: "Date", color: darkMode ? "white" : "black" },
                 yaxis: {
                   title: "Price (INR)",
