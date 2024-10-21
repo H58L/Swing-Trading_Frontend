@@ -17,14 +17,14 @@ import ThemeIcon from "./ThemeIcon";
 const Header = ({ name, isLoggedIn, onLogin, onLogout }) => {
   const [showAlerts, setShowAlerts] = useState(false);
   const navigate = useNavigate(); // Use navigate for programmatic navigation
-  
-//FOr Dark Mode and Light Mode
-  const {darkMode, setDarkMode} = useContext(ThemeContext);
+
+  //FOr Dark Mode and Light Mode
+  const { darkMode, setDarkMode } = useContext(ThemeContext);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     console.log(darkMode);
-  }
+  };
 
   const [alerts] = useState([
     "New message from John",
@@ -41,12 +41,28 @@ const Header = ({ name, isLoggedIn, onLogin, onLogout }) => {
     navigate("/login");
   };
 
+  const handleDashboard = () => {
+    navigate("/dashboard");
+  };
+
+  const handleHome = () => {
+    navigate("/");
+  };
+
+  const handleData = () => {
+    navigate("/data");
+  };
+
+  const handleChart = () => {
+    navigate("/chart");
+  };
+
   return (
     <div className="">
       <Navbar expand="lg" className="navbar-custom">
         <Container className="nav-container">
-          <Navbar.Brand className="brand-link" href="/">
-            TradingView
+          <Navbar.Brand onClick={handleHome} className="brand-link">
+            ChartView
           </Navbar.Brand>
 
           <div className="d-none d-lg-flex ">
@@ -78,20 +94,25 @@ const Header = ({ name, isLoggedIn, onLogin, onLogout }) => {
               ) : (
                 <NavDropdown.Item onClick={handleLogin}>Login</NavDropdown.Item> // Use handleLogin for redirect
               )}
-              
-                {darkMode? (<NavDropdown.Item onClick={toggleDarkMode}>Light Mode</NavDropdown.Item>): 
-                (<NavDropdown.Item onClick={toggleDarkMode}>Dark Mode</NavDropdown.Item>)}
-              
-             
+
+              {darkMode ? (
+                <NavDropdown.Item onClick={toggleDarkMode}>
+                  Light Mode
+                </NavDropdown.Item>
+              ) : (
+                <NavDropdown.Item onClick={toggleDarkMode}>
+                  Dark Mode
+                </NavDropdown.Item>
+              )}
             </NavDropdown>
           </div>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
             <Nav className="hamburger">
-              <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="#features">Features</Nav.Link>
-              <Nav.Link href="#about">About</Nav.Link>
-              <Nav.Link href="#contact">Contact</Nav.Link>
+              <Nav.Link onClick={handleHome}>Home</Nav.Link>
+              <Nav.Link onClick={handleData}>Data</Nav.Link>
+              <Nav.Link onClick={handleDashboard}>Dashboard</Nav.Link>
+              <Nav.Link onClick={handleChart}>Chart</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -101,5 +122,3 @@ const Header = ({ name, isLoggedIn, onLogin, onLogout }) => {
 };
 
 export default Header;
-
-
