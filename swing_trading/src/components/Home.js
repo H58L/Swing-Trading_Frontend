@@ -1,13 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
-import Header from "./Header";
+// import Header from "./Header";
 import Footer from "./Footer";
 import ChartContainer from "./ChartContainer";
 
 const Home = () => {
   return (
     <div className="home-container">
-      <Header></Header>
+      {/* <Header></Header> */}
       <div className="navigation">
         {/* <Link to="/login" className="mr-4">
           Login
