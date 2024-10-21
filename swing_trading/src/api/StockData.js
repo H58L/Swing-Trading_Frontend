@@ -43,7 +43,7 @@ const StockChart = () => {
     fetchStockData();
 
     // Set up an interval for real-time updates every 1 second
-    const intervalId = setInterval(fetchStockData, 1000);
+    const intervalId = setInterval(fetchStockData, 60000);
 
     // Clear interval on component unmount
     return () => clearInterval(intervalId);
