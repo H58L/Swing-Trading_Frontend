@@ -13,6 +13,7 @@ import Dashboard from "./components/Dashboard";
 import ThemeContext from "./context/ThemeContex";
 import StockContext from "./context/StockContext";
 import StockData from "./api/StockData";
+import { StockProvider } from "./context/StockContext";
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -21,7 +22,7 @@ const App = () => {
   return (
     // Theme COntext for swtiching between dark and light modes
     <ThemeContext.Provider value={{ darkMode, setDarkMode }}>
-     <StockContext.Provider value = {{stockSymbol, setStockSymbol}}>
+     <StockProvider value = {{stockSymbol, setStockSymbol}}>
         <Router>
                 <div className="App">
                   {" "}
@@ -36,7 +37,7 @@ const App = () => {
                   </Routes>
                 </div>
               </Router>
-     </StockContext.Provider>
+     </StockProvider>
     </ThemeContext.Provider>
   );
 };
