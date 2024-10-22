@@ -4,13 +4,15 @@ import { XIcon, SearchIcon } from "@heroicons/react/solid";
 import SearchResults from "./SearchResults";
 import "../style/Search.css";
 import ThemeContext from "../context/ThemeContex";
+import axios from "axios";
 
 
 const Search = () => {
   //intialize both these states to the mock data that was copypastes gfrom Finn hub
   const [input, setInput] = useState(""); //Will track what the use ris searching for
-  const [bestMatches, setBestMatches] = useState(mockSearchResults.result);
+  const [bestMatches, setBestMatches] = useState(mockSearchResults.result);  //Update to get data from flask
   //Will track the best matches being returned form the API
+  const [error, setError] = useState("");
  
   const {darkMode} = useContext(ThemeContext);
   
@@ -20,8 +22,25 @@ const Search = () => {
     setBestMatches([]);
   };
 
-  const updateBestMatches = () => {
-    setBestMatches(mockSearchResults.result);
+
+  const updateBestMatches = async () => {
+    if(!input) return;
+
+    try {
+      //Calling flask API
+      const response = await axios.get(`http://localhost:5000/api/stock`, {
+        params: { ticker: input },
+});
+
+setBestMatches(response.data);
+setError("");
+    }
+
+    catch(err) {
+      setError("Stock not found. Please try again.");
+      setBestMatches([]);
+    }
+    
   };
 
   return (
@@ -60,8 +79,18 @@ const Search = () => {
         <SearchIcon className="search-icon h-20 w-20 fill-gray-100" />
       </button>
 
-      {input && bestMatches.length > 0 ? (
+      {/* {input && bestMatches.length > 0 ? (
         <SearchResults results={bestMatches}></SearchResults>
+      ) : null}
+    </div>
+  );
+}; */}
+
+{/* Display search results */}
+{input && bestMatches.length > 0 ? (
+        <SearchResults results={bestMatches}></SearchResults>
+      ) : error ? (
+        <p>{error}</p> // Display error message if any
       ) : null}
     </div>
   );

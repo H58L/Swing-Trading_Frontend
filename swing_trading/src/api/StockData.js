@@ -68,7 +68,7 @@ const StockChart = () => {
 
   const handlePeriodChange = (e) => {
     setPeriod(e.target.value);
-    setLoading(true); // Set loading to true when period changes
+    setLoading(true); // Set loading to true when period changes, pass searched Stock here
   };
 
   // Generate dynamic chart title

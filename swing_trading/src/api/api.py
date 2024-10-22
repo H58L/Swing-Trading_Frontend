@@ -8,7 +8,7 @@ CORS(app)
 
 @app.route('/api/stock', methods=['GET'])
 def get_stock_data():
-    stock_ticker = request.args.get('ticker', 'RELIANCE.NS')  # Default to Reliance
+    stock_ticker = request.args.get('ticker', 'RELIANCE.NS')  # Default to Reliance , Chnage this to a state
     period = request.args.get('period', '1mo')  # Default to 1 month if not provided
 
     try:
