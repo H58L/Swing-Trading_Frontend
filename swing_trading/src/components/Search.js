@@ -6,51 +6,48 @@ import "../style/Search.css";
 import ThemeContext from "../context/ThemeContex";
 import axios from "axios";
 
-
 const Search = () => {
   //intialize both these states to the mock data that was copypastes gfrom Finn hub
   const [input, setInput] = useState(""); //Will track what the use ris searching for
-  const [bestMatches, setBestMatches] = useState(mockSearchResults.result);  //Update to get data from flask
+  const [bestMatches, setBestMatches] = useState(mockSearchResults.result); //Update to get data from flask
   //Will track the best matches being returned form the API
   const [error, setError] = useState("");
- 
-  const {darkMode} = useContext(ThemeContext);
-  
+
+  const { darkMode } = useContext(ThemeContext);
+
   const clear = () => {
     //to clear the search bar
     setInput("");
     setBestMatches([]);
   };
 
-
   const updateBestMatches = async () => {
-    if(!input) return;
+    if (!input) return;
 
     try {
       //Calling flask API
       const response = await axios.get(`http://localhost:5000/api/stock`, {
         params: { ticker: input },
-});
+      });
 
-setBestMatches(response.data);
-setError("");
-    }
-
-    catch(err) {
+      setBestMatches(response.data);
+      setError("");
+    } catch (err) {
       setError("Stock not found. Please try again.");
       setBestMatches([]);
     }
-    
   };
 
   return (
-    <div className={`search-box flex items-center my-4 border-2 rounded-md relative z-50 w-96  border-neutral-200
-    ${darkMode ? "bg-gray-900 border-gray-800" : null}`}>
+    <div
+      className={`search-box flex items-center my-4 border-2 rounded-md relative z-50 w-96  border-neutral-200
+    ${darkMode ? "bg-gray-900 border-gray-800" : null}`}
+    >
       <input
         type="text"
         value={input}
         className={`search-input w-full px-4 py-2 focus:outline-none rounded-md
-        ${darkMode ? "bg-gray-900": null}`} 
+        ${darkMode ? "bg-gray-900" : null}`}
         placeholder="Search Stock"
         onChange={(event) => {
           //Setting input to what is searchd in the bar
@@ -86,8 +83,8 @@ setError("");
   );
 }; */}
 
-{/* Display search results */}
-{input && bestMatches.length > 0 ? (
+      {/* Display search results */}
+      {input && bestMatches.length > 0 ? (
         <SearchResults results={bestMatches}></SearchResults>
       ) : error ? (
         <p>{error}</p> // Display error message if any

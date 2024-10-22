@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Plot from "react-plotly.js";
+import SearchBar from "./SearchBar"; // Import the SearchBar component
 
 const StockChart = () => {
   const [stockData, setStockData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [chartType, setChartType] = useState("candlestick"); // Default to candlestick chart
-  const [darkMode, setDarkMode] = useState(false); // Dark mode state
-  const [period, setPeriod] = useState("1mo"); // Default to 1 month data
-  const [realTimePrice, setRealTimePrice] = useState(null); // Real-time stock price
-
-  const stockTicker = "RELIANCE.NS"; // Hardcoded for now, but can be dynamic
+  const [chartType, setChartType] = useState("candlestick");
+  const [darkMode, setDarkMode] = useState(false);
+  const [period, setPeriod] = useState("1mo");
+  const [realTimePrice, setRealTimePrice] = useState(null);
+  const [stockTicker, setStockTicker] = useState("RELIANCE.NS"); // Moved here for dynamic search
 
   // Function to fetch stock data
   const fetchStockData = () => {
@@ -24,9 +24,6 @@ const StockChart = () => {
           setError(data.error);
         } else {
           setStockData(data);
-          console.log(stockData);
-
-          // Set the real-time price to the most recent closing price
           setRealTimePrice(data.close[data.close.length - 1]);
         }
         setLoading(false);
@@ -37,19 +34,20 @@ const StockChart = () => {
       });
   };
 
-  // Fetch stock data initially and at regular intervals (real-time updates)
+  // Fetch stock data initially and at regular intervals
   useEffect(() => {
-    // Fetch initial stock data
     fetchStockData();
 
-    // Set up an interval for real-time updates every 1 second
     const intervalId = setInterval(fetchStockData, 60000);
-
-    // Clear interval on component unmount
     return () => clearInterval(intervalId);
-  }, [period]); // Re-run if period changes
+  }, [period, stockTicker]); // Re-run if period or stockTicker changes
 
-  if (error)
+  const handleSearch = (newTicker) => {
+    setStockTicker(newTicker); // Update the stock ticker state
+    setLoading(true); // Set loading to true when ticker changes
+  };
+
+  if (error) {
     return (
       <div
         className={`text-red-500 text-center ${darkMode ? "bg-gray-800" : ""}`}
@@ -57,7 +55,7 @@ const StockChart = () => {
         {error}
       </div>
     );
-
+  }
   const handleChartTypeChange = (e) => {
     setChartType(e.target.value);
   };
@@ -117,6 +115,9 @@ const StockChart = () => {
         >
           Indian Stock Market Data
         </h1>
+
+        {/* Search Bar Component */}
+        <SearchBar stockTicker={stockTicker} onSearch={handleSearch} />
 
         {/* Real-time stock price display */}
         <div className="text-center mb-4">
@@ -204,7 +205,7 @@ const StockChart = () => {
               layout={{
                 title: {
                   text: chartTitle,
-                  font: { color: darkMode ? "white" : "black" }, // Set title color based on darkMode
+                  font: { color: darkMode ? "white" : "black" },
                 },
                 xaxis: { title: "Date", color: darkMode ? "white" : "black" },
                 yaxis: {
@@ -223,7 +224,7 @@ const StockChart = () => {
               layout={{
                 title: {
                   text: chartTitle,
-                  font: { color: darkMode ? "white" : "black" }, // Set title color based on darkMode
+                  font: { color: darkMode ? "white" : "black" },
                 },
                 xaxis: { title: "Date", color: darkMode ? "white" : "black" },
                 yaxis: {

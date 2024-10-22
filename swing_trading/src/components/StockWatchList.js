@@ -1,4 +1,6 @@
 import React from "react";
+import ThemeContext from "../context/ThemeContex";
+import { useContext } from "react";
 
 const StockWatchlist = () => {
   const stocks = [
@@ -48,19 +50,31 @@ const StockWatchlist = () => {
       marketCap: "2.29T",
     },
   ];
-
+  const { darkMode } = useContext(ThemeContext);
   return (
-    <div className="p-0 h-full w-full">
-      <ul className="h-full border-gray-300">
+    <div className={`p-0 h-full w-full `}>
+      <ul className={`h-full `}>
         {stocks.map((stock, index) => (
           <li
             key={index}
-            className="stock-item mb-3 bg-white rounded p-4 shadow-sm border border-gray-300 w-full"
+            className={`stock-item mb-3  rounded p-4 shadow-sm border border-gray-100 w-full ${
+              darkMode ? "bg-gray-900 text-gray-100" : "bg-white"
+            }`}
           >
-            <div className="flex justify-between items-center">
+            <div
+              className={`flex justify-between items-center ${
+                darkMode ? "bg-gray-900 text-gray-100" : "bg-white"
+              }`}
+            >
               <div>
                 <h3 className="text-lg font-semibold">{stock.companyName}</h3>
-                <p className="text-gray-700">{stock.symbol}</p>
+                <p
+                  className={`text-left ${
+                    darkMode ? "bg-gray-900 text-gray-100" : "bg-white"
+                  }`}
+                >
+                  {stock.symbol}
+                </p>
               </div>
               <div className="text-right">
                 <p
@@ -81,8 +95,20 @@ const StockWatchlist = () => {
               </div>
             </div>
             <div className="mt-2 flex justify-between text-gray-600">
-              <p>Volume: {stock.volume.toLocaleString()}</p>
-              <p>Market Cap: {stock.marketCap}</p>
+              <p
+                className={`${
+                  darkMode ? "bg-gray-900 text-gray-100" : "bg-white"
+                }`}
+              >
+                Volume: {stock.volume.toLocaleString()}
+              </p>
+              <p
+                className={`${
+                  darkMode ? "bg-gray-900 text-gray-100" : "bg-white"
+                }`}
+              >
+                Market Cap: {stock.marketCap}
+              </p>
             </div>
           </li>
         ))}
