@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Plot from "react-plotly.js";
+import StockContext from "../context/StockContext";
+import { useContext } from "react";
 
 const StockChart = () => {
   const [stockData, setStockData] = useState(null);
@@ -10,13 +12,14 @@ const StockChart = () => {
   const [period, setPeriod] = useState("1mo"); // Default to 1 month data
   const [realTimePrice, setRealTimePrice] = useState(null); // Real-time stock price
 
-  const stockTicker = "RELIANCE.NS"; // Hardcoded for now, but can be dynamic
+  // const stockTicker = "RELIANCE.NS"; // Hardcoded for now, but can be dynamic
+  const {stockSymbol} = useContext(StockContext);
 
   // Function to fetch stock data
   const fetchStockData = () => {
     setLoading(true);
     fetch(
-      `http://127.0.0.1:5000/api/stock?ticker=${stockTicker}&period=${period}`
+      `http://127.0.0.1:5000/api/stock?ticker=${stockSymbol}&period=${period}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -72,7 +75,7 @@ const StockChart = () => {
   };
 
   // Generate dynamic chart title
-  const chartTitle = `${stockTicker} - ${
+  const chartTitle = `${stockSymbol} - ${
     chartType.charAt(0).toUpperCase() + chartType.slice(1)
   } Chart (${period})`;
 

@@ -5,7 +5,7 @@ import SearchResults from "./SearchResults";
 import "../style/Search.css";
 import ThemeContext from "../context/ThemeContex";
 import axios from "axios";
-
+import StockContext from "../context/StockContext";
 
 const Search = () => {
   //intialize both these states to the mock data that was copypastes gfrom Finn hub
@@ -15,7 +15,7 @@ const Search = () => {
   const [error, setError] = useState("");
  
   const {darkMode} = useContext(ThemeContext);
-  
+  const {setStockSymbol} = useContext(StockContext); // Get Setter for stock symol
   const clear = () => {
     //to clear the search bar
     setInput("");
@@ -58,7 +58,9 @@ setError("");
         }}
         onKeyPress={(event) => {
           if (event.key === "Enter") {
-            updateBestMatches();
+            setStockSymbol(input);
+            console.log(setStockSymbol);
+            // updateBestMatches();
           }
         }}
       ></input>
