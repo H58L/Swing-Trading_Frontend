@@ -1,29 +1,34 @@
 import React, { useEffect, useState } from "react";
 import Plot from "react-plotly.js";
-import SearchBar from "./SearchBar"; // Import the SearchBar component
+import StockContext from "../context/StockContext";
+import { useContext } from "react";
 
 const StockChart = () => {
   const [stockData, setStockData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [chartType, setChartType] = useState("candlestick");
-  const [darkMode, setDarkMode] = useState(false);
-  const [period, setPeriod] = useState("1mo");
-  const [realTimePrice, setRealTimePrice] = useState(null);
-  const [stockTicker, setStockTicker] = useState("RELIANCE.NS"); // Moved here for dynamic search
+  const [chartType, setChartType] = useState("candlestick"); // Default to candlestick chart
+  const [darkMode, setDarkMode] = useState(false); // Dark mode state
+  const [period, setPeriod] = useState("1mo"); // Default to 1 month data
+  const [realTimePrice, setRealTimePrice] = useState(null); // Real-time stock price
+
+  // const stockTicker = "RELIANCE.NS"; // Hardcoded for now, but can be dynamic
+  const { stockSymbol } = useContext(StockContext);
 
   // Function to fetch stock data
   const fetchStockData = () => {
+    const ticker = stockSymbol || "TCS"; // Default ticker if stockSymbol is empty
     setLoading(true);
-    fetch(
-      `http://127.0.0.1:5000/api/stock?ticker=${stockTicker}&period=${period}`
-    )
+    fetch(`http://127.0.0.1:5000/api/stock?ticker=${ticker}&period=${period}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.error) {
           setError(data.error);
         } else {
           setStockData(data);
+          console.log(stockData);
+
+          // Set the real-time price to the most recent closing price
           setRealTimePrice(data.close[data.close.length - 1]);
         }
         setLoading(false);
@@ -34,20 +39,19 @@ const StockChart = () => {
       });
   };
 
-  // Fetch stock data initially and at regular intervals
+  // Fetch stock data initially and at regular intervals (real-time updates)
   useEffect(() => {
+    // Fetch initial stock data
     fetchStockData();
 
+    // Set up an interval for real-time updates every 1 second
     const intervalId = setInterval(fetchStockData, 60000);
+
+    // Clear interval on component unmount
     return () => clearInterval(intervalId);
-  }, [period, stockTicker]); // Re-run if period or stockTicker changes
+  }, [period]); // Re-run if period changes
 
-  const handleSearch = (newTicker) => {
-    setStockTicker(newTicker); // Update the stock ticker state
-    setLoading(true); // Set loading to true when ticker changes
-  };
-
-  if (error) {
+  if (error)
     return (
       <div
         className={`text-red-500 text-center ${darkMode ? "bg-gray-800" : ""}`}
@@ -55,7 +59,7 @@ const StockChart = () => {
         {error}
       </div>
     );
-  }
+
   const handleChartTypeChange = (e) => {
     setChartType(e.target.value);
   };
@@ -70,7 +74,7 @@ const StockChart = () => {
   };
 
   // Generate dynamic chart title
-  const chartTitle = `${stockTicker} - ${
+  const chartTitle = `${stockSymbol} - ${
     chartType.charAt(0).toUpperCase() + chartType.slice(1)
   } Chart (${period})`;
 
@@ -115,9 +119,6 @@ const StockChart = () => {
         >
           Indian Stock Market Data
         </h1>
-
-        {/* Search Bar Component */}
-        <SearchBar stockTicker={stockTicker} onSearch={handleSearch} />
 
         {/* Real-time stock price display */}
         <div className="text-center mb-4">
@@ -205,7 +206,7 @@ const StockChart = () => {
               layout={{
                 title: {
                   text: chartTitle,
-                  font: { color: darkMode ? "white" : "black" },
+                  font: { color: darkMode ? "white" : "black" }, // Set title color based on darkMode
                 },
                 xaxis: { title: "Date", color: darkMode ? "white" : "black" },
                 yaxis: {
@@ -224,7 +225,7 @@ const StockChart = () => {
               layout={{
                 title: {
                   text: chartTitle,
-                  font: { color: darkMode ? "white" : "black" },
+                  font: { color: darkMode ? "white" : "black" }, // Set title color based on darkMode
                 },
                 xaxis: { title: "Date", color: darkMode ? "white" : "black" },
                 yaxis: {
