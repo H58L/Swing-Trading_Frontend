@@ -4,7 +4,7 @@
 
 // const ChartFilter = (text, active, onCLick) => {
 //   return (
-//     <button onCLick={onCLick} className={`w-12 m-2 h-8 border-1 rounded-md flex itesm-center jusitfy-center cursor-pointer 
+//     <button onCLick={onCLick} className={`w-12 m-2 h-8 border-1 rounded-md flex itesm-center jusitfy-center cursor-pointer
 //     ${active ? "bg-indigo-600 border-indigo-700 text-gray-100" : "border-indigo-300 text-indigo-300"
 //     } `}>
 //         {text}
@@ -14,25 +14,30 @@
 
 // export default ChartFilter
 
-import React from 'react';
-import Card from './Card';
-import ThemeContext from '../context/ThemeContex';
-import { useContext } from 'react';
+import React from "react";
+import Card from "./Card";
+import ThemeContext from "../context/ThemeContext";
+import { useContext } from "react";
 
 const ChartFilter = ({ text, active, onClick }) => {
-  const {darkMode} = useContext(ThemeContext);
+  const { darkMode } = useContext(ThemeContext);
   return (
-   <div className= {`${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-neutral-200 "  }`}>
-       <button 
-      className={`p-2 m-1 rounded ${active ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-black'}` }
-      onClick={onClick}
+    <div
+      className={`${
+        darkMode
+          ? "bg-gray-900 border-gray-800"
+          : "bg-white border-neutral-200 "
+      }`}
     >
-      {text}
-    </button>
-   </div>
-   
-    
-    
+      <button
+        className={`p-2 m-1 rounded ${
+          active ? "bg-indigo-500 text-white" : "bg-gray-200 text-black"
+        }`}
+        onClick={onClick}
+      >
+        {text}
+      </button>
+    </div>
   );
 };
 

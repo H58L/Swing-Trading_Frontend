@@ -1,6 +1,6 @@
 import React from "react";
 import { useContext } from "react";
-import ThemeContext from "../context/ThemeContex";
+import ThemeContext from "../context/ThemeContext";
 
 const Alerts = () => {
   const alerts = [
@@ -9,6 +9,7 @@ const Alerts = () => {
       description: "The stock market has opened for trading.",
       timestamp: "2024-10-08T09:30:00",
     },
+
     {
       title: "New Price Target",
       description: "Analysts have raised the price target for XYZ stock.",
@@ -33,7 +34,7 @@ const Alerts = () => {
     },
   ];
 
-  const {darkMode, setDarkMode} = useContext(ThemeContext);
+  const { darkMode, setDarkMode } = useContext(ThemeContext);
 
   return (
     <div className="p-0 h-full">
@@ -41,11 +42,17 @@ const Alerts = () => {
         {alerts.map((alert, index) => (
           <li
             key={index}
-            className="alert-item mb-3 bg-white rounded p-4 shadow-sm border border-gray-300 w-full"
+            className={`alert-item mb-3  rounded p-4 shadow-sm border border-gray-100 w-full ${
+              darkMode ? "bg-gray-900 text-gray-100" : "bg-white"
+            }`}
           >
             <h3 className="text-lg font-semibold">{alert.title}</h3>
-            <p className="text-gray-700">{alert.description}</p>
-            <span className="text-sm text-gray-500">
+            <p>{alert.description}</p>
+            <span
+              className={`text-sm ${
+                darkMode ? "bg-gray-900 text-gray-500" : "bg-white"
+              }`}
+            >
               {new Date(alert.timestamp).toLocaleString()}
             </span>
           </li>
@@ -56,7 +63,6 @@ const Alerts = () => {
 };
 
 export default Alerts;
-
 
 // import React from "react";
 // import { useContext } from "react";

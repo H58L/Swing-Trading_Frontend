@@ -72,14 +72,14 @@ import {
 } from "recharts";
 import { chatConfig } from "../constants/config";
 import ChartFilter from "./ChartFilter";
-import ThemeContext from "../context/ThemeContex";
+import ThemeContext from "../context/ThemeContext";
 import { useContext } from "react";
 
 const Chart = () => {
   // Creating state for data and filter
   const [data, setData] = useState(mockHistoricalData);
   const [filter, setFilter] = useState("1W"); // State for controlling the filter (1W, 1M, 1Y)
-  const {darkMode} = useContext(ThemeContext);
+  const { darkMode } = useContext(ThemeContext);
 
   // Function to format data for chart
   const formatData = () => {
@@ -92,7 +92,6 @@ const Chart = () => {
   };
 
   return (
-    
     <Card>
       {/* Chart Filters */}
       <ul className="flex absolute top-2 right-2 z-40">
@@ -108,19 +107,21 @@ const Chart = () => {
       </ul>
 
       {/* Chart Rendering */}
-     
 
-  
-      <ResponsiveContainer width="100%" height={400} >
+      <ResponsiveContainer width="100%" height={400}>
         <AreaChart data={formatData()}>
           <defs>
             <linearGradient id="chartColor" x1="0" y1="0" x2="0" y2="1">
               <stop
                 offset="5%"
-                stopColor= {darkMode ? "#312e81" : "rgb(199 210 254"}
+                stopColor={darkMode ? "#312e81" : "rgb(199 210 254"}
                 stopOpacity={0.8}
               />
-              <stop offset="95%" stopColor= {darkMode ? "#312e81" : "rgb(199 210 254"} stopOpacity={0} />
+              <stop
+                offset="95%"
+                stopColor={darkMode ? "#312e81" : "rgb(199 210 254"}
+                stopOpacity={0}
+              />
             </linearGradient>
           </defs>
 
@@ -138,14 +139,13 @@ const Chart = () => {
             fill="url(#chartColor)"
           />
 
-          <Tooltip 
-          contentStyle={darkMode ? {backgroundColor: "#111827"} : null}
-          itemStyle={darkMode ? {color : "#818cf8"} : null}
+          <Tooltip
+            contentStyle={darkMode ? { backgroundColor: "#111827" } : null}
+            itemStyle={darkMode ? { color: "#818cf8" } : null}
           />
         </AreaChart>
       </ResponsiveContainer>
     </Card>
-    
   );
 };
 
