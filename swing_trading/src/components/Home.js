@@ -16,10 +16,10 @@ const Home = () => {
           Register
         </Link> */}
 
-        {/* Image with full width */}
+        {/* Image with full width from the public folder */}
         <img
-          src="https://img.freepik.com/free-photo/3d-fantasy-scene_23-2151127998.jpg"
-          alt="Fantasy Scene"
+          src={`${process.env.PUBLIC_URL}/Landing_Page_bg.jpg`}
+          alt="Landing Page Background"
           className="w-screen h-auto" // Tailwind classes for full width
         />
         <ChartContainer></ChartContainer>
