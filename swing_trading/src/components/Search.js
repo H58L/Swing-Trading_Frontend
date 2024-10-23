@@ -3,7 +3,7 @@ import { mockSearchResults } from "../constants/mock";
 import { XIcon, SearchIcon } from "@heroicons/react/solid";
 import SearchResults from "./SearchResults";
 import "../style/Search.css";
-import ThemeContext from "../context/ThemeContex";
+import ThemeContext from "../context/ThemeContext";
 import axios from "axios";
 import StockContext from "../context/StockContext";
 

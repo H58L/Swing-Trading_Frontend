@@ -10,7 +10,7 @@ import "./App.css";
 import ChartContainer from "./components/ChartContainer";
 import { useState } from "react";
 import Dashboard from "./components/Dashboard";
-import ThemeContext from "./context/ThemeContex";
+import ThemeContext from "./context/ThemeContext";
 import StockContext from "./context/StockContext";
 import StockData from "./api/StockData";
 import { StockProvider } from "./context/StockContext";

@@ -105,145 +105,149 @@ const StockChart = () => {
   ];
 
   return (
-    <div
-      className={`min-h-screen p-8 ${darkMode ? "bg-gray-900" : "bg-gray-100"}`}
-    >
-    <Header></Header>
+    <>
+      <Header></Header>
       <div
-        className={`max-w-5xl mx-auto shadow-lg rounded-lg p-6 ${
-          darkMode ? "bg-gray-800" : "bg-white"
+        className={`min-h-screen p-8 ${
+          darkMode ? "bg-gray-900" : "bg-gray-100"
         }`}
       >
-        <h1
-          className={`text-3xl font-bold mb-6 text-center ${
-            darkMode ? "text-gray-200" : "text-gray-800"
+        <div
+          className={`max-w-5xl mx-auto shadow-lg rounded-lg p-6 ${
+            darkMode ? "bg-gray-800" : "bg-white"
           }`}
         >
-          Indian Stock Market Data
-        </h1>
-
-        {/* Real-time stock price display */}
-        <div className="text-center mb-4">
-          <span
-            className={`text-xl font-bold ${
-              darkMode ? "text-gray-300" : "text-gray-800"
+          <h1
+            className={`text-3xl font-bold mb-6 text-center ${
+              darkMode ? "text-gray-200" : "text-gray-800"
             }`}
           >
-            Current Price:{" "}
-            {realTimePrice ? `₹${realTimePrice.toFixed(2)}` : "Loading..."}
-          </span>
-        </div>
+            Indian Stock Market Data
+          </h1>
 
-        {/* Dark Mode Toggle Button */}
-        <div className="flex justify-end mb-4">
-          <button
-            onClick={handleToggleDarkMode}
-            className={`p-2 rounded-md ${
-              darkMode ? "bg-gray-600" : "bg-gray-300"
-            } transition duration-200`}
-          >
-            {darkMode ? "Light Mode" : "Dark Mode"}
-          </button>
-        </div>
+          {/* Real-time stock price display */}
+          <div className="text-center mb-4">
+            <span
+              className={`text-xl font-bold ${
+                darkMode ? "text-gray-300" : "text-gray-800"
+              }`}
+            >
+              Current Price:{" "}
+              {realTimePrice ? `₹${realTimePrice.toFixed(2)}` : "Loading..."}
+            </span>
+          </div>
 
-        {/* Dropdown for selecting time period */}
-        <div className="flex justify-center mb-4">
-          <label
-            className={`text-lg font-medium ${
-              darkMode ? "text-gray-300" : "text-gray-600"
-            } mr-4`}
-          >
-            Select Time Period:
-          </label>
-          <select
-            value={period}
-            onChange={handlePeriodChange}
-            className={`p-2 border ${
-              darkMode
-                ? "border-gray-600 bg-gray-700 text-gray-200"
-                : "border-gray-300"
-            } rounded-md focus:outline-none focus:border-indigo-500`}
-          >
-            <option value="1d">1 Day</option>
-            <option value="1mo">1 Month</option>
-            <option value="6mo">6 Months</option>
-            <option value="1y">1 Year</option>
-            <option value="5y">5 Years</option>
-            <option value="10y">10 Years</option>
-          </select>
-        </div>
+          {/* Dark Mode Toggle Button */}
+          <div className="flex justify-end mb-4">
+            <button
+              onClick={handleToggleDarkMode}
+              className={`p-2 rounded-md ${
+                darkMode ? "bg-gray-600" : "bg-gray-300"
+              } transition duration-200`}
+            >
+              {darkMode ? "Light Mode" : "Dark Mode"}
+            </button>
+          </div>
 
-        {/* Dropdown for selecting chart type */}
-        <div className="flex justify-center mb-4">
-          <label
-            className={`text-lg font-medium ${
-              darkMode ? "text-gray-300" : "text-gray-600"
-            } mr-4`}
-          >
-            Select Chart Type:
-          </label>
-          <select
-            value={chartType}
-            onChange={handleChartTypeChange}
-            className={`p-2 border ${
-              darkMode
-                ? "border-gray-600 bg-gray-700 text-gray-200"
-                : "border-gray-300"
-            } rounded-md focus:outline-none focus:border-indigo-500`}
-          >
-            <option value="candlestick">Candlestick Chart</option>
-            <option value="line">Line Chart (Closing Prices)</option>
-          </select>
-        </div>
+          {/* Dropdown for selecting time period */}
+          <div className="flex justify-center mb-4">
+            <label
+              className={`text-lg font-medium ${
+                darkMode ? "text-gray-300" : "text-gray-600"
+              } mr-4`}
+            >
+              Select Time Period:
+            </label>
+            <select
+              value={period}
+              onChange={handlePeriodChange}
+              className={`p-2 border ${
+                darkMode
+                  ? "border-gray-600 bg-gray-700 text-gray-200"
+                  : "border-gray-300"
+              } rounded-md focus:outline-none focus:border-indigo-500`}
+            >
+              <option value="1d">1 Day</option>
+              <option value="1mo">1 Month</option>
+              <option value="6mo">6 Months</option>
+              <option value="1y">1 Year</option>
+              <option value="5y">5 Years</option>
+              <option value="10y">10 Years</option>
+            </select>
+          </div>
 
-        {/* Conditionally render the chart */}
-        <div
-          className={`rounded-lg p-4 ${
-            darkMode ? "bg-gray-900" : "bg-gray-50"
-          }`}
-        >
-          {chartType === "candlestick" ? (
-            <Plot
-              data={candlestickData}
-              layout={{
-                title: {
-                  text: chartTitle,
-                  font: { color: darkMode ? "white" : "black" }, // Set title color based on darkMode
-                },
-                xaxis: { title: "Date", color: darkMode ? "white" : "black" },
-                yaxis: {
-                  title: "Price (INR)",
-                  color: darkMode ? "white" : "black",
-                },
-                dragmode: "zoom",
-                plot_bgcolor: darkMode ? "#1F2937" : "#F9FAFB",
-                paper_bgcolor: darkMode ? "#1F2937" : "#F9FAFB",
-              }}
-              style={{ width: "100%", height: "500px" }}
-            />
-          ) : (
-            <Plot
-              data={lineChartData}
-              layout={{
-                title: {
-                  text: chartTitle,
-                  font: { color: darkMode ? "white" : "black" }, // Set title color based on darkMode
-                },
-                xaxis: { title: "Date", color: darkMode ? "white" : "black" },
-                yaxis: {
-                  title: "Price (INR)",
-                  color: darkMode ? "white" : "black",
-                },
-                dragmode: "zoom",
-                plot_bgcolor: darkMode ? "#1F2937" : "#F9FAFB",
-                paper_bgcolor: darkMode ? "#1F2937" : "#F9FAFB",
-              }}
-              style={{ width: "100%", height: "500px" }}
-            />
-          )}
+          {/* Dropdown for selecting chart type */}
+          <div className="flex justify-center mb-4">
+            <label
+              className={`text-lg font-medium ${
+                darkMode ? "text-gray-300" : "text-gray-600"
+              } mr-4`}
+            >
+              Select Chart Type:
+            </label>
+            <select
+              value={chartType}
+              onChange={handleChartTypeChange}
+              className={`p-2 border ${
+                darkMode
+                  ? "border-gray-600 bg-gray-700 text-gray-200"
+                  : "border-gray-300"
+              } rounded-md focus:outline-none focus:border-indigo-500`}
+            >
+              <option value="candlestick">Candlestick Chart</option>
+              <option value="line">Line Chart (Closing Prices)</option>
+            </select>
+          </div>
+
+          {/* Conditionally render the chart */}
+          <div
+            className={`rounded-lg p-4 ${
+              darkMode ? "bg-gray-900" : "bg-gray-50"
+            }`}
+          >
+            {chartType === "candlestick" ? (
+              <Plot
+                data={candlestickData}
+                layout={{
+                  title: {
+                    text: chartTitle,
+                    font: { color: darkMode ? "white" : "black" }, // Set title color based on darkMode
+                  },
+                  xaxis: { title: "Date", color: darkMode ? "white" : "black" },
+                  yaxis: {
+                    title: "Price (INR)",
+                    color: darkMode ? "white" : "black",
+                  },
+                  dragmode: "zoom",
+                  plot_bgcolor: darkMode ? "#1F2937" : "#F9FAFB",
+                  paper_bgcolor: darkMode ? "#1F2937" : "#F9FAFB",
+                }}
+                style={{ width: "100%", height: "500px" }}
+              />
+            ) : (
+              <Plot
+                data={lineChartData}
+                layout={{
+                  title: {
+                    text: chartTitle,
+                    font: { color: darkMode ? "white" : "black" }, // Set title color based on darkMode
+                  },
+                  xaxis: { title: "Date", color: darkMode ? "white" : "black" },
+                  yaxis: {
+                    title: "Price (INR)",
+                    color: darkMode ? "white" : "black",
+                  },
+                  dragmode: "zoom",
+                  plot_bgcolor: darkMode ? "#1F2937" : "#F9FAFB",
+                  paper_bgcolor: darkMode ? "#1F2937" : "#F9FAFB",
+                }}
+                style={{ width: "100%", height: "500px" }}
+              />
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

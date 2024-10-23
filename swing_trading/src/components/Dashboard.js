@@ -3,7 +3,7 @@ import Alerts from "./Alerts";
 import StockWatchlist from "./StockWatchList";
 import Header from "./Header";
 import Chart from "./Chart";
-import ThemeContext from "../context/ThemeContex";
+import ThemeContext from "../context/ThemeContext";
 import { useContext } from "react";
 
 const Dashboard = () => {
