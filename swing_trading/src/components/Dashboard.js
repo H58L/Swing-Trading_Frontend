@@ -16,7 +16,7 @@ const Dashboard = () => {
           darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-200"
         }`}
       >
-        <div className={`col-span-2 p-4 border overflow-hidden `}>
+        <div className={`col-span-2 p-4 overflow-hidden `}>
           <Chart />
         </div>
         <div

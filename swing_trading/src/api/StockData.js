@@ -120,7 +120,7 @@ const StockChart = () => {
               darkMode ? "text-gray-200" : "text-gray-800"
             }`}
           >
-            Indian Stock Market Data
+            {chartTitle}
           </h1>
 
           {/* Real-time stock price display */}
@@ -131,7 +131,7 @@ const StockChart = () => {
               }`}
             >
               Current Price:{" "}
-              {realTimePrice ? `₹${realTimePrice.toFixed(4)}` : "Loading..."}
+              {realTimePrice ? `₹${realTimePrice.toFixed(2)}` : "Loading..."}
             </span>
           </div>
 
