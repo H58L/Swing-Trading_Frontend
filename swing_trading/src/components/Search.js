@@ -60,7 +60,7 @@ setError("");
           if (event.key === "Enter") {
             setStockSymbol(input);
             console.log(setStockSymbol);
-            // updateBestMatches();
+            updateBestMatches();
           }
         }}
       ></input>
