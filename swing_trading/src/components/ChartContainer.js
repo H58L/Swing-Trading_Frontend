@@ -10,7 +10,7 @@ import Chart from "./Chart";
 import ThemeContext from "../context/ThemeContext";
 import { useContext } from "react";
 import Search from "./Search";
-import StockChart from "../api/StockData";
+import StockChart from "./StockData";
 
 const ChartContainer = () => {
   const { darkMode } = useContext(ThemeContext);

@@ -12,7 +12,7 @@ import { useState } from "react";
 import Dashboard from "./components/Dashboard";
 import ThemeContext from "./context/ThemeContext";
 import StockContext from "./context/StockContext";
-import StockData from "./api/StockData";
+import StockData from "./components/StockData";
 import { StockProvider } from "./context/StockContext";
 
 const App = () => {

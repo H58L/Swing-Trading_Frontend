@@ -3,9 +3,9 @@ import Plot from "react-plotly.js";
 import StockContext from "../context/StockContext";
 import { useContext } from "react";
 import ThemeContext from "../context/ThemeContext";
-import Header from "../components/Header";
+import Header from "./Header";
 
-const StockChart = () => {
+const StockData = () => {
   const { darkMode } = useContext(ThemeContext);
   const [stockData, setStockData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -13,10 +13,9 @@ const StockChart = () => {
   const [chartType, setChartType] = useState("candlestick"); // Default to candlestick chart
   const [period, setPeriod] = useState("1mo"); // Default to 1 month data
   const [realTimePrice, setRealTimePrice] = useState(null); // Real-time stock price
+  const [previousClose, setPreviousClose] = useState(null); // Previous closing price
 
-  // const stockTicker = "RELIANCE.NS"; // Hardcoded for now, but can be dynamic
   const { stockSymbol } = useContext(StockContext);
-  console.log(stockSymbol);
 
   // Function to fetch stock data
   const fetchStockData = () => {
@@ -29,10 +28,14 @@ const StockChart = () => {
           setError(data.error);
         } else {
           setStockData(data);
-          console.log(stockData);
 
           // Set the real-time price to the most recent closing price
-          setRealTimePrice(data.close[data.close.length - 1]);
+          const latestClose = data.close[data.close.length - 1];
+          setRealTimePrice(latestClose);
+
+          // Set previous close for calculating difference
+          const prevClose = data.close[data.close.length - 2];
+          setPreviousClose(prevClose);
         }
         setLoading(false);
       })
@@ -44,15 +47,12 @@ const StockChart = () => {
 
   // Fetch stock data initially and at regular intervals (real-time updates)
   useEffect(() => {
-    // Fetch initial stock data
     fetchStockData();
 
-    // Set up an interval for real-time updates every 1 second
     const intervalId = setInterval(fetchStockData, 60000);
 
-    // Clear interval on component unmount
     return () => clearInterval(intervalId);
-  }, [period]); // Re-run if period changes
+  }, [period]);
 
   if (error)
     return (
@@ -69,10 +69,9 @@ const StockChart = () => {
 
   const handlePeriodChange = (e) => {
     setPeriod(e.target.value);
-    setLoading(true); // Set loading to true when period changes, pass searched Stock here
+    setLoading(true);
   };
 
-  // Generate dynamic chart title
   const chartTitle = `${stockSymbol} - ${
     chartType.charAt(0).toUpperCase() + chartType.slice(1)
   } Chart (${period})`;
@@ -96,15 +95,26 @@ const StockChart = () => {
       y: stockData?.close,
       type: "scatter",
       mode: "lines+markers",
-      line: { color: "#4F46E5" }, // Blue color for line
+      line: { color: "#4F46E5" },
       marker: { color: "#4F46E5", size: 6 },
       name: "Closing Prices",
     },
   ];
 
+  // Calculate price difference and percentage change
+  const priceDifference =
+    realTimePrice && previousClose
+      ? (realTimePrice - previousClose).toFixed(2)
+      : null;
+
+  const percentageChange =
+    previousClose && realTimePrice
+      ? (((realTimePrice - previousClose) / previousClose) * 100).toFixed(2)
+      : null;
+
   return (
     <>
-      <Header></Header>
+      <Header />
       <div
         className={`min-h-screen p-8 ${
           darkMode ? "bg-gray-900" : "bg-gray-100"
@@ -133,6 +143,30 @@ const StockChart = () => {
               Current Price:{" "}
               {realTimePrice ? `₹${realTimePrice.toFixed(2)}` : "Loading..."}
             </span>
+            {priceDifference !== null && (
+              <div className="text-lg">
+                <span
+                  className={`font-bold ${
+                    priceDifference >= 0 ? "text-green-500" : "text-red-500"
+                  }`}
+                >
+                  {priceDifference >= 0
+                    ? `+₹${priceDifference}`
+                    : `-₹${Math.abs(priceDifference)}`}
+                </span>
+                <span
+                  className={`ml-2 ${
+                    percentageChange >= 0 ? "text-green-500" : "text-red-500"
+                  }`}
+                >
+                  (
+                  {percentageChange >= 0
+                    ? `+${percentageChange}%`
+                    : `${percentageChange}%`}
+                  )
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Dropdown for selecting time period */}
@@ -197,7 +231,7 @@ const StockChart = () => {
                 layout={{
                   title: {
                     text: chartTitle,
-                    font: { color: darkMode ? "white" : "black" }, // Set title color based on darkMode
+                    font: { color: darkMode ? "white" : "black" },
                   },
                   xaxis: { title: "Date", color: darkMode ? "white" : "black" },
                   yaxis: {
@@ -216,7 +250,7 @@ const StockChart = () => {
                 layout={{
                   title: {
                     text: chartTitle,
-                    font: { color: darkMode ? "white" : "black" }, // Set title color based on darkMode
+                    font: { color: darkMode ? "white" : "black" },
                   },
                   xaxis: { title: "Date", color: darkMode ? "white" : "black" },
                   yaxis: {
@@ -237,4 +271,4 @@ const StockChart = () => {
   );
 };
 
-export default StockChart;
+export default StockData;
