@@ -10,6 +10,7 @@ import Chart from "./Chart";
 import ThemeContext from "../context/ThemeContex";
 import { useContext} from "react";
 import Search from "./Search";
+import StockChart from "../api/StockData";
 
 
 const ChartContainer = () => {
@@ -32,6 +33,7 @@ const ChartContainer = () => {
       {/* Chart box */}
       <div className="md:col-span-2 row-span-4">
         <Chart></Chart>
+        {/* <StockChart></StockChart> */}
       </div>
 
       {/* Overview box */}

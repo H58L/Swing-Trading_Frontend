@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Plot from "react-plotly.js";
 import StockContext from "../context/StockContext";
 import { useContext } from "react";
+import Header from "../components/Header";
 
 const StockChart = () => {
   const [stockData, setStockData] = useState(null);
@@ -107,6 +108,7 @@ const StockChart = () => {
     <div
       className={`min-h-screen p-8 ${darkMode ? "bg-gray-900" : "bg-gray-100"}`}
     >
+    <Header></Header>
       <div
         className={`max-w-5xl mx-auto shadow-lg rounded-lg p-6 ${
           darkMode ? "bg-gray-800" : "bg-white"
