@@ -72,7 +72,7 @@ import {
 } from "recharts";
 import { chatConfig } from "../constants/config";
 import ChartFilter from "./ChartFilter";
-import ThemeContext from "../context/ThemeContex";
+import ThemeContext from "../context/ThemeContext";
 import { useContext } from "react";
 
 const Chart = () => {

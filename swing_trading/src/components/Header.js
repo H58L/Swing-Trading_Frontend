@@ -11,7 +11,7 @@ import { FaBell, FaUserCircle } from "react-icons/fa";
 import "../style/Header.css";
 import Search from "./Search";
 import Alerts from "./Alerts";
-import ThemeContext from "../context/ThemeContex";
+import ThemeContext from "../context/ThemeContext";
 import ThemeIcon from "./ThemeIcon";
 
 const Header = ({ name, isLoggedIn, onLogin, onLogout }) => {
