@@ -2,19 +2,21 @@ import React, { useEffect, useState } from "react";
 import Plot from "react-plotly.js";
 import StockContext from "../context/StockContext";
 import { useContext } from "react";
+import ThemeContext from "../context/ThemeContext";
 import Header from "../components/Header";
 
 const StockChart = () => {
+  const { darkMode } = useContext(ThemeContext);
   const [stockData, setStockData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [chartType, setChartType] = useState("candlestick"); // Default to candlestick chart
-  const [darkMode, setDarkMode] = useState(false); // Dark mode state
   const [period, setPeriod] = useState("1mo"); // Default to 1 month data
   const [realTimePrice, setRealTimePrice] = useState(null); // Real-time stock price
 
   // const stockTicker = "RELIANCE.NS"; // Hardcoded for now, but can be dynamic
   const { stockSymbol } = useContext(StockContext);
+  console.log(stockSymbol);
 
   // Function to fetch stock data
   const fetchStockData = () => {
@@ -63,10 +65,6 @@ const StockChart = () => {
 
   const handleChartTypeChange = (e) => {
     setChartType(e.target.value);
-  };
-
-  const handleToggleDarkMode = () => {
-    setDarkMode(!darkMode);
   };
 
   const handlePeriodChange = (e) => {
@@ -133,20 +131,8 @@ const StockChart = () => {
               }`}
             >
               Current Price:{" "}
-              {realTimePrice ? `₹${realTimePrice.toFixed(2)}` : "Loading..."}
+              {realTimePrice ? `₹${realTimePrice.toFixed(4)}` : "Loading..."}
             </span>
-          </div>
-
-          {/* Dark Mode Toggle Button */}
-          <div className="flex justify-end mb-4">
-            <button
-              onClick={handleToggleDarkMode}
-              className={`p-2 rounded-md ${
-                darkMode ? "bg-gray-600" : "bg-gray-300"
-              } transition duration-200`}
-            >
-              {darkMode ? "Light Mode" : "Dark Mode"}
-            </button>
           </div>
 
           {/* Dropdown for selecting time period */}

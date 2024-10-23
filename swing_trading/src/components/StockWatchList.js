@@ -129,7 +129,13 @@ const StockWatchlist = () => {
                   {stock.change >= 0 ? "+" : ""}
                   {stock.change} ({stock.percentageChange}%)
                 </p>
-                <p className="text-xs text-gray-500">Volume: {stock.volume}</p>
+                <p
+                  className={`text-xs ${
+                    darkMode ? "text-gray-300" : "text-gray-600"
+                  }`}
+                >
+                  Volume: {stock.volume}
+                </p>
               </div>
             </div>
           </li>
