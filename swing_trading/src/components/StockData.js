@@ -4,10 +4,11 @@ import StockContext from "../context/StockContext";
 import { useContext } from "react";
 import ThemeContext from "../context/ThemeContext";
 import Header from "./Header";
+import { fetchStockData } from "../redux/actions/StockActions";
+import { useDispatch, useSelector } from "react-redux"; // Added useSelector to access data
 
 const StockData = () => {
   const { darkMode } = useContext(ThemeContext);
-  const [stockData, setStockData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [chartType, setChartType] = useState("candlestick"); // Default to candlestick chart
@@ -16,60 +17,45 @@ const StockData = () => {
   const [previousClose, setPreviousClose] = useState(null); // Previous closing price
 
   const { stockSymbol } = useContext(StockContext);
+  const dispatch = useDispatch(); //allows the component to send actions to the Redux store.
 
-  // Function to fetch stock data
-  const fetchStockData = () => {
-    //const ticker = stockSymbol; // Default ticker if stockSymbol is empty
-    setLoading(true);
-    fetch(`http://127.0.0.1:5000/api/stock?ticker=${stockSymbol}&period=${period}`)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.error) {
-          setError(data.error);
-        } else {
-          setStockData(data);
 
-          // Set the real-time price to the most recent closing price
-          const latestClose = data.close[data.close.length - 1];
-          setRealTimePrice(latestClose);
+  // This hook accesses the current stockData from the Redux store
+  const stockData = useSelector((state) => state.stockData);
+  //The fetchStockData action creator is dispatched with the current stockSymbol and period, triggering the API call to fetch the stock data.
+  // Set real-time and previous close prices from the stock data
 
-          // Set previous close for calculating difference
-          const prevClose = data.close[data.close.length - 2];
-          setPreviousClose(prevClose);
-        }
+ 
+
+
+  // This hook runs the provided effect when the component mounts and whenever any dependencies change
+  //(in this case, period, stockSymbol, dispatch, and stockData).
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        await dispatch(fetchStockData(stockSymbol, period));
         setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         setError("Failed to fetch stock data.");
         setLoading(false);
-      });
-  };
+      }
+    };
 
-  // Fetch stock data initially and at regular intervals (real-time updates)
-  useEffect(() => {
-    fetchStockData();
-
-    const intervalId = setInterval(fetchStockData, 60000);
+    fetchData();
+    const intervalId = setInterval(fetchData, 30000); // Call API every 30 seconds
 
     return () => clearInterval(intervalId);
-  }, [period,stockSymbol]);
 
-  // //LISA
-  // useEffect(() => {
-  //   if (stockSymbol) {  // Only fetch if stockSymbol is set
-  //     fetchStockData();  // Call the function to fetch stock data
-  //   }
-  // }, [stockSymbol]);  // Run this effect when stockSymbol changes
-  
+  }, [stockSymbol, dispatch, period]);
 
-  if (error)
-    return (
-      <div
-        className={`text-red-500 text-center ${darkMode ? "bg-gray-800" : ""}`}
-      >
-        {error}
-      </div>
-    );
+  // Update real-time prices based on stockData changes
+  useEffect(() => {
+    if (stockData?.close && stockData.close.length > 1) {
+      setRealTimePrice(stockData.close[stockData.close.length - 1]);
+      setPreviousClose(stockData.close[stockData.close.length - 2]);
+    }
+  }, [stockData]); // This effect updates real-time prices whenever stockData changes
 
   const handleChartTypeChange = (e) => {
     setChartType(e.target.value);
@@ -226,7 +212,6 @@ const StockData = () => {
               <option value="line">Line Chart (Closing Prices)</option>
             </select>
           </div>
-
           {/* Conditionally render the chart */}
           <div
             className={`rounded-lg p-4 ${
