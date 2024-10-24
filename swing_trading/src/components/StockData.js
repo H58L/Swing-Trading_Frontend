@@ -19,10 +19,14 @@ const StockData = () => {
   const { stockSymbol } = useContext(StockContext);
   const dispatch = useDispatch(); //allows the component to send actions to the Redux store.
 
+
   // This hook accesses the current stockData from the Redux store
   const stockData = useSelector((state) => state.stockData);
   //The fetchStockData action creator is dispatched with the current stockSymbol and period, triggering the API call to fetch the stock data.
   // Set real-time and previous close prices from the stock data
+
+ 
+
 
   // This hook runs the provided effect when the component mounts and whenever any dependencies change
   //(in this case, period, stockSymbol, dispatch, and stockData).
@@ -42,6 +46,7 @@ const StockData = () => {
     const intervalId = setInterval(fetchData, 30000); // Call API every 30 seconds
 
     return () => clearInterval(intervalId);
+
   }, [stockSymbol, dispatch, period]);
 
   // Update real-time prices based on stockData changes
