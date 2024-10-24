@@ -19,9 +19,9 @@ const StockData = () => {
 
   // Function to fetch stock data
   const fetchStockData = () => {
-    const ticker = stockSymbol || "TCS"; // Default ticker if stockSymbol is empty
+    //const ticker = stockSymbol; // Default ticker if stockSymbol is empty
     setLoading(true);
-    fetch(`http://127.0.0.1:5000/api/stock?ticker=${ticker}&period=${period}`)
+    fetch(`http://127.0.0.1:5000/api/stock?ticker=${stockSymbol}&period=${period}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.error) {
@@ -52,7 +52,15 @@ const StockData = () => {
     const intervalId = setInterval(fetchStockData, 60000);
 
     return () => clearInterval(intervalId);
-  }, [period]);
+  }, [period,stockSymbol]);
+
+  // //LISA
+  // useEffect(() => {
+  //   if (stockSymbol) {  // Only fetch if stockSymbol is set
+  //     fetchStockData();  // Call the function to fetch stock data
+  //   }
+  // }, [stockSymbol]);  // Run this effect when stockSymbol changes
+  
 
   if (error)
     return (
