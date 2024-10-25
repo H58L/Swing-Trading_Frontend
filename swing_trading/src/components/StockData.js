@@ -6,6 +6,7 @@ import ThemeContext from "../context/ThemeContext";
 import Header from "./Header";
 import { fetchStockData } from "../redux/actions/StockActions";
 import { useDispatch, useSelector } from "react-redux"; // Added useSelector to access data
+import ChartDisplay from "./ChartDisplay";
 
 const StockData = () => {
   const { darkMode } = useContext(ThemeContext);
@@ -21,13 +22,12 @@ const StockData = () => {
 
   // This hook accesses the current stockData from the Redux store
   const stockData = useSelector((state) => state.stockData);
-  //The fetchStockData action creator is dispatched with the current stockSymbol and period, triggering the API call to fetch the stock data.
+
   // Set real-time and previous close prices from the stock data
 
-  // This hook runs the provided effect when the component mounts and whenever any dependencies change
-  //(in this case, period, stockSymbol, dispatch, and stockData).
   useEffect(() => {
     const fetchData = async () => {
+      //The fetchStockData action creator is dispatched with the current stockSymbol and period, triggering the API call to fetch the stock data.
       try {
         setLoading(true);
         await dispatch(fetchStockData(stockSymbol, period));
@@ -42,7 +42,8 @@ const StockData = () => {
     const intervalId = setInterval(fetchData, 30000); // Call API every 30 seconds
 
     return () => clearInterval(intervalId);
-  }, [stockSymbol, dispatch, period]);
+  }, [stockSymbol, dispatch, period]); //// This hook runs the provided effect when the component mounts and whenever any dependencies change
+  //(in this case, period, stockSymbol, dispatch, and stockData).
 
   // Update real-time prices based on stockData changes
   useEffect(() => {
@@ -64,31 +65,6 @@ const StockData = () => {
   const chartTitle = `${stockSymbol} - ${
     chartType.charAt(0).toUpperCase() + chartType.slice(1)
   } Chart (${period})`;
-
-  const candlestickData = [
-    {
-      x: stockData?.dates,
-      open: stockData?.open,
-      high: stockData?.high,
-      low: stockData?.low,
-      close: stockData?.close,
-      type: "candlestick",
-      xaxis: "x",
-      yaxis: "y",
-    },
-  ];
-
-  const lineChartData = [
-    {
-      x: stockData?.dates,
-      y: stockData?.close,
-      type: "scatter",
-      mode: "lines+markers",
-      line: { color: "#4F46E5" },
-      marker: { color: "#4F46E5", size: 6 },
-      name: "Closing Prices",
-    },
-  ];
 
   // Calculate price difference and percentage change
   const priceDifference =
@@ -213,45 +189,12 @@ const StockData = () => {
               darkMode ? "bg-gray-900" : "bg-gray-50"
             }`}
           >
-            {chartType === "candlestick" ? (
-              <Plot
-                data={candlestickData}
-                layout={{
-                  title: {
-                    text: chartTitle,
-                    font: { color: darkMode ? "white" : "black" },
-                  },
-                  xaxis: { title: "Date", color: darkMode ? "white" : "black" },
-                  yaxis: {
-                    title: "Price (INR)",
-                    color: darkMode ? "white" : "black",
-                  },
-                  dragmode: "zoom",
-                  plot_bgcolor: darkMode ? "#1F2937" : "#F9FAFB",
-                  paper_bgcolor: darkMode ? "#1F2937" : "#F9FAFB",
-                }}
-                style={{ width: "100%", height: "500px" }}
-              />
-            ) : (
-              <Plot
-                data={lineChartData}
-                layout={{
-                  title: {
-                    text: chartTitle,
-                    font: { color: darkMode ? "white" : "black" },
-                  },
-                  xaxis: { title: "Date", color: darkMode ? "white" : "black" },
-                  yaxis: {
-                    title: "Price (INR)",
-                    color: darkMode ? "white" : "black",
-                  },
-                  dragmode: "zoom",
-                  plot_bgcolor: darkMode ? "#1F2937" : "#F9FAFB",
-                  paper_bgcolor: darkMode ? "#1F2937" : "#F9FAFB",
-                }}
-                style={{ width: "100%", height: "500px" }}
-              />
-            )}
+            <ChartDisplay
+              chartTitle={chartTitle}
+              period={period}
+              chartType={chartType}
+              darkMode={darkMode}
+            />
           </div>
         </div>
       </div>

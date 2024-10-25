@@ -5,6 +5,7 @@ import Header from "./Header";
 import Chart from "./Chart";
 import ThemeContext from "../context/ThemeContext";
 import { useContext } from "react";
+import ChartDisplay from "./ChartDisplay";
 
 const Dashboard = () => {
   const { darkMode } = useContext(ThemeContext);
@@ -17,7 +18,7 @@ const Dashboard = () => {
         }`}
       >
         <div className={`col-span-2 p-4 overflow-hidden `}>
-          <Chart />
+          <ChartDisplay />
         </div>
         <div
           className={`p-4 bg-gray-200 overflow-y-auto ${
