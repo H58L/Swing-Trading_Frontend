@@ -39,7 +39,9 @@ const StockWatchlist = () => {
     const fetchStockData = async (symbol) => {
       try {
         const response = await fetch(
-          `http://127.0.0.1:5000/api/stock?ticker=${symbol}`
+          // `http://127.0.0.1:5000/api/stock?ticker=${symbol}`
+          `https://swing-trading-backend-fdrx.vercel.app/api/stock?ticker=${symbol}`
+
         );
         const data = await response.json();
 

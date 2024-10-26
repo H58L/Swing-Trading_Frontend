@@ -272,7 +272,9 @@ const StockChart = () => {
   const fetchStockData = () => {
     setLoading(true);
     fetch(
-      `http://127.0.0.1:5000/api/stock?ticker=${stockSymbol}&period=${period}`
+      // `http://127.0.0.1:5000/api/stock?ticker=${stockSymbol}&period=${period}`
+      `https://swing-trading-backend-fdrx.vercel.app/api/stock?ticker=${stockSymbol}&period=${period}`
+
     )
       .then((response) => response.json())
       .then((data) => {

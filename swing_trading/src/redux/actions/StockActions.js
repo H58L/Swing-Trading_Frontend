@@ -10,7 +10,8 @@ export const fetchStockData =
     //The inner function is an asynchronous function that receives dispatch as an argument.
     try {
       const response = await fetch(
-        `http://127.0.0.1:5000/api/stock?ticker=${ticker}&period=${period}`
+        // `http://127.0.0.1:5000/api/stock?ticker=${ticker}&period=${period}
+        `https://swing-trading-backend-fdrx.vercel.app/api/stock?ticker=${ticker}&period=${period}`
       );
 
       if (!response.ok) {
