@@ -14,6 +14,7 @@ import ThemeContext from "./context/ThemeContext";
 import StockContext from "./context/StockContext";
 import StockData from "./components/StockData";
 import { StockProvider } from "./context/StockContext";
+import AlertForm from "./components/AlertForm";
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -34,6 +35,7 @@ const App = () => {
               <Route path="/chart" element={<ChartContainer />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/data" element={<StockData />} />
+              <Route path = "/alertform" element = {<AlertForm/>} />
             </Routes>
           </div>
         </Router>

@@ -23,8 +23,8 @@ const Dashboard = () => {
         </div>
         
         <div
-          className={`p-4 bg-gray-500 overflow-y-auto ${
-            darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-500"
+          className={`p-4 bg-gray-200 overflow-y-auto ${
+            darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-200"
           }`}
         >
         <AlertHeading></AlertHeading>
