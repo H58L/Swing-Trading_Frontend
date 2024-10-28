@@ -25,11 +25,18 @@ const Search = () => {
   const updateBestMatches = async () => {
     if (!input) return;
 
+    // try {
+    //   //Calling flask API
+    //   const response = await axios.get(`http://localhost:5000/api/stock`, {
+    //     params: { ticker: input },
+    //   });
+
     try {
-      //Calling flask API
-      const response = await axios.get(`http://localhost:5000/api/stock`, {
+      // Calling Flask API on Vercel
+      const response = await axios.get(`https://swing-trading-backend-fdrx.vercel.app/api/stock`, {
         params: { ticker: input },
       });
+    
 
       setBestMatches(response.data);
       setError("");

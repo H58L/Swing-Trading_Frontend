@@ -39,7 +39,8 @@ const StockWatchlist = () => {
     const fetchStockData = async (symbol) => {
       try {
         const response = await fetch(
-          `http://127.0.0.1:5000/api/stock?ticker=${symbol}`
+          // `http://127.0.0.1:5000/api/stock?ticker=${symbol}`
+          `https://swing-trading-backend-fdrx.vercel.app/api/stock?ticker=${symbol}`
         );
         const data = await response.json();
 
@@ -82,7 +83,7 @@ const StockWatchlist = () => {
     // Set up interval to fetch data every 60 seconds
     const intervalId = setInterval(() => {
       updateStockData();
-    }, 60000); // 60000 ms = 60 seconds
+    }, 30000); // 60000 ms = 60 seconds
 
     // Cleanup the interval on component unmount
     return () => clearInterval(intervalId);
