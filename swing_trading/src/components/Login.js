@@ -54,10 +54,19 @@ const Login = () => {
     console.log("Password:", password);
     console.log("Remember Me:", rememberMe);
 
-    // Fetch message from the backend
-    fetch("http://localhost:8080/api/message")
-      .then((response) => response.text())
-      .then((data) => setMessage(data)) // Set message in state
+    // Send POST request with email and password to the backend
+    fetch("http://localhost:8080/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setMessage(data.message); // Set message based on the backend response
+        console.log("Response from server:", data.message);
+      })
       .catch((error) => console.error("Error fetching message:", error));
   };
 
