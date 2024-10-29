@@ -8,6 +8,7 @@ const Login = () => {
     onSuccess: (tokenResponse) => console.log(tokenResponse),
   });
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState(""); // State to store backend message
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState({}); // Track validation errors
@@ -52,6 +53,21 @@ const Login = () => {
     console.log("Email:", email);
     console.log("Password:", password);
     console.log("Remember Me:", rememberMe);
+
+    // Send POST request with email and password to the backend
+    fetch("http://localhost:8080/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setMessage(data.message); // Set message based on the backend response
+        console.log("Response from server:", data.message);
+      })
+      .catch((error) => console.error("Error fetching message:", error));
   };
 
   return (
@@ -164,6 +180,10 @@ const Login = () => {
             <Link to="/register" className="text-blue-500 hover:underline">
               Register Here
             </Link>
+            {message && (
+              <p className="mt-4 text-center text-green-500">{message}</p>
+            )}{" "}
+            {/* Display the message */}
           </p>
         </form>
       </div>
