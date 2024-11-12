@@ -11,9 +11,8 @@ Use ML algorithms and indicators to predict closing prices of a stock.
 <li>View overlay of ML predictions over historical data</i>
 </ol>
 
-
-<h1>Project Structure </h1>
 <h2> <a href="https://h58l.github.io/Swing-Trading_Frontend/"> Deployed Project Link</a></h2>
+<h1>Project Structure </h1>
     <h2>Frontend:</h2>
         <p>
             <b>
