@@ -29,7 +29,6 @@ ReactJS , node
     </b>
     <h3>Calls Yahoo Finance API for getting stock data</h3>
     <h3>Called by Frontend</h3>
-
     <ol>
         <li>Python</li>
         <li>Flask</li>
@@ -40,7 +39,6 @@ ReactJS , node
         <a href = "https://github.com/kaushikikhabri/swing-trading-backend-java">Repo Link</a>
     </b>
     <h3>Handles session management, login, watchlist and alerts</h3>
-
     <br><br>
     <h2>Database:</h2>
     <h3>PostGres SQL, Databse hosted on render</h3>
