@@ -25,7 +25,7 @@ Use ML algorithms and indicators to predict closing prices of a stock.
                 <li>Tailwind CSS</li>
             </ol>
         </p>
-        <p><h3>Temprarily hosted on github pages</h3></p>
+        <p><h3>Temporarily hosted on github pages</h3></p>
 <br><br>
     <h2>Backend - Flask:</h2>
     <b>
