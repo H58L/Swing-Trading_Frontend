@@ -1,10 +1,15 @@
 # Swing-Trading_Frontend
+Full Stack Development for swing trading prediction.
+Use ML algorithms and indicators to predict closing prices of a stock.
 
-BTech Project Project. 
-
-Frontend Repo.
-
-ReactJS , node
+<b>Features</b>
+<ol>
+<li>Fetch and View Prices of a stock as a line OR a candlestick chart</li>
+<li>View historical data of upto 10 years</li>
+<li>Login and session managment</li>
+<li>Alerts and watchlists</li>
+<li>View overlay of ML predictions over historical data</i>
+</ol>
 
 
 <h1>Project Structure </h1>
