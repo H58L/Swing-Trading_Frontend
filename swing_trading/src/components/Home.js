@@ -3,14 +3,14 @@ import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import Header from "./Header";
 import Footer from "./Footer";
 import ChartContainer from "./ChartContainer";
-import StockContext from "../context/StockContext";
+import Counter from "./Counter";
 
 const Home = () => {
-  const { stockSymbol } = useContext(StockContext);
   return (
     <div className="home-container">
       <Header></Header>
       <div className="navigation">
+        {/* <Counter /> */}
         {/* <Link to="/login" className="mr-4">
           Login
         </Link>

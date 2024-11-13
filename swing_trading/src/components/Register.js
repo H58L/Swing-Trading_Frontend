@@ -52,8 +52,19 @@ const Register = () => {
 
     setErrors({});
 
-    console.log("Email:", email);
-    console.log("Password:", password);
+    // Send the registration data to the backend
+    fetch("http://localhost:8080/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.message); // Display success message
+      })
+      .catch((error) => console.error("Error during registration:", error));
   };
 
   return (
