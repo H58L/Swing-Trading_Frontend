@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link, useNavigate } from "react-router-dom"; // Import Link from react-router-dom
 import { useGoogleLogin } from "@react-oauth/google";
 import "../style/Login.css";
 
@@ -7,6 +7,7 @@ const Login = () => {
   const login = useGoogleLogin({
     onSuccess: (tokenResponse) => console.log(tokenResponse),
   });
+  const navigate = useNavigate(); // Initialize useNavigate for redirecting
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState(""); // State to store backend message
   const [password, setPassword] = useState("");
@@ -64,10 +65,18 @@ const Login = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        setMessage(data.message); // Set message based on the backend response
-        console.log("Response from server:", data.message);
+        if (data.message === "Successfully logged in!") {
+          // Redirect to home page on successful login
+          navigate("/");
+        } else {
+          // Display the error message on failed login
+          setMessage(data.message || "Invalid credentials.");
+        }
       })
-      .catch((error) => console.error("Error fetching message:", error));
+      .catch((error) => {
+        console.error("Error fetching message:", error);
+        setMessage("An error occurred. Please try again.");
+      });
   };
 
   return (
@@ -141,7 +150,6 @@ const Login = () => {
               Forgot Password?
             </Link>
           </div>
-
           <button
             type="submit"
             className="w-full py-2 px-4 bg-black text-white rounded-lg hover:bg-gray-800 transition duration-200"
@@ -149,7 +157,10 @@ const Login = () => {
           >
             Sign in
           </button>
-
+          {message && (
+            <p className="mt-4 text-center text-green-500">{message}</p>
+          )}{" "}
+          {/* Display the message */}
           <div className="mt-6 text-center">
             <div className="flex items-center justify-center">
               <hr className="w-1/3 border-gray-300" />
@@ -174,16 +185,11 @@ const Login = () => {
               </span>
             </button>
           </div>
-
           <p className="mt-4 text-sm text-center text-gray-600">
             Don’t have an account?{" "}
             <Link to="/register" className="text-blue-500 hover:underline">
               Register Here
             </Link>
-            {message && (
-              <p className="mt-4 text-center text-green-500">{message}</p>
-            )}{" "}
-            {/* Display the message */}
           </p>
         </form>
       </div>
