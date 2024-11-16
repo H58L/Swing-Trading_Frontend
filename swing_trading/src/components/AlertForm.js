@@ -164,6 +164,8 @@ const AlertForm = () => {
     const [latestPrice, setLatestPrice] = useState(null);
 
     // Example support and resistance data
+    const pivotPoint = 225.40;
+
     const supportResistanceData = [
         { resistance: 228.05, support: 222.75 },
         { resistance: 230.70, support: 220.10 },
@@ -307,7 +309,7 @@ const AlertForm = () => {
                     </form>
 
                     {/* Support and Resistance Table */}
-                    <SupportResistanceTable data={supportResistanceData} darkMode={darkMode} />
+                    <SupportResistanceTable data={supportResistanceData} darkMode={darkMode} pivotPoint={pivotPoint} />
                 </div>
             </div>
         </>
