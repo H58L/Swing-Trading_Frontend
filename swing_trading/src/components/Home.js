@@ -10,7 +10,7 @@ const Home = () => {
     <div className="home-container">
       <Header></Header>
       <div className="navigation">
-        <Counter />
+        {/* <Counter /> */}
         {/* <Link to="/login" className="mr-4">
           Login
         </Link>
