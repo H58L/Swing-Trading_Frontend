@@ -382,7 +382,7 @@ const AlertForm = () => {
 
             // Fetch support and resistance data
             const srResponse = await fetch(
-                `http://localhost:5000/api/support?ticker=${symbol}`
+                `https://swing-trading-backend-fdrx.vercel.app/api/support?ticker=${symbol}`
             );
             const srData = await srResponse.json();
 
