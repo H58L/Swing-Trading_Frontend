@@ -19,6 +19,8 @@ const ChartDisplay = ({ chartTitle, chartType }) => {
   const stockData = useSelector((state) => state.stockData);
 
   useEffect(() => {
+
+
     const fetchData = async () => {
       //The fetchStockData action creator is dispatched with the current stockSymbol and period, triggering the API call to fetch the stock data.
       try {
@@ -58,6 +60,14 @@ const ChartDisplay = ({ chartTitle, chartType }) => {
       xaxis: "x",
       yaxis: "y",
     },
+    {
+      x: stockData?.dates, // Match the prediction range
+      y: stockData?.predictions,
+      type: "scatter",
+      mode: "lines",
+      line: { color: "#FF5733", width: 2 }, // Customize the line appearance
+      name: "LSTM Predictions",
+    },
   ];
 
   const lineChartData = [
@@ -69,6 +79,14 @@ const ChartDisplay = ({ chartTitle, chartType }) => {
       line: { color: "#4F46E5" },
       marker: { color: "#4F46E5", size: 6 },
       name: "Closing Prices",
+    },
+    {
+      x: stockData?.dates, // Match the prediction range
+      y: stockData?.predictions,
+      type: "scatter",
+      mode: "lines",
+      line: { color: "#FF5733", width: 2 }, // Customize the line appearance
+      name: "LSTM Predictions",
     },
   ];
 

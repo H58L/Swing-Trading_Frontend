@@ -343,6 +343,14 @@ const StockChart = () => {
       xaxis: "x",
       yaxis: "y",
     },
+    {
+      x: stockData?.dates, // Match the prediction range
+      y: stockData?.predictions,
+      type: "scatter",
+      mode: "lines",
+      line: { color: "#FF5733", width: 2 }, // Customize the line appearance
+      name: "LSTM Predictions",
+    },
   ];
 
   const lineChartData = [
