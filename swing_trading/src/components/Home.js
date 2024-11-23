@@ -8,7 +8,7 @@ import Counter from "./Counter";
 const Home = () => {
   return (
     <div className="home-container">
-      <Header></Header>
+      
       <div className="navigation">
         {/* <Counter /> */}
         {/* <Link to="/login" className="mr-4">
@@ -17,7 +17,7 @@ const Home = () => {
         <Link to="/register" className="mr-4">
           Register
         </Link> */}
-
+          <Header></Header>
         {/* Image with full width from the public folder */}
         <img
           src={`${process.env.PUBLIC_URL}/Landing_Page_bg.jpg`}
