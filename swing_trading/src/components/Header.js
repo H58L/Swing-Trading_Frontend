@@ -15,6 +15,10 @@ import ThemeContext from "../context/ThemeContext";
 import ThemeIcon from "./ThemeIcon";
 import { useLoginContext } from "../context/LoginContext";
 import { useEmailContext } from "../context/EmailContext";
+import { useEffect } from "react";
+//import { useState } from "react";
+
+
 
 const Header = ({ name, onLogin, onLogout }) => {
   const [showAlerts, setShowAlerts] = useState(false);
@@ -44,13 +48,26 @@ const Header = ({ name, onLogin, onLogout }) => {
     navigate("/login");
   };
 
+  const [loggedOut, setLoggedOut] = useState(false);
+
   const handleLogout = () => {
-    // setIsLoggedIn(false);
-    // setUserEmail("");
+    setIsLoggedIn(false);
+    setUserEmail("");
+    setLoggedOut(true);
     // console.log(isLoggedin);
     // console.log(userEmail);
-    navigate("/");
+    // navigate("/");
+  
   };
+
+  useEffect(() => {  //monitors chanege in userEmail or isLoggedin, used for logout
+    if (loggedOut && !isLoggedin) {
+      console.log(isLoggedin);
+      console.log(userEmail);
+      console.log(loggedOut);
+      navigate("/");
+    }
+  }, [isLoggedin, navigate,userEmail,loggedOut]);
 
   const handleDashboard = () => {
     navigate("/dashboard");
