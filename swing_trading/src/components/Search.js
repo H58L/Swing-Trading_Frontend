@@ -38,11 +38,11 @@ const Search = () => {
       });
     
 
-      setBestMatches(response.data);
+      //setBestMatches(response.data);
       setError("");
     } catch (err) {
       setError("Stock not found. Please try again.");
-      setBestMatches([]);
+      //setBestMatches([]);
     }
   };
 

@@ -1,7 +1,7 @@
-// XXXXXXXXXXXXXXXXXXXXXXXXORIGINAL CODE///////////
 
+// XXXXX CODE WITH for dispaying users email Id XXXXXXXXXXXXXXXXXXXX
 import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
+import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -13,13 +13,17 @@ import Search from "./Search";
 import Alerts from "./Alerts";
 import ThemeContext from "../context/ThemeContext";
 import ThemeIcon from "./ThemeIcon";
+import { useLoginContext } from "../context/LoginContext";
+import { useEmailContext } from "../context/EmailContext";
 
-const Header = ({ name, isLoggedIn, onLogin, onLogout }) => {
+const Header = ({ name, onLogin, onLogout }) => {
   const [showAlerts, setShowAlerts] = useState(false);
-  const navigate = useNavigate(); // Use navigate for programmatic navigation
+  const navigate = useNavigate();
 
-  //FOr Dark Mode and Light Mode
   const { darkMode, setDarkMode } = useContext(ThemeContext);
+  const { isLoggedin, setIsLoggedIn } = useLoginContext();
+  const {userEmail, setUserEmail} = useEmailContext();
+
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -36,9 +40,16 @@ const Header = ({ name, isLoggedIn, onLogin, onLogout }) => {
     setShowAlerts(!showAlerts);
   };
 
-  // Function for login that redirects to /login
   const handleLogin = () => {
     navigate("/login");
+  };
+
+  const handleLogout = () => {
+    // setIsLoggedIn(false);
+    // setUserEmail("");
+    // console.log(isLoggedin);
+    // console.log(userEmail);
+    navigate("/");
   };
 
   const handleDashboard = () => {
@@ -58,26 +69,27 @@ const Header = ({ name, isLoggedIn, onLogin, onLogout }) => {
   };
 
   return (
-    <div className="">
+    <div>
       <Navbar expand="lg" className="navbar-custom">
         <Container className="nav-container">
           <Navbar.Brand onClick={handleHome} className="brand-link">
             ChartView
           </Navbar.Brand>
 
-          <div className="d-none d-lg-flex ">
+          <div className="d-none d-lg-flex">
             <div className="xl:px-8">
               <h1 className="text-5xl">{name}</h1>
               <Search />
             </div>
           </div>
 
-          <FaBell
-            className="h-8 w-8 text-gray-700 mx-0 cursor-pointer"
-            onClick={handleBellClick}
-          />
-
           <div className="d-flex align-items-center">
+            {/* Display user email when logged in */}
+            {isLoggedin && (
+              <span className="user-email text-sm text-white-700 me-3">
+                Logged in as: {userEmail}
+              </span>
+            )}
             <NavDropdown
               title={
                 <div className="flex items-center">
@@ -89,10 +101,10 @@ const Header = ({ name, isLoggedIn, onLogin, onLogout }) => {
               align="end"
               className="dropdown-no-arrow"
             >
-              {isLoggedIn ? (
-                <NavDropdown.Item onClick={onLogout}>Logout</NavDropdown.Item>
+              {isLoggedin ? (
+                <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
               ) : (
-                <NavDropdown.Item onClick={handleLogin}>Login</NavDropdown.Item> // Use handleLogin for redirect
+                <NavDropdown.Item onClick={handleLogin}>Login</NavDropdown.Item>
               )}
 
               {darkMode ? (
