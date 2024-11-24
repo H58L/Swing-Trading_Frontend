@@ -1,53 +1,40 @@
-# charts.py
+#charts.py
 import yfinance as yf
 import plotly.graph_objects as go
 import json
 import pandas as pd
 
-def create_candlestick_chart(stock_symbol="AAPL"):
-    # Fetch data for the past 1 year
-    stock_data = yf.download(stock_symbol, period="5y", interval="1d")
-
-    # print(stock_data)
+def create_candlestick_chart(stock_symbol="AAPL", period="5y"):
+    # Fetch data for the past 5 years
+    stock_data = yf.download(stock_symbol, period=period, interval="1d")
+    
+    # Debugging: Print the fetched data
+    print(stock_data)
     
     # Ensure we have data
     if stock_data.empty:
-        return {"error": "No data found for this symbol"}
+        return {"error": f"No data found for the symbol '{stock_symbol}'."}
     
-    
-     # Flatten the index to convert it to a string (for JSON compatibility)
-     
-     # Reset index and ensure 'Date' is a column
-    if 'Date' not in stock_data.columns:
-        stock_data.reset_index(inplace=True)
+    # Reset index to make 'Date' a column
+    stock_data.reset_index(inplace=True)
 
     # Debugging: Check column names and first few rows
-    # print(stock_data.columns)
-    # print(stock_data.head())
+    print(stock_data.columns)
+    print(stock_data.head())
 
-        # Flatten multi-index columns if present
-    if isinstance(stock_data.columns, pd.MultiIndex):
-        stock_data.columns = ['_'.join(col).strip() if isinstance(col, tuple) else col for col in stock_data.columns]
-
-    # print(stock_data.columns)  # Debugging step
+    # Extract the necessary columns dynamically, checking if symbol is in the column names
+    date_col = 'Date'
+    open_col = [col for col in stock_data.columns if 'Open' in col][0]  # Find column containing 'Open'
+    high_col = [col for col in stock_data.columns if 'High' in col][0]  # Find column containing 'High'
+    low_col = [col for col in stock_data.columns if 'Low' in col][0]  # Find column containing 'Low'
+    close_col = [col for col in stock_data.columns if 'Close' in col][0]  # Find column containing 'Close'
     
-    # Handle missing values
-    stock_data.dropna(subset=['Open', 'High', 'Low', 'Close'], inplace=True)
-
-    # Flattening all values
-    # flattened_data = {
-    #     key: [item[0] for item in stock_data['stock_data'][0][key]]
-    #     for key in ['close', 'high', 'low', 'open']
-    # }
-
-    # print(flattened_data)
-
-  # Extract individual columns
-    dates = stock_data['Date'].astype(str)
-    open_prices = stock_data.get('Open')
-    high_prices = stock_data.get('High')
-    low_prices = stock_data.get('Low')
-    close_prices = stock_data.get('Close')
+    # Extract individual columns based on dynamic names
+    dates = stock_data[date_col].astype(str)  # Convert dates to strings for JSON compatibility
+    open_prices = stock_data[open_col]
+    high_prices = stock_data[high_col]
+    low_prices = stock_data[low_col]
+    close_prices = stock_data[close_col]
 
     # Create a candlestick chart
     fig = go.Figure(
@@ -64,12 +51,12 @@ def create_candlestick_chart(stock_symbol="AAPL"):
 
     # Add title and layout configurations
     fig.update_layout(
-        title=f"{stock_symbol} Candlestick Chart (5 Year)",
+        title=f"{stock_symbol.upper()} Candlestick Chart ({period})",
         xaxis_title="Date",
         yaxis_title="Price (USD)",
-        xaxis_rangeslider_visible=False,
+        xaxis_rangeslider_visible=True,
         template="plotly_dark"
     )
 
-    # Convert figure to JSON
+    # Convert the figure to JSON for API response
     return json.loads(fig.to_json())
