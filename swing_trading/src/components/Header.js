@@ -1,4 +1,3 @@
-
 // XXXXX CODE WITH for dispaying users email Id XXXXXXXXXXXXXXXXXXXX
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -18,16 +17,13 @@ import { useEmailContext } from "../context/EmailContext";
 import { useEffect } from "react";
 //import { useState } from "react";
 
-
-
 const Header = ({ name, onLogin, onLogout }) => {
   const [showAlerts, setShowAlerts] = useState(false);
   const navigate = useNavigate();
 
   const { darkMode, setDarkMode } = useContext(ThemeContext);
   const { isLoggedin, setIsLoggedIn } = useLoginContext();
-  const {userEmail, setUserEmail} = useEmailContext();
-
+  const { userEmail, setUserEmail } = useEmailContext();
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -57,17 +53,17 @@ const Header = ({ name, onLogin, onLogout }) => {
     // console.log(isLoggedin);
     // console.log(userEmail);
     // navigate("/");
-  
   };
 
-  useEffect(() => {  //monitors chanege in userEmail or isLoggedin, used for logout
+  useEffect(() => {
+    //monitors chanege in userEmail or isLoggedin, used for logout
     if (loggedOut && !isLoggedin) {
       console.log(isLoggedin);
       console.log(userEmail);
       console.log(loggedOut);
       navigate("/");
     }
-  }, [isLoggedin, navigate,userEmail,loggedOut]);
+  }, [isLoggedin, navigate, userEmail, loggedOut]);
 
   const handleDashboard = () => {
     navigate("/dashboard");
@@ -75,6 +71,10 @@ const Header = ({ name, onLogin, onLogout }) => {
 
   const handleHome = () => {
     navigate("/");
+  };
+
+  const handlePredicition = () => {
+    navigate("/prediction");
   };
 
   const handleData = () => {
@@ -119,7 +119,9 @@ const Header = ({ name, onLogin, onLogout }) => {
               className="dropdown-no-arrow"
             >
               {isLoggedin ? (
-                <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+                <NavDropdown.Item onClick={handleLogout}>
+                  Logout
+                </NavDropdown.Item>
               ) : (
                 <NavDropdown.Item onClick={handleLogin}>Login</NavDropdown.Item>
               )}
@@ -138,7 +140,7 @@ const Header = ({ name, onLogin, onLogout }) => {
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
             <Nav className="hamburger">
-              <Nav.Link onClick={handleHome}>Home</Nav.Link>
+              <Nav.Link onClick={handlePredicition}>Prediction</Nav.Link>
               <Nav.Link onClick={handleData}>Data</Nav.Link>
               <Nav.Link onClick={handleDashboard}>Dashboard</Nav.Link>
               <Nav.Link onClick={handleChart}>Chart</Nav.Link>
