@@ -21,7 +21,7 @@ const Header = ({ name, onLogin, onLogout }) => {
   const navigate = useNavigate();
 
   const { darkMode, setDarkMode } = useContext(ThemeContext);
-  const { isLoggedin } = useLoginContext();
+  const { isLoggedin, setIsLoggedIn } = useLoginContext();
   const {userEmail, setUserEmail} = useEmailContext();
 
 
@@ -42,6 +42,14 @@ const Header = ({ name, onLogin, onLogout }) => {
 
   const handleLogin = () => {
     navigate("/login");
+  };
+
+  const handleLogout = () => {
+    // setIsLoggedIn(false);
+    // setUserEmail("");
+    // console.log(isLoggedin);
+    // console.log(userEmail);
+    navigate("/");
   };
 
   const handleDashboard = () => {
@@ -94,7 +102,7 @@ const Header = ({ name, onLogin, onLogout }) => {
               className="dropdown-no-arrow"
             >
               {isLoggedin ? (
-                <NavDropdown.Item onClick={onLogout}>Logout</NavDropdown.Item>
+                <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
               ) : (
                 <NavDropdown.Item onClick={handleLogin}>Login</NavDropdown.Item>
               )}

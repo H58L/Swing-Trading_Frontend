@@ -29,7 +29,7 @@ const Login = () => {
     if (isLoggedin) {
       console.log(isLoggedin);
       console.log(userEmail);
-      //navigate("/");
+      navigate("/");
     }
   }, [isLoggedin, navigate,userEmail]);
 
