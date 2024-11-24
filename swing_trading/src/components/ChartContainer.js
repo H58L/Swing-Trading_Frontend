@@ -102,10 +102,65 @@ const ChartContainer = () => {
       >
         {/* Removed absolute positioning from ThemeIcon and added relative to container */}
 
-        {/* Header row */}
+        {/* Header row
         <div className="col-span-1 md:col-span-2 xl:col-span-3 row-span-1 flex justify-start items-center">
           <Header_Stock />
         </div>
+
+        <div className="flex justify-end items-center space-x-2 mt-4">
+  {["1d", "1mo", "6mo", "1y", "5y", "10y", "all"].map((periodLabel) => (
+    <button
+      key={periodLabel}
+      className={`px-4 py-2 rounded ${
+        darkMode
+          ? "bg-gray-800 text-gray-300"
+          : "bg-gray-200 text-gray-900"
+      } hover:bg-blue-500 hover:text-white transition-all duration-200`}
+      onClick={() => handlePeriodChange(periodLabel)}
+    >
+      {periodLabel.toUpperCase()}
+      {returns[periodLabel] ? (
+        <span className="ml-2 text-sm">
+          {returns[periodLabel] >= 0 ? "+" : ""}
+          {returns[periodLabel]}%
+        </span>
+      ) : null}
+    </button>
+  ))}
+</div> */}
+
+{/* Header row */}
+<div className="col-span-1 md:col-span-2 xl:col-span-3 row-span-1 flex justify-between items-center">
+  {/* Header on the left */}
+  <div>
+    <Header_Stock />
+  </div>
+  
+  {/* Buttons on the right */}
+  <div className="flex space-x-2">
+    {["1d", "1mo", "6mo", "1y", "5y", "10y", "all"].map((periodLabel) => (
+      <button
+        key={periodLabel}
+        className={`px-4 py-2 rounded ${
+          darkMode
+            ? "bg-gray-800 text-gray-300"
+            : "bg-gray-200 text-gray-900"
+        } hover:bg-blue-500 hover:text-white transition-all duration-200`}
+        onClick={() => handlePeriodChange(periodLabel)}
+      >
+        {periodLabel.toUpperCase()}
+        {returns[periodLabel] ? (
+          <span className="ml-2 text-sm">
+            {returns[periodLabel] >= 0 ? "+" : ""}
+            {returns[periodLabel]}%
+          </span>
+        ) : null}
+      </button>
+    ))}
+  </div>
+</div>
+
+
 
         {/* Chart box */}
         <div className="md:col-span-2 row-span-4">
@@ -137,7 +192,7 @@ const ChartContainer = () => {
         </div>
       </div>
       {/* Time Period Buttons */}
-      <div className="col-span-3 bottom- row-span-1 flex justify-around mt-4">
+      {/* <div className="col-span-3 bottom- row-span-1 flex justify-around mt-4">
         {["1d", "1mo", "6mo", "1y", "5y", "10y", "all"].map((periodLabel) => (
           <button
             key={periodLabel}
@@ -157,7 +212,7 @@ const ChartContainer = () => {
             ) : null}
           </button>
         ))}
-      </div>
+      </div> */}
     </>
   );
 };
