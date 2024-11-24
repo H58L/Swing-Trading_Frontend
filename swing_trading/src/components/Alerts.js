@@ -11,15 +11,15 @@ const Alerts = () => {
   const navigate = useNavigate();
 
   const handleSetAlert = () => {
-    // if (!isLoggedin) {
-    //   const confirmLogin = window.confirm(
-    //     "You must log in to set an alert. Would you like to go to the login page?"
-    //   );
-    //   if (confirmLogin) {
-    //     navigate("/login");
-    //   }
-    //   return;
-    // }
+    if (!isLoggedin) {
+      const confirmLogin = window.confirm(
+        "You must log in to set an alert. Would you like to go to the login page?"
+      );
+      if (confirmLogin) {
+        navigate("/login");
+      }
+      return;
+    }
     navigate("/alertform");
   };
 
