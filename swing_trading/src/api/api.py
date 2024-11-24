@@ -3,7 +3,9 @@ from flask import Flask, jsonify, request
 import yfinance as yf
 from flask_cors import CORS
 from charts import create_candlestick_chart
-from predictions import get_lstm_predictions
+# from predictions import get_lstm_predictions
+from predictions import get_ohlc_predictions  # Import the modified LSTM prediction function
+
 
 app = Flask(__name__)
 CORS(app)
@@ -47,29 +49,44 @@ def candlestick_chart():
 @app.route('/combined-chart', methods=['GET'])
 def combined_chart():
     stock_symbol = request.args.get('symbol', 'AAPL')
+    forecast_days = int(request.args.get('forecast_days', 15))  # Default to 15 days forecast
     
     # Generate candlestick data
     candlestick_data = create_candlestick_chart(stock_symbol)
     if "error" in candlestick_data:
         return jsonify(candlestick_data)
     
-    # Get LSTM predictions
-    lstm_data = get_lstm_predictions(stock_symbol)
+    # Get OHLC predictions (including next 15 days)
+    lstm_data = get_ohlc_predictions(stock_symbol, forecast_days=forecast_days)
     if "error" in lstm_data:
         return jsonify(lstm_data)
     
     # Combine both datasets into one
     combined_data = candlestick_data
+    
+    # Combine the historical predictions and forecast predictions
     combined_data["data"].append({
         "x": lstm_data["dates"],
-        "y": lstm_data["predictions"],
+        "y": lstm_data["predicted"],
         "type": "scatter",
         "mode": "lines",
         "name": "LSTM Predictions",
         "line": {"color": "blue", "width": 2}
     })
+
+    combined_data["data"].append({
+    "x": lstm_data["forecasted_dates"],
+    "y": lstm_data["forecasted_predictions"],
+    "type": "scatter",
+    "mode": "lines",
+    "name": "Forecasted Predictions",
+    "line": {"color": "green", "width": 2, "dash": "dash"}
+    })
+    
     return jsonify(combined_data)
 
         
 if __name__ == '__main__':
     app.run(debug=True)
+
+
