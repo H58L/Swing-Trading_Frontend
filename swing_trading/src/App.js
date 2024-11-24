@@ -15,30 +15,42 @@ import StockContext from "./context/StockContext";
 import StockData from "./components/StockData";
 import { StockProvider } from "./context/StockContext";
 import AlertForm from "./components/AlertForm";
+import {LoginProvider, useLoginContext} from "./context/LoginContext"
+import Header from "./components/Header";
+import {EmailProvider} from "./context/EmailContext"
+
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [stockSymbol, setStockSymbol] = useState(""); //state for theme,initliazed to false
+  //const {isLoggedin, setIsLoggedIn} = useLoginContext();
+  //const [email, setEmail] = useState("");
 
   return (
     // Theme COntext for swtiching between dark and light modes
     <ThemeContext.Provider value={{ darkMode, setDarkMode }}>
       <StockProvider value={{ stockSymbol, setStockSymbol }}>
+      <LoginProvider>
+      <EmailProvider>
         <Router>
-          <div className="App">
-            {" "}
-            {/* Wrap everything in the App class */}
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/chart" element={<ChartContainer />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/data" element={<StockData />} />
-              <Route path = "/alertform" element = {<AlertForm/>} />
-            </Routes>
-          </div>
-        </Router>
+                    <div className="App">
+                      {" "}
+                      {/* Wrap everything in the App class */}
+                      <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/chart" element={<ChartContainer />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/data" element={<StockData />} />
+                        <Route path = "/alertform" element = {<AlertForm/>} />
+                      </Routes>
+                    </div>
+                  </Router>
+      </EmailProvider>
+          
+      </LoginProvider>
+        
       </StockProvider>
     </ThemeContext.Provider>
   );

@@ -1,5 +1,5 @@
-// XXXXXXXXXXXXXXXXXXXXXXXXORIGINAL CODE///////////
 
+// XXXXX CODE WITH for dispaying users email Id XXXXXXXXXXXXXXXXXXXX
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
@@ -13,12 +13,17 @@ import Search from "./Search";
 import Alerts from "./Alerts";
 import ThemeContext from "../context/ThemeContext";
 import ThemeIcon from "./ThemeIcon";
+import { useLoginContext } from "../context/LoginContext";
+import { useEmailContext } from "../context/EmailContext";
 
-const Header = ({ name, isLoggedIn, userEmail, onLogin, onLogout }) => {
+const Header = ({ name, onLogin, onLogout }) => {
   const [showAlerts, setShowAlerts] = useState(false);
   const navigate = useNavigate();
 
   const { darkMode, setDarkMode } = useContext(ThemeContext);
+  const { isLoggedin } = useLoginContext();
+  const {userEmail, setUserEmail} = useEmailContext();
+
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -71,9 +76,10 @@ const Header = ({ name, isLoggedIn, userEmail, onLogin, onLogout }) => {
           </div>
 
           <div className="d-flex align-items-center">
-            {isLoggedIn && (
-              <span className="user-email text-sm text-gray-700 me-3">
-                {userEmail}
+            {/* Display user email when logged in */}
+            {isLoggedin && (
+              <span className="user-email text-sm text-white-700 me-3">
+                Logged in as: {userEmail}
               </span>
             )}
             <NavDropdown
@@ -87,7 +93,7 @@ const Header = ({ name, isLoggedIn, userEmail, onLogin, onLogout }) => {
               align="end"
               className="dropdown-no-arrow"
             >
-              {isLoggedIn ? (
+              {isLoggedin ? (
                 <NavDropdown.Item onClick={onLogout}>Logout</NavDropdown.Item>
               ) : (
                 <NavDropdown.Item onClick={handleLogin}>Login</NavDropdown.Item>

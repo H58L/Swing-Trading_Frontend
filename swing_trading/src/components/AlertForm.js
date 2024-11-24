@@ -367,7 +367,7 @@ const AlertForm = () => {
         try {
             // Fetch the latest stock price
             const priceResponse = await fetch(
-                `https://swing-trading-backend-fdrx.vercel.app/api/stock?ticker=${symbol}`
+                `https://swing-trading-backend-fdrx.vercel.app/api/stock?ticker=${symbol}`,
             );
             const priceData = await priceResponse.json();
 
