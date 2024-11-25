@@ -1,0 +1,9 @@
+#pip install -r requirements.txt
+
+Flask
+matplotlib
+flask_cors
+yfinance
+plotly
+tensorflow
+scikit-learn

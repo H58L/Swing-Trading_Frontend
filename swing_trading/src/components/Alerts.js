@@ -1,43 +1,49 @@
-import React from "react";
-import { useContext } from "react";
+import React, { createContext, useState, useContext } from "react";
 import ThemeContext from "../context/ThemeContext";
+import { useNavigate } from "react-router-dom";
+import { useLoginContext } from "../context/LoginContext";
+import { useAlertsContext } from "../context/AlertsContext";
 
 const Alerts = () => {
-  const alerts = [
-    {
-      title: "Market Open",
-      description: "The stock market has opened for trading.",
-      timestamp: "2024-10-08T09:30:00",
-    },
-
-    {
-      title: "New Price Target",
-      description: "Analysts have raised the price target for XYZ stock.",
-      timestamp: "2024-10-08T12:00:00",
-    },
-    {
-      title: "Earnings Report",
-      description:
-        "Company ABC will release its quarterly earnings report tomorrow.",
-      timestamp: "2024-10-07T16:00:00",
-    },
-    {
-      title: "Dividend Announcement",
-      description:
-        "Company DEF declared a quarterly dividend of $0.50 per share.",
-      timestamp: "2024-10-06T14:00:00",
-    },
-    {
-      title: "Stock Split",
-      description: "Company GHI announces a 2-for-1 stock split.",
-      timestamp: "2024-10-05T10:00:00",
-    },
-  ];
-
   const { darkMode, setDarkMode } = useContext(ThemeContext);
+  const { isLoggedin } = useLoginContext(); // Use login context to check authentication status
+  const { alerts } = useAlertsContext();
+  const navigate = useNavigate();
+
+  const handleSetAlert = () => {
+    if (!isLoggedin) {
+      const confirmLogin = window.confirm(
+        "You must log in to set an alert. Would you like to go to the login page?"
+      );
+      if (confirmLogin) {
+        navigate("/login");
+      }
+      return;
+    }
+    navigate("/alertform");
+  };
 
   return (
     <div className="p-0 h-full">
+      <div className="flex items-center justify-between mb-4">
+        <div
+          className={`text-lg font-bold ${
+            darkMode ? "text-gray-200" : "text-gray-800"
+          }`}
+        >
+          Your Alerts
+        </div>
+        <button
+          className={`px-3 py-1 text-sm font-semibold rounded ${
+            darkMode
+              ? "bg-indigo-700 text-gray-200 hover:bg-purple-700"
+              : "bg-gray-900 text-white hover:bg-blue-600"
+          }`}
+          onClick={handleSetAlert}
+        >
+          Set Alerts
+        </button>
+      </div>
       <ul className="h-full  border-gray-300">
         {alerts.map((alert, index) => (
           <li
@@ -63,58 +69,3 @@ const Alerts = () => {
 };
 
 export default Alerts;
-
-// import React from "react";
-// import { useContext } from "react";
-// import ThemeContext from "../context/ThemeContex";
-
-// const Alerts = () => {
-//   const alerts = [
-//     {
-//       title: "Market Open",
-//       description: "The stock market has opened for trading.",
-//       timestamp: "2024-10-08T09:30:00",
-//     },
-//     {
-//       title: "New Price Target",
-//       description: "Analysts have raised the price target for XYZ stock.",
-//       timestamp: "2024-10-08T12:00:00",
-//     },
-//     {
-//       title: "Earnings Report",
-//       description:
-//         "Company ABC will release its quarterly earnings report tomorrow.",
-//       timestamp: "2024-10-07T16:00:00",
-//     },
-//     {
-//       title: "Dividend Announcement",
-//       description:
-//         "Company DEF declared a quarterly dividend of $0.50 per share.",
-//       timestamp: "2024-10-06T14:00:00",
-//     },
-//     {
-//       title: "Stock Split",
-//       description: "Company GHI announces a 2-for-1 stock split.",
-//       timestamp: "2024-10-05T10:00:00",
-//     },
-//   ];
-
-//   const { darkMode } = useContext(ThemeContext);
-
-//   return (
-//     <div className={`alerts-container ${darkMode ? "dark-mode" : "light-mode"}`}>
-//       <h2>Alerts</h2>
-//       <ul className="alerts-list">
-//         {alerts.map((alert, index) => (
-//           <li key={index} className={`alert-item ${darkMode ? "dark" : "light"}`}>
-//             <h3>{alert.title}</h3>
-//             <p>{alert.description}</p>
-//             <span>{new Date(alert.timestamp).toLocaleString()}</span>
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// };
-
-// export default Alerts;
