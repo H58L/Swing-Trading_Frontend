@@ -1,25 +1,25 @@
-import React from "react";
-import { useContext } from "react";
+import React, { createContext, useState, useContext } from "react";
 import ThemeContext from "../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { useLoginContext } from "../context/LoginContext";
-import alerts_list from "./alerts_list";
+import { useAlertsContext } from "../context/AlertsContext";
 
 const Alerts = () => {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
   const { isLoggedin } = useLoginContext(); // Use login context to check authentication status
+  const { alerts } = useAlertsContext();
   const navigate = useNavigate();
 
   const handleSetAlert = () => {
-    if (!isLoggedin) {
-      const confirmLogin = window.confirm(
-        "You must log in to set an alert. Would you like to go to the login page?"
-      );
-      if (confirmLogin) {
-        navigate("/login");
-      }
-      return;
-    }
+    // if (!isLoggedin) {
+    //   const confirmLogin = window.confirm(
+    //     "You must log in to set an alert. Would you like to go to the login page?"
+    //   );
+    //   if (confirmLogin) {
+    //     navigate("/login");
+    //   }
+    //   return;
+    // }
     navigate("/alertform");
   };
 
@@ -45,7 +45,7 @@ const Alerts = () => {
         </button>
       </div>
       <ul className="h-full  border-gray-300">
-        {alerts_list.map((alert, index) => (
+        {alerts.map((alert, index) => (
           <li
             key={index}
             className={`alert-item mb-3  rounded p-4 shadow-sm border border-gray-100 w-full ${
