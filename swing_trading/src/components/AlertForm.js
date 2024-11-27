@@ -32,14 +32,42 @@ const AlertForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newAlert = {
+      userId: 1, // Replace with actual user ID if available
+      uuid: crypto.randomUUID(), // Generate a unique identifier
+      ticker: formData.ticker,
+      currentPrice: parseFloat(formData.currentPrice),
+      operator: formData.operator,
+      alertPrice: parseFloat(formData.alertPrice),
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      const response = await fetch("http://localhost:8080/api/alerts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newAlert),
+      });
+
+      if (response.ok) {
+        console.log("Alert created successfully");
+      } else {
+        console.error("Failed to create alert:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error creating alert:", error);
+    }
+
+    addAlert({
       title: `Alert for ${formData.ticker}`,
       description: `Trigger when ${formData.ticker} is ${formData.operator} ${formData.alertPrice}`,
       timestamp: new Date().toISOString(),
-    };
-    addAlert(newAlert); // Add new alert to the context
+    });
+
     setFormData({
       ticker: "",
       currentPrice: "",

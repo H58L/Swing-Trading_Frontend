@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 import ThemeContext from "../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { useLoginContext } from "../context/LoginContext";
@@ -9,6 +9,9 @@ const Alerts = () => {
   const { isLoggedin } = useLoginContext(); // Use login context to check authentication status
   const { alerts } = useAlertsContext();
   const navigate = useNavigate();
+
+  const [alertData, setAlertData] = useState([]);
+  const [stockPrices, setStockPrices] = useState({});
 
   const handleSetAlert = () => {
     if (!isLoggedin) {
