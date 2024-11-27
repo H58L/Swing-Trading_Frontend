@@ -5,7 +5,7 @@ import { FaPlus } from "react-icons/fa"; // Icon
 
 const StockWatchlist = () => {
   const { darkMode } = useContext(ThemeContext);
-  const [stocks, setStocks] = useState([
+  const [stocks, setStocks] = useState([  //fetch this data from the databse
     {
       symbol: "RELIANCE.NS",
       companyName: "Reliance Industries",
@@ -91,6 +91,7 @@ const StockWatchlist = () => {
 
   const handleAddToWatchlist = (stock) => {
     console.log("Adding to watchlist:", stock);
+    console.log("Hello Lisa");
   };
 
   return (

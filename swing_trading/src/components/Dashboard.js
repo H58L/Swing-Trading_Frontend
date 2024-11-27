@@ -6,6 +6,7 @@ import Chart from "./Chart";
 import ThemeContext from "../context/ThemeContext";
 import { useContext } from "react";
 import ChartDisplay from "./ChartDisplay";
+import StockWatchlistSearch from "./StockWatchlistSearch"
 
 const Dashboard = () => {
   const { darkMode } = useContext(ThemeContext);
@@ -33,6 +34,7 @@ const Dashboard = () => {
             darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-200"
           }`}
         >
+        <StockWatchlistSearch></StockWatchlistSearch>
           <StockWatchlist />
         </div>
       </div>
