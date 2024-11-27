@@ -3,8 +3,9 @@ from flask import Flask, jsonify, request
 import yfinance as yf
 from flask_cors import CORS
 from charts import create_candlestick_chart
-# from predictions import get_lstm_predictions
-from predictions import get_ohlc_predictions  # Import the modified LSTM prediction function
+from LSTM import get_lstm_predictions  # Import the modified LSTM prediction function
+from RNN import get_ohlc_predictions
+
 
 
 app = Flask(__name__)
@@ -46,8 +47,47 @@ def candlestick_chart():
     candlestick_data = create_candlestick_chart(stock_symbol)
     return jsonify(candlestick_data)
 
-@app.route('/combined-chart', methods=['GET'])
-def combined_chart():
+@app.route('/lstm', methods=['GET'])
+def combined_chart_lstm():
+    stock_symbol = request.args.get('symbol', 'AAPL')
+    forecast_days = int(request.args.get('forecast_days', 15))  # Default to 15 days forecast
+    
+    # Generate candlestick data
+    candlestick_data = create_candlestick_chart(stock_symbol)
+    if "error" in candlestick_data:
+        return jsonify(candlestick_data)
+    
+    # Get OHLC predictions (including next 15 days)
+    lstm_data = get_lstm_predictions(stock_symbol, forecast_days=forecast_days)
+    if "error" in lstm_data:
+        return jsonify(lstm_data)
+    
+    # Combine both datasets into one
+    combined_data = candlestick_data
+    
+    # Combine the historical predictions and forecast predictions
+    combined_data["data"].append({
+        "x": lstm_data["dates"],
+        "y": lstm_data["predictions"],
+        "type": "scatter",
+        "mode": "lines",
+        "name": "LSTM Predictions",
+        "line": {"color": "blue", "width": 2}
+    })
+
+    combined_data["data"].append({
+    "x": lstm_data["forecasted_dates"],
+    "y": lstm_data["forecasted_predictions"],
+    "type": "scatter",
+    "mode": "lines",
+    "name": "Forecasted Predictions",
+    "line": {"color": "green", "width": 2, "dash": "dash"}
+    })
+    
+    return jsonify(combined_data)
+
+@app.route('/rnn', methods=['GET'])
+def combined_chart_rnn():
     stock_symbol = request.args.get('symbol', 'AAPL')
     forecast_days = int(request.args.get('forecast_days', 15))  # Default to 15 days forecast
     
@@ -70,7 +110,7 @@ def combined_chart():
         "y": lstm_data["predicted"],
         "type": "scatter",
         "mode": "lines",
-        "name": "LSTM Predictions",
+        "name": "RNN Predictions",
         "line": {"color": "blue", "width": 2}
     })
 
@@ -88,5 +128,4 @@ def combined_chart():
         
 if __name__ == '__main__':
     app.run(debug=True)
-
 

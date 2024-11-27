@@ -2,9 +2,11 @@ import React, { useState, useContext } from "react";
 import Header from "./Header";
 import ThemeContext from "../context/ThemeContext";
 import SupportResistanceTable from "./SupportResistanceTable";
+import { useAlertsContext } from "../context/AlertsContext";
 
 const AlertForm = () => {
   const { darkMode } = useContext(ThemeContext);
+  const { addAlert } = useAlertsContext(); // Use the alerts context
   const [formData, setFormData] = useState({
     ticker: "",
     currentPrice: "",
@@ -32,7 +34,18 @@ const AlertForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form data submitted:", formData);
+    const newAlert = {
+      title: `Alert for ${formData.ticker}`,
+      description: `Trigger when ${formData.ticker} is ${formData.operator} ${formData.alertPrice}`,
+      timestamp: new Date().toISOString(),
+    };
+    addAlert(newAlert); // Add new alert to the context
+    setFormData({
+      ticker: "",
+      currentPrice: "",
+      operator: ">=",
+      alertPrice: "",
+    });
   };
 
   const fetchStockData = async (symbol) => {
