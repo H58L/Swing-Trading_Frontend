@@ -12,10 +12,32 @@ const StockWatchlistSearch = ({ onSearch }) => {
     setQuery(e.target.value);
   };
 
-  const handleKeyPress = (e) => {
+
+
+  const handleKeyPress = async(e) => {
     if (e.key === "Enter" && query.trim()) {
       console.log(query);
-      //add API call to backend here
+      
+      const newWatchlist = 
+      {ticker : query} //JSON object to pass to backend
+
+      try {
+        const response = await fetch("http://localhost:8080/api/watchlist/createWatchlist", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newWatchlist),
+        });
+  
+        if (response.ok) {
+          console.log("Watchlist created successfully");
+        } else {
+          console.error("Failed to create watchlist", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error creating ", error);
+      }
     }
   };
 
