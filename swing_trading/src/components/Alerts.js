@@ -3,12 +3,14 @@ import ThemeContext from "../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { useLoginContext } from "../context/LoginContext";
 import { useAlertsContext } from "../context/AlertsContext";
+import { useEmailContext } from "../context/EmailContext";
 
 const Alerts = () => {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
   const { isLoggedin } = useLoginContext(); // Use login context to check authentication status
   const { alerts } = useAlertsContext();
   const navigate = useNavigate();
+  const { userEmail, setUserEmail } = useEmailContext();
 
   const [alertData, setAlertData] = useState([]);
   const [stockPrices, setStockPrices] = useState({});
@@ -51,15 +53,23 @@ const Alerts = () => {
         {alerts.map((alert, index) => (
           <li
             key={index}
-            className={`alert-item mb-3  rounded p-4 shadow-sm border border-gray-100 w-full ${
+            className={`alert-item mb-3 rounded p-4 shadow-sm border border-gray-100 w-full ${
               darkMode ? "bg-gray-900 text-gray-100" : "bg-white"
             }`}
           >
             <h3 className="text-lg font-semibold">{alert.title}</h3>
-            <p>{alert.description}</p>
+            <p
+              className={`text-sm ${
+                darkMode ? "bg-gray-900 text-gray-200" : "bg-white"
+              }`}
+            >
+              {alert.description}
+            </p>
             <span
               className={`text-sm ${
-                darkMode ? "bg-gray-900 text-gray-500" : "bg-white"
+                darkMode
+                  ? "bg-gray-900 text-gray-500"
+                  : "bg-white text-gray-400"
               }`}
             >
               {new Date(alert.timestamp).toLocaleString()}

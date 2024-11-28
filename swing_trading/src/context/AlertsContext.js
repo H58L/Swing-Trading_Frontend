@@ -7,16 +7,11 @@ const AlertsContext = createContext();
 export const AlertsProvider = ({ children }) => {
   const [alerts, setAlerts] = useState([
     {
-      title: "Market Open",
-      description: "The stock market has opened for trading.",
+      title: "Welcome to ChartView!",
+      description:
+        "You’ve just joined a wonderful platform that will help you trade better.",
       timestamp: "2024-10-08T09:30:00",
     },
-    {
-      title: "New Price Target",
-      description: "Analysts have raised the price target for XYZ stock.",
-      timestamp: "2024-10-08T12:00:00",
-    },
-    // Add other initial alerts here
   ]);
 
   const addAlert = (newAlert) => {
