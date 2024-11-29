@@ -75,8 +75,9 @@ const Login = () => {
       .then((data) => {
         if (data.message === "Successfully logged in!") {
           setIsLoggedIn(true);
-          setUserEmail(email);
-          navigate("/"); // Redirect to the home page upon successful login
+          // setUserEmail(email);
+          sessionStorage.setItem("userEmail", email); // Save email to sessionStorage
+          navigate("/");
         } else {
           setMessage(data.message || "Invalid credentials.");
         }

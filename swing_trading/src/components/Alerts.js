@@ -1,19 +1,42 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import ThemeContext from "../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { useLoginContext } from "../context/LoginContext";
-import { useAlertsContext } from "../context/AlertsContext";
 import { useEmailContext } from "../context/EmailContext";
+import axios from "axios";
 
 const Alerts = () => {
-  const { darkMode, setDarkMode } = useContext(ThemeContext);
-  const { isLoggedin } = useLoginContext(); // Use login context to check authentication status
-  const { alerts } = useAlertsContext();
+  const { darkMode } = useContext(ThemeContext);
+  const { isLoggedin } = useLoginContext();
   const navigate = useNavigate();
-  const { userEmail, setUserEmail } = useEmailContext();
+  // const { userEmail } = useEmailContext();
+  const [userEmail, setUserEmail] = useState(""); // State for user email
 
-  const [alertData, setAlertData] = useState([]);
-  const [stockPrices, setStockPrices] = useState({});
+  const [alerts, setAlerts] = useState([]);
+
+  // Retrieve email from sessionStorage on component mount
+  useEffect(() => {
+    const email = sessionStorage.getItem("userEmail");
+    if (email) {
+      setUserEmail(email);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchAlerts = async () => {
+      if (isLoggedin && userEmail) {
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/api/alerts/${userEmail}`
+          );
+          setAlerts(response.data);
+        } catch (error) {
+          console.error("Error fetching alerts:", error);
+        }
+      }
+    };
+    fetchAlerts();
+  }, [isLoggedin, userEmail]);
 
   const handleSetAlert = () => {
     if (!isLoggedin) {
@@ -49,33 +72,39 @@ const Alerts = () => {
           Set Alerts
         </button>
       </div>
-      <ul className="h-full  border-gray-300">
-        {alerts.map((alert, index) => (
-          <li
-            key={index}
-            className={`alert-item mb-3 rounded p-4 shadow-sm border border-gray-100 w-full ${
-              darkMode ? "bg-gray-900 text-gray-100" : "bg-white"
-            }`}
-          >
-            <h3 className="text-lg font-semibold">{alert.title}</h3>
-            <p
-              className={`text-sm ${
-                darkMode ? "bg-gray-900 text-gray-200" : "bg-white"
+      <ul className="h-full border-gray-300">
+        {alerts.length > 0 ? (
+          alerts.map((alert, index) => (
+            <li
+              key={index}
+              className={`alert-item mb-3 rounded p-4 shadow-sm border border-gray-100 w-full ${
+                darkMode ? "bg-gray-900 text-gray-100" : "bg-white"
               }`}
             >
-              {alert.description}
-            </p>
-            <span
-              className={`text-sm ${
-                darkMode
-                  ? "bg-gray-900 text-gray-500"
-                  : "bg-white text-gray-400"
-              }`}
-            >
-              {new Date(alert.timestamp).toLocaleString()}
-            </span>
-          </li>
-        ))}
+              <h3 className="text-lg font-semibold">{alert.ticker}</h3>
+              <p
+                className={`text-sm ${
+                  darkMode ? "bg-gray-900 text-gray-200" : "bg-white"
+                }`}
+              >
+                {alert.operator} {alert.alertPrice}
+              </p>
+              <span
+                className={`text-sm ${
+                  darkMode
+                    ? "bg-gray-900 text-gray-500"
+                    : "bg-white text-gray-400"
+                }`}
+              >
+                {new Date(alert.createdAt).toLocaleString()}
+              </span>
+            </li>
+          ))
+        ) : (
+          <p className={darkMode ? "text-gray-200" : "text-gray-800"}>
+            No alerts found.
+          </p>
+        )}
       </ul>
     </div>
   );
