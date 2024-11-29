@@ -24,6 +24,7 @@ const Header = ({ name, onLogin, onLogout }) => {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
   const { isLoggedin, setIsLoggedIn } = useLoginContext();
   const { userEmail, setUserEmail } = useEmailContext();
+  console.log("Header email: ", userEmail);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);

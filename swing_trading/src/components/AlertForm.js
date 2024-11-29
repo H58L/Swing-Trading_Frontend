@@ -3,10 +3,13 @@ import Header from "./Header";
 import ThemeContext from "../context/ThemeContext";
 import SupportResistanceTable from "./SupportResistanceTable";
 import { useAlertsContext } from "../context/AlertsContext";
+import { useEmailContext } from "../context/EmailContext";
 
 const AlertForm = () => {
   const { darkMode } = useContext(ThemeContext);
   const { addAlert } = useAlertsContext(); // Use the alerts context
+  const { userEmail, setUserEmail } = useEmailContext();
+  console.log("Email value:", userEmail); // Log the email value to the console
   const [formData, setFormData] = useState({
     ticker: "",
     currentPrice: "",
@@ -34,11 +37,11 @@ const AlertForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const newAlert = {
-      userId: 1, // Replace with actual user ID if available
-      uuid: crypto.randomUUID(), // Generate a unique identifier
+      emailId: userEmail, // Add email to the alert object
       ticker: formData.ticker,
-      currentPrice: parseFloat(formData.currentPrice),
+      // currentPrice: parseFloat(formData.currentPrice),
       operator: formData.operator,
       alertPrice: parseFloat(formData.alertPrice),
       createdAt: new Date().toISOString(),
@@ -49,6 +52,7 @@ const AlertForm = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Send token if required
         },
         body: JSON.stringify(newAlert),
       });
@@ -70,7 +74,7 @@ const AlertForm = () => {
 
     setFormData({
       ticker: "",
-      currentPrice: "",
+      // currentPrice: "",
       operator: ">=",
       alertPrice: "",
     });
