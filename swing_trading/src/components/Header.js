@@ -20,10 +20,12 @@ import { useEffect } from "react";
 const Header = ({ name, onLogin, onLogout }) => {
   const [showAlerts, setShowAlerts] = useState(false);
   const navigate = useNavigate();
-
   const { darkMode, setDarkMode } = useContext(ThemeContext);
   const { isLoggedin, setIsLoggedIn } = useLoginContext();
-  const { userEmail, setUserEmail } = useEmailContext();
+  // const { userEmail, setUserEmail } = useEmailContext();
+  // const userEmail = sessionStorage.getItem("userEmail"); // Retrieve email from sessionStorage
+  const [userEmail, setUserEmail] = useState("");
+
   console.log("Header email: ", userEmail);
 
   const toggleDarkMode = () => {
@@ -47,13 +49,20 @@ const Header = ({ name, onLogin, onLogout }) => {
 
   const [loggedOut, setLoggedOut] = useState(false);
 
+  useEffect(() => {
+    // Sync login state and email from sessionStorage
+    const storedEmail = sessionStorage.getItem("userEmail");
+    if (storedEmail) {
+      setUserEmail(storedEmail);
+      setIsLoggedIn(true);
+    }
+  }, [setIsLoggedIn]);
+
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUserEmail("");
-    setLoggedOut(true);
-    // console.log(isLoggedin);
-    // console.log(userEmail);
-    // navigate("/");
+    sessionStorage.removeItem("userEmail");
+    navigate("/login");
   };
 
   useEffect(() => {

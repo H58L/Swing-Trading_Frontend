@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Header from "./Header";
 import ThemeContext from "../context/ThemeContext";
 import SupportResistanceTable from "./SupportResistanceTable";
@@ -8,8 +8,10 @@ import { useEmailContext } from "../context/EmailContext";
 const AlertForm = () => {
   const { darkMode } = useContext(ThemeContext);
   const { addAlert } = useAlertsContext(); // Use the alerts context
-  const { userEmail, setUserEmail } = useEmailContext();
-  console.log("Email value:", userEmail); // Log the email value to the console
+  // const { userEmail, setUserEmail } = useEmailContext();
+  // const userEmail = sessionStorage.getItem("userEmail"); // Retrieve email from sessionStorage
+  const [userEmail, setUserEmail] = useState(""); // State for user email
+
   const [formData, setFormData] = useState({
     ticker: "",
     currentPrice: "",
@@ -19,6 +21,14 @@ const AlertForm = () => {
   const [latestPrice, setLatestPrice] = useState(null);
   const [supportResistanceData, setSupportResistanceData] = useState([]);
   const [pivotPoint, setPivotPoint] = useState(null);
+
+  // Retrieve email from sessionStorage on component mount
+  useEffect(() => {
+    const email = sessionStorage.getItem("userEmail");
+    if (email) {
+      setUserEmail(email);
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
