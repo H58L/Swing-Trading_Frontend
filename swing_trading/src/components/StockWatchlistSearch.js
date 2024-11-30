@@ -28,7 +28,7 @@ const StockWatchlistSearch = ({ onSearch }) => {
     }
   }, []);
 
-
+//for adding a watchlist
   const handleKeyPress = async(e) => {
 
     if (!isLoggedin) {
