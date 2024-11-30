@@ -3,6 +3,8 @@ import React, { useContext, useState } from "react";
  import ThemeContext from "../context/ThemeContext";
  import { useEmailContext } from "../context/EmailContext";
  import { useEffect } from "react";
+ import { useLoginContext } from "../context/LoginContext";
+ import { useNavigate } from "react-router-dom";
  // Update this with your ThemeContext path
 
 
@@ -10,6 +12,8 @@ const StockWatchlistSearch = ({ onSearch }) => {
   const [query, setQuery] = useState(""); //query is the stock tcker that is to be set
   const { darkMode } = useContext(ThemeContext); // Access darkMode from ThemeContext
   //const { userEmail, setUserEmail } = useEmailContext();
+  const { isLoggedin } = useLoginContext();
+  const navigate = useNavigate();
   const [userEmail, setUserEmail] = useState("");
   const handleInputChange = (e) => {
     setQuery(e.target.value);
@@ -26,6 +30,18 @@ const StockWatchlistSearch = ({ onSearch }) => {
 
 
   const handleKeyPress = async(e) => {
+
+    if (!isLoggedin) {
+      const confirmLogin = window.confirm(
+        "You must log in to add in watchlist. Would you like to go to the login page?"
+      );
+      if (confirmLogin) {
+        navigate("/login");
+      }
+      return;
+    }
+    navigate("/dashboard");
+
     if (e.key === "Enter" && query.trim()) {
       console.log(query);
       
