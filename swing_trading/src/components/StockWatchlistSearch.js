@@ -1,17 +1,28 @@
 
 import React, { useContext, useState } from "react";
  import ThemeContext from "../context/ThemeContext";
+ import { useEmailContext } from "../context/EmailContext";
+ import { useEffect } from "react";
  // Update this with your ThemeContext path
 
 
 const StockWatchlistSearch = ({ onSearch }) => {
   const [query, setQuery] = useState(""); //query is the stock tcker that is to be set
   const { darkMode } = useContext(ThemeContext); // Access darkMode from ThemeContext
-
+  //const { userEmail, setUserEmail } = useEmailContext();
+  const [userEmail, setUserEmail] = useState("");
   const handleInputChange = (e) => {
     setQuery(e.target.value);
   };
 
+  // Retrieve email from sessionStorage on component mount
+  useEffect(() => {
+    const email = sessionStorage.getItem("userEmail");
+    if (email) {
+      console.log("Email retrieved from sessionStorage:", email);
+      setUserEmail(email);
+    }
+  }, []);
 
 
   const handleKeyPress = async(e) => {
@@ -19,8 +30,11 @@ const StockWatchlistSearch = ({ onSearch }) => {
       console.log(query);
       
       const newWatchlist = 
-      {ticker : query} //JSON object to pass to backend
+      {ticker : query,
+        emailId: userEmail
+      } //JSON object to pass to backend
 
+      console.log("Payload being sent to backend:", newWatchlist);
       try {
         const response = await fetch("http://localhost:8080/api/watchlist/createWatchlist", {
           method: "POST",
