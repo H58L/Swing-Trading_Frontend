@@ -1,12 +1,25 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../style/Register.css"; // Import CSS styles
+import { useLoginContext } from "../context/LoginContext";
+import { Navigate } from "react-router-dom"; // Use Navigate for redirection
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({}); // Track validation errors
+  const navigate = useNavigate();
+
+  const { isLoggedin } = useLoginContext(); // Access authentication status
+  // If the user is not logged in, redirect to the login page
+  if (!isLoggedin) {
+   
+      window.alert("You must be logged in to create a new user. You will be redirected to the home page");
+  
+    return <Navigate to="/" replace />;
+  }
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

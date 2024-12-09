@@ -21,6 +21,7 @@ import "../style/Login.css";
 import { useLoginContext } from "../context/LoginContext";
 import Header from "./Header";
 import { useEmailContext } from "../context/EmailContext";
+import { Navigate } from "react-router-dom";
 
 const Admin = () => {
   const [email, setEmail] = useState("");
@@ -38,14 +39,10 @@ const Admin = () => {
     onSuccess: (tokenResponse) => console.log(tokenResponse),
   });
 
-  // Redirect on successful login, React is asynchronoues
-//   useEffect(() => {
-//     if (isLoggedin) {
-//       console.log(isLoggedin);
-//       console.log(userEmail);
-//       navigate("/");
-//     }
-//   }, [isLoggedin, navigate, userEmail]);
+  if (!isLoggedin) {
+   
+    return <Navigate to="/" replace />;
+  }
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

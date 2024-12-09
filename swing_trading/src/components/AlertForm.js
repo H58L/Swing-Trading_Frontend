@@ -4,6 +4,8 @@ import ThemeContext from "../context/ThemeContext";
 import SupportResistanceTable from "./SupportResistanceTable";
 import { useAlertsContext } from "../context/AlertsContext";
 import { useEmailContext } from "../context/EmailContext";
+import { useLoginContext } from "../context/LoginContext";
+import { Navigate } from "react-router-dom";
 
 const AlertForm = () => {
   const { darkMode } = useContext(ThemeContext);
@@ -11,7 +13,7 @@ const AlertForm = () => {
   // const { userEmail, setUserEmail } = useEmailContext();
   // const userEmail = sessionStorage.getItem("userEmail"); // Retrieve email from sessionStorage
   const [userEmail, setUserEmail] = useState(""); // State for user email
-
+  const { isLoggedin, setIsLoggedIn } = useLoginContext();
   const [formData, setFormData] = useState({
     ticker: "",
     currentPrice: "",
@@ -22,6 +24,8 @@ const AlertForm = () => {
   const [supportResistanceData, setSupportResistanceData] = useState([]);
   const [pivotPoint, setPivotPoint] = useState(null);
 
+
+
   // Retrieve email from sessionStorage on component mount
   useEffect(() => {
     const email = sessionStorage.getItem("userEmail");
@@ -29,6 +33,12 @@ const AlertForm = () => {
       setUserEmail(email);
     }
   }, []);
+
+  //Lock
+  if (!isLoggedin) {
+   
+    return <Navigate to="/" replace />;
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;

@@ -7,9 +7,18 @@ import ThemeContext from "../context/ThemeContext";
 import { useContext } from "react";
 import ChartDisplay from "./ChartDisplay";
 import StockWatchlistSearch from "./StockWatchlistSearch"
+import { useLoginContext } from "../context/LoginContext";
+import { Navigate } from "react-router-dom";
 
 const Dashboard = () => {
   const { darkMode } = useContext(ThemeContext);
+ const {isLoggedin} = useLoginContext();
+
+  if (!isLoggedin) {
+   
+    return <Navigate to="/" replace />;
+  }
+
   return (
     <>
       <Header />

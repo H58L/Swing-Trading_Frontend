@@ -7,6 +7,8 @@ import Header from "./Header";
 import { fetchStockData } from "../redux/actions/StockActions";
 import { useDispatch, useSelector } from "react-redux"; // Added useSelector to access data
 import ChartDisplay from "./ChartDisplay";
+import { useLoginContext } from "../context/LoginContext";
+import { Navigate } from "react-router-dom";
 
 const StockData = () => {
   const { darkMode } = useContext(ThemeContext);
@@ -22,6 +24,7 @@ const StockData = () => {
 
   // This hook accesses the current stockData from the Redux store
   const stockData = useSelector((state) => state.stockData);
+  const { isLoggedin, setIsLoggedIn } = useLoginContext();
 
   // Set real-time and previous close prices from the stock data
 
@@ -52,6 +55,12 @@ const StockData = () => {
       setPreviousClose(stockData.close[stockData.close.length - 2]);
     }
   }, [stockData]); // This effect updates real-time prices whenever stockData changes
+
+  //Locking
+  if (!isLoggedin) {
+    
+    return <Navigate to="/" replace />;
+  }
 
   const handleChartTypeChange = (e) => {
     setChartType(e.target.value);

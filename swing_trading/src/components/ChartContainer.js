@@ -12,8 +12,11 @@ import ChartDisplay from "./ChartDisplay";
 import StockContext from "../context/StockContext";
 import { fetchStockData } from "../redux/actions/StockActions";
 import { useDispatch, useSelector } from "react-redux"; // Added useSelector to access data
-
+import { useLoginContext } from "../context/LoginContext";
+import { Navigate } from "react-router-dom";
 const ChartContainer = () => {
+
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [period, setPeriod] = useState("1mo"); // Default to 1 month data
@@ -25,9 +28,9 @@ const ChartContainer = () => {
   const { stockSymbol } = useContext(StockContext);
   const dispatch = useDispatch(); //allows the component to send actions to the Redux store.
   const stockData = useSelector((state) => state.stockData);
-
+  const { isLoggedin } = useLoginContext();
   // Set real-time and previous close prices from the stock data
-
+ 
   useEffect(() => {
     const fetchData = async () => {
       //The fetchStockData action creator is dispatched with the current stockSymbol and period, triggering the API call to fetch the stock data.
@@ -92,6 +95,10 @@ const ChartContainer = () => {
       ? (((realTimePrice - previousClose) / previousClose) * 100).toFixed(2)
       : null;
 
+      if (!isLoggedin) {
+        return <Navigate to="/" replace />;
+      }
+    
   return (
     <>
       {/* <Header /> */}
