@@ -20,6 +20,9 @@ import Header from "./components/Header";
 import { EmailProvider } from "./context/EmailContext";
 import Prediction from "./components/Prediction";
 import { AlertsProvider } from "./context/AlertsContext";
+import Admin from "./components/Admin";
+import LandingPage from "./components/LandingPage"
+import LoginDisplay from "./components/LoginDisplay"
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -39,14 +42,16 @@ const App = () => {
                   {" "}
                   {/* Wrap everything in the App class */}
                   <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
+                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/home" element={<Home />} />
+                    <Route path="/login" element={<LoginDisplay />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/chart" element={<ChartContainer />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/data" element={<StockData />} />
                     <Route path="/alertform" element={<AlertForm />} />
                     <Route path="/prediction" element={<Prediction />} />
+                    <Route path="/admin" element={<Admin />} />
                   </Routes>
                 </div>
               </Router>

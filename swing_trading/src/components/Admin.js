@@ -1,3 +1,19 @@
+
+// import React from "react";
+// import Login from "./Login";
+
+// const Admin = () => {
+//   return (
+//     <>
+//       <h1>Admin Login</h1>
+     
+//     </>
+//   );
+// };
+
+// export default Admin;
+
+// XXXX ADMIN LOGIN FOR REGISTERING NEW USER XXXXX
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
@@ -6,7 +22,7 @@ import { useLoginContext } from "../context/LoginContext";
 import Header from "./Header";
 import { useEmailContext } from "../context/EmailContext";
 
-const Login = () => {
+const Admin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -23,13 +39,13 @@ const Login = () => {
   });
 
   // Redirect on successful login, React is asynchronoues
-  useEffect(() => {
-    if (isLoggedin) {
-      console.log(isLoggedin);
-      console.log(userEmail);
-      navigate("/home");
-    }
-  }, [isLoggedin, navigate, userEmail]);
+//   useEffect(() => {
+//     if (isLoggedin) {
+//       console.log(isLoggedin);
+//       console.log(userEmail);
+//       navigate("/");
+//     }
+//   }, [isLoggedin, navigate, userEmail]);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -90,7 +106,7 @@ const Login = () => {
 
   return (
     <div>
-      {/* <Header /> */}
+      <Header />
       <div
         className="bg-cover bg-center bg-no-repeat h-screen flex items-center justify-center login-page"
         style={{
@@ -101,7 +117,7 @@ const Login = () => {
         <div className="login-container">
           <form onSubmit={handleSubmit} className="p-6">
             <h1 className="text-center text-3xl font-semibold text-gray-700 mb-6">
-              Sign in
+              Verify your Identity to register a new User
             </h1>
 
             <div className="mb-4">
@@ -195,4 +211,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Admin;

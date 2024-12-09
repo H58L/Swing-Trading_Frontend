@@ -62,7 +62,7 @@ const Header = ({ name, onLogin, onLogout }) => {
     setIsLoggedIn(false);
     setUserEmail("");
     sessionStorage.removeItem("userEmail");
-    navigate("/login");
+    navigate("/");
   };
 
   useEffect(() => {
@@ -80,7 +80,7 @@ const Header = ({ name, onLogin, onLogout }) => {
   };
 
   const handleHome = () => {
-    navigate("/");
+    navigate("/home");
   };
 
   const handlePredicition = () => {
@@ -93,6 +93,10 @@ const Header = ({ name, onLogin, onLogout }) => {
 
   const handleChart = () => {
     navigate("/chart");
+  };
+
+  const handleAdmin = () => {
+    navigate("/admin");
   };
 
   return (
@@ -154,6 +158,7 @@ const Header = ({ name, onLogin, onLogout }) => {
               <Nav.Link onClick={handleData}>Data</Nav.Link>
               <Nav.Link onClick={handleDashboard}>Dashboard</Nav.Link>
               <Nav.Link onClick={handleChart}>Chart</Nav.Link>
+              {/* <Nav.Link onClick={handleAdmin}>Admin</Nav.Link> */}
             </Nav>
           </Navbar.Collapse>
         </Container>
