@@ -23,6 +23,7 @@ import { AlertsProvider } from "./context/AlertsContext";
 import Admin from "./components/Admin";
 import LandingPage from "./components/LandingPage"
 import LoginDisplay from "./components/LoginDisplay"
+import { ValidTickerProvider } from "./context/ValidTickerContext";
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -37,6 +38,7 @@ const App = () => {
         <LoginProvider>
           <EmailProvider>
             <AlertsProvider>
+            <ValidTickerProvider>
               <Router>
                 <div className="App">
                   {" "}
@@ -55,6 +57,8 @@ const App = () => {
                   </Routes>
                 </div>
               </Router>
+            </ValidTickerProvider>
+              
             </AlertsProvider>
           </EmailProvider>
         </LoginProvider>
