@@ -59,10 +59,11 @@ const Search = () => {
         placeholder="Search Stock"
         onChange={(event) => {
           //Setting input to what is searchd in the bar
-          setInput(event.target.value);
+           setInput(event.target.value);
         }}
         onKeyPress={(event) => {
           if (event.key === "Enter") {
+            setInput(event.target.value);
             setStockSymbol(input);
             console.log(setStockSymbol);
             updateBestMatches();
@@ -95,9 +96,13 @@ const Search = () => {
 
       {/* Display search results */}
       {input && bestMatches.length > 0 ? (
-        <SearchResults results={bestMatches}></SearchResults>
+        <SearchResults results={bestMatches}></SearchResults> 
       ) : error ? (
-        <p>{error}</p> // Display error message if any
+        console.log({error}),
+        //window.alert("Stock not found, please try again with a valid ticker"),
+        <p>{error}</p>
+        
+         // Display error message if any
       ) : null}
     </div>
   );
