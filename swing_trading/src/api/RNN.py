@@ -7,10 +7,10 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Input, Dropout
 from tensorflow.keras.callbacks import EarlyStopping, LearningRateScheduler
 
-def get_ohlc_predictions(stock_symbol="AAPL", start_date="2015-01-01", end_date="2024-11-24", forecast_days=15):
+def get_rnn_predictions(stock_symbol="AAPL", forecast_days=5):
     try:
         # Fetch stock data
-        data = yf.download(stock_symbol, start=start_date, end=end_date)
+        data = yf.download(stock_symbol, period="10y", interval="1d")
         if data.empty:
             return {"error": "No data found for this symbol"}
         
@@ -101,7 +101,7 @@ def get_ohlc_predictions(stock_symbol="AAPL", start_date="2015-01-01", end_date=
         combined_predicted = predicted_ohlc_unscaled[:, 3].astype(float).tolist()
 
         # Create an array to store predictions for the next 15 days
-        next_15_days_predictions = []
+        next_5_days_predictions = []
         last_sequence = scaled_data[-time_steps:]  # Use the last sequence for iterative predictions
 
         for _ in range(forecast_days):
@@ -115,7 +115,7 @@ def get_ohlc_predictions(stock_symbol="AAPL", start_date="2015-01-01", end_date=
             ])
             
             # Add to the list of predictions (convert 'Close' to float)
-            next_15_days_predictions.append(float(next_day_unscaled[0, 3]))  # Convert to float
+            next_5_days_predictions.append(float(next_day_unscaled[0, 3]))  # Convert to float
             
             # Update the last sequence by adding the predicted day's data (rolling window)
             last_sequence = np.vstack([last_sequence[1:], next_day])
@@ -129,10 +129,11 @@ def get_ohlc_predictions(stock_symbol="AAPL", start_date="2015-01-01", end_date=
             "actual": combined_actual,
             "predicted": combined_predicted,
             "forecasted_dates": future_dates,
-            "forecasted_predictions": next_15_days_predictions
+            "forecasted_predictions": next_5_days_predictions
         }
 
         
         return response
     except Exception as e:
         return {"error": str(e)}
+

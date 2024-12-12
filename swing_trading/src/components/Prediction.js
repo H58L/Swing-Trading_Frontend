@@ -1,38 +1,37 @@
-import React, { useEffect, useState } from "react";
-import RNN_Charts from "./RNN_Charts";
-import LSTM_Charts from "./LSTM_Charts";
-import { useLoginContext } from "../context/LoginContext";
-import { Navigate } from "react-router-dom";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import RNN_Chart from './RNN_Charts'; // RNN chart component
+import LSTM_Chart from './LSTM_Charts'; // LSTM chart component
+import ChartControls from './ChartControls'; // Chart controls component
 
-function Prediction() {
-  const navigate = useNavigate();
-  const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
+const Prediction = () => {
+    const [symbol, setSymbol] = useState('AAPL'); // State for stock symbol
+    const [period, setPeriod] = useState('5y'); // State for period selection
+    const [selectedModel, setSelectedModel] = useState('RNN'); // Default model is RNN
 
-  // Retrieve isLoggedIn from sessionStorage on component mount
-  useEffect(() => {
-    const storedLoginStatus = sessionStorage.getItem("isLoggedin");
-    if (storedLoginStatus) {
-      setIsLoggedIn(storedLoginStatus === "true"); // Convert to boolean
-    } else {
-      setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
-    }
-  }, []);
+    return (
+        <div>
+            <h1>Interactive Candlestick Chart</h1>
 
-  // Redirect if not logged in
-  useEffect(() => {
-    if (isLoggedin === false) {
-      navigate("/");
-    }
-  }, [isLoggedin, navigate]);
+            {/* Render ChartControls */}
+            <ChartControls
+                symbol={symbol}
+                setSymbol={setSymbol}
+                period={period}
+                setPeriod={setPeriod}
+                selectedModel={selectedModel}
+                setSelectedModel={setSelectedModel}
+            />
 
-  return (
-    <div>
-      {" "}
-      <RNN_Charts />
-      <LSTM_Charts />
-    </div>
-  );
-}
+            {/* Render the selected chart */}
+            {selectedModel === 'RNN' ? (
+                // eslint-disable-next-line react/jsx-pascal-case
+                <RNN_Chart symbol={symbol} period={period} />
+            ) : (
+                // eslint-disable-next-line react/jsx-pascal-case
+                <LSTM_Chart symbol={symbol} period={period} />
+            )}
+        </div>
+    );
+};
 
 export default Prediction;
