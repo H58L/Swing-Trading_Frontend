@@ -102,7 +102,11 @@ const Header = ({ name, onLogin, onLogout }) => {
     <div>
       <Navbar expand="lg" className="navbar-custom">
         <Container className="nav-container">
-          <Navbar.Brand onClick={handleHome} className="brand-link">
+          <Navbar.Brand
+            onClick={handleHome}
+            className="brand-link"
+            style={{ cursor: "pointer" }}
+          >
             ChartView
           </Navbar.Brand>
 
