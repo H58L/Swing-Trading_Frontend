@@ -237,6 +237,8 @@ import StockContext from "../context/StockContext";
 import { useLoginContext } from "../context/LoginContext";
 import { fetchStockData } from "../redux/actions/StockActions";
 import { useValidTickerContext } from "../context/ValidTickerContext";
+import { Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ChartContainer = () => {
   const [loading, setLoading] = useState(true);
@@ -251,7 +253,27 @@ const ChartContainer = () => {
   const { stockSymbol } = useContext(StockContext);
   const dispatch = useDispatch();
   const stockData = useSelector((state) => state.stockData);
-  const { isLoggedin } = useLoginContext();
+  // Set real-time and previous close prices from the stock data
+
+  const navigate = useNavigate();
+  const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
+
+  // Retrieve isLoggedIn from sessionStorage on component mount
+  useEffect(() => {
+    const storedLoginStatus = sessionStorage.getItem("isLoggedin");
+    if (storedLoginStatus) {
+      setIsLoggedIn(storedLoginStatus === "true"); // Convert to boolean
+    } else {
+      setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
+    }
+  }, []);
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (isLoggedin === false) {
+      navigate("/");
+    }
+  }, [isLoggedin, navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -315,6 +337,7 @@ const ChartContainer = () => {
     return <Navigate to="/" replace />;
   }
 
+
   return (
     <div
       className={`h-screen flex flex-col space-y-6 p-6 font-quicksand ${
@@ -377,6 +400,79 @@ const ChartContainer = () => {
             <ChartDisplay />
           )}
         </main>
+
+      {periodLabel.toUpperCase()}
+      {returns[periodLabel] ? (
+        <span className="ml-2 text-sm">
+          {returns[periodLabel] >= 0 ? "+" : ""}
+          {returns[periodLabel]}%
+        </span>
+      ) : null}
+    </button>
+  ))}
+</div> */}
+
+        {/* Header row */}
+        <div className="col-span-1 md:col-span-2 xl:col-span-3 row-span-1 flex justify-between items-center">
+          {/* Header on the left */}
+          <div>
+            <Header_Stock />
+          </div>
+
+          {/* Buttons on the right */}
+          <div className="flex space-x-2">
+            {["1d", "1mo", "6mo", "1y", "5y", "10y", "all"].map(
+              (periodLabel) => (
+                <button
+                  key={periodLabel}
+                  className={`px-4 py-2 rounded ${
+                    darkMode
+                      ? "bg-gray-800 text-gray-300"
+                      : "bg-gray-200 text-gray-900"
+                  } hover:bg-blue-500 hover:text-white transition-all duration-200`}
+                  onClick={() => handlePeriodChange(periodLabel)}
+                >
+                  {periodLabel.toUpperCase()}
+                  {returns[periodLabel] ? (
+                    <span className="ml-2 text-sm">
+                      {returns[periodLabel] >= 0 ? "+" : ""}
+                      {returns[periodLabel]}%
+                    </span>
+                  ) : null}
+                </button>
+              )
+            )}
+          </div>
+        </div>
+
+        {/* Chart box */}
+        <div className="md:col-span-2 row-span-4">
+          <ChartDisplay />
+          {/* <StockChart></StockChart> */}
+        </div>
+
+        {/* Overview box */}
+        <div>
+          <Overview
+            price={realTimePrice ? `${realTimePrice.toFixed(2)}` : "Loading..."}
+            change={
+              priceDifference >= 0
+                ? `+₹${priceDifference}`
+                : `-₹${Math.abs(priceDifference)}`
+            }
+            percentageChange={
+              percentageChange >= 0
+                ? `+${percentageChange}%`
+                : `${percentageChange}%`
+            }
+            currency={"INR"}
+          ></Overview>
+        </div>
+
+        {/* Company details */}
+        <div className="row-span-2 xl:row-span-3">
+          <Details details={mockCompanyDetails}></Details>
+        </div>
       </div>
     </div>
   );

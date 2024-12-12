@@ -24,6 +24,8 @@ import Admin from "./components/Admin";
 import LandingPage from "./components/LandingPage"
 import LoginDisplay from "./components/LoginDisplay"
 import { ValidTickerProvider } from "./context/ValidTickerContext";
+import LandingPage from "./components/LandingPage";
+import LoginDisplay from "./components/LoginDisplay";
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -44,9 +46,9 @@ const App = () => {
                   {" "}
                   {/* Wrap everything in the App class */}
                   <Routes>
-                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/" element={<Login />} />
                     <Route path="/home" element={<Home />} />
-                    <Route path="/login" element={<LoginDisplay />} />
+                    <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/chart" element={<ChartContainer />} />
                     <Route path="/dashboard" element={<Dashboard />} />
@@ -68,5 +70,3 @@ const App = () => {
 };
 
 export default App;
-
-

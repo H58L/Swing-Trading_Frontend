@@ -26,8 +26,6 @@ const Header = ({ name, onLogin, onLogout }) => {
   // const userEmail = sessionStorage.getItem("userEmail"); // Retrieve email from sessionStorage
   const [userEmail, setUserEmail] = useState("");
 
-  console.log("Header email: ", userEmail);
-
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     console.log(darkMode);
@@ -62,6 +60,7 @@ const Header = ({ name, onLogin, onLogout }) => {
     setIsLoggedIn(false);
     setUserEmail("");
     sessionStorage.removeItem("userEmail");
+    sessionStorage.setItem("isLoggedin", false); //
     navigate("/");
   };
 
@@ -103,7 +102,11 @@ const Header = ({ name, onLogin, onLogout }) => {
     <div>
       <Navbar expand="lg" className="navbar-custom">
         <Container className="nav-container">
-          <Navbar.Brand onClick={handleHome} className="brand-link">
+          <Navbar.Brand
+            onClick={handleHome}
+            className="brand-link"
+            style={{ cursor: "pointer" }}
+          >
             ChartView
           </Navbar.Brand>
 

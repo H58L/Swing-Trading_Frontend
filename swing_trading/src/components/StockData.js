@@ -10,6 +10,7 @@ import ChartDisplay from "./ChartDisplay";
 import { useLoginContext } from "../context/LoginContext";
 import { Navigate } from "react-router-dom";
 import { useValidTickerContext } from "../context/ValidTickerContext";
+import { Link, useNavigate } from "react-router-dom";
 
 const StockData = () => {
   const { darkMode } = useContext(ThemeContext);
@@ -27,7 +28,26 @@ const StockData = () => {
 
   // This hook accesses the current stockData from the Redux store
   const stockData = useSelector((state) => state.stockData);
-  const { isLoggedin, setIsLoggedIn } = useLoginContext();
+
+  const navigate = useNavigate();
+  const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
+
+  // Retrieve isLoggedIn from sessionStorage on component mount
+  useEffect(() => {
+    const storedLoginStatus = sessionStorage.getItem("isLoggedin");
+    if (storedLoginStatus) {
+      setIsLoggedIn(storedLoginStatus === "true"); // Convert to boolean
+    } else {
+      setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
+    }
+  }, []);
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (isLoggedin === false) {
+      navigate("/");
+    }
+  }, [isLoggedin, navigate]);
 
   // Set real-time and previous close prices from the stock data
 
@@ -60,10 +80,10 @@ const StockData = () => {
   }, [stockData]); // This effect updates real-time prices whenever stockData changes
 
   //Locking
-  if (!isLoggedin) {
-    
-    return <Navigate to="/" replace />;
-  }
+  // if (!isLoggedin) {
+
+  //   return <Navigate to="/" replace />;
+  // }
 
   const handleChartTypeChange = (e) => {
     setChartType(e.target.value);

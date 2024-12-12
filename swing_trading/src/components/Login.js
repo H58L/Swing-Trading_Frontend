@@ -12,9 +12,9 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState({});
-  // const {isLoggedin, setIsLoggedIn} = useLoginContext(); //use login context
-  const { isLoggedin, setIsLoggedIn } = useLoginContext();
-  const { userEmail, setUserEmail } = useEmailContext();
+  const [isLoggedin, setIsLoggedIn] = useState(false); //use login context
+  // const { isLoggedin, setIsLoggedIn } = useLoginContext();
+  // const { userEmail, setUserEmail } = useEmailContext();
 
   const navigate = useNavigate();
 
@@ -25,11 +25,10 @@ const Login = () => {
   // Redirect on successful login, React is asynchronoues
   useEffect(() => {
     if (isLoggedin) {
-      console.log(isLoggedin);
-      console.log(userEmail);
-      navigate("/home");
+      console.log("login", isLoggedin);
+      console.log("email ", email);
     }
-  }, [isLoggedin, navigate, userEmail]);
+  }, [isLoggedin, email]);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -75,9 +74,9 @@ const Login = () => {
       .then((data) => {
         if (data.message === "Successfully logged in!") {
           setIsLoggedIn(true);
-          // setUserEmail(email);
-          sessionStorage.setItem("userEmail", email); // Save email to sessionStorage
-          navigate("/");
+          sessionStorage.setItem("isLoggedin", true); // Store isLoggedin in sessionStorage
+          sessionStorage.setItem("userEmail", email); // Store email in sessionStorage
+          navigate("/home"); // Navigate to home
         } else {
           setMessage(data.message || "Invalid credentials.");
         }

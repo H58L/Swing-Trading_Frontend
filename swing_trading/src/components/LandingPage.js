@@ -9,17 +9,16 @@ import Login from "./Login";
 const Home = () => {
   return (
     <div className="home-container">
-      
       <div className="navigation">
-      {/* <Header></Header> */}
-        <img
+        {/* <Header></Header> */}
+        {/* <img
           src={`${process.env.PUBLIC_URL}/Landing_Page_bg.jpg`}
           alt="Landing Page Background"
           className="w-screen h-auto" // Tailwind classes for full width
         />
-        
+         */}
         <Login></Login>
-        <Footer></Footer>
+        {/* <Footer></Footer> */}
       </div>
     </div>
   );
