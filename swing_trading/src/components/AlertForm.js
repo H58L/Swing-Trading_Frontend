@@ -6,6 +6,7 @@ import { useAlertsContext } from "../context/AlertsContext";
 import { useEmailContext } from "../context/EmailContext";
 import { useLoginContext } from "../context/LoginContext";
 import { Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const AlertForm = () => {
   const { darkMode } = useContext(ThemeContext);
@@ -13,7 +14,6 @@ const AlertForm = () => {
   // const { userEmail, setUserEmail } = useEmailContext();
   // const userEmail = sessionStorage.getItem("userEmail"); // Retrieve email from sessionStorage
   const [userEmail, setUserEmail] = useState(""); // State for user email
-  const { isLoggedin, setIsLoggedIn } = useLoginContext();
   const [formData, setFormData] = useState({
     ticker: "",
     currentPrice: "",
@@ -24,21 +24,25 @@ const AlertForm = () => {
   const [supportResistanceData, setSupportResistanceData] = useState([]);
   const [pivotPoint, setPivotPoint] = useState(null);
 
+  const navigate = useNavigate();
+  const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
 
-
-  // Retrieve email from sessionStorage on component mount
+  // Retrieve isLoggedIn from sessionStorage on component mount
   useEffect(() => {
-    const email = sessionStorage.getItem("userEmail");
-    if (email) {
-      setUserEmail(email);
+    const storedLoginStatus = sessionStorage.getItem("isLoggedin");
+    if (storedLoginStatus) {
+      setIsLoggedIn(storedLoginStatus === "true"); // Convert to boolean
+    } else {
+      setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
     }
   }, []);
 
-  //Lock
-  if (!isLoggedin) {
-   
-    return <Navigate to="/" replace />;
-  }
+  // Redirect if not logged in
+  useEffect(() => {
+    if (isLoggedin === false) {
+      navigate("/");
+    }
+  }, [isLoggedin, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

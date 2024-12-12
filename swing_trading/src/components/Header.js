@@ -26,8 +26,6 @@ const Header = ({ name, onLogin, onLogout }) => {
   // const userEmail = sessionStorage.getItem("userEmail"); // Retrieve email from sessionStorage
   const [userEmail, setUserEmail] = useState("");
 
-  console.log("Header email: ", userEmail);
-
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     console.log(darkMode);
@@ -62,6 +60,7 @@ const Header = ({ name, onLogin, onLogout }) => {
     setIsLoggedIn(false);
     setUserEmail("");
     sessionStorage.removeItem("userEmail");
+    sessionStorage.setItem("isLoggedin", false); //
     navigate("/");
   };
 

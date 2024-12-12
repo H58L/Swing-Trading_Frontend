@@ -1,18 +1,3 @@
-
-// import React from "react";
-// import Login from "./Login";
-
-// const Admin = () => {
-//   return (
-//     <>
-//       <h1>Admin Login</h1>
-     
-//     </>
-//   );
-// };
-
-// export default Admin;
-
 // XXXX ADMIN LOGIN FOR REGISTERING NEW USER XXXXX
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -29,20 +14,30 @@ const Admin = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState({});
-  // const {isLoggedin, setIsLoggedIn} = useLoginContext(); //use login context
-  const { isLoggedin, setIsLoggedIn } = useLoginContext();
-  const { userEmail, setUserEmail } = useEmailContext();
-
-  const navigate = useNavigate();
 
   const login = useGoogleLogin({
     onSuccess: (tokenResponse) => console.log(tokenResponse),
   });
 
-  if (!isLoggedin) {
-   
-    return <Navigate to="/" replace />;
-  }
+  const navigate = useNavigate();
+  const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
+
+  // Retrieve isLoggedIn from sessionStorage on component mount
+  useEffect(() => {
+    const storedLoginStatus = sessionStorage.getItem("isLoggedin");
+    if (storedLoginStatus) {
+      setIsLoggedIn(storedLoginStatus === "true"); // Convert to boolean
+    } else {
+      setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
+    }
+  }, []);
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (isLoggedin === false) {
+      navigate("/");
+    }
+  }, [isLoggedin, navigate]);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

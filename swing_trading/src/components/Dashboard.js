@@ -1,23 +1,35 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Alerts from "./Alerts";
 import StockWatchlist from "./StockWatchList";
 import Header from "./Header";
-import Chart from "./Chart";
-import ThemeContext from "../context/ThemeContext";
-import { useContext } from "react";
 import ChartDisplay from "./ChartDisplay";
-import StockWatchlistSearch from "./StockWatchlistSearch"
+import StockWatchlistSearch from "./StockWatchlistSearch";
+import ThemeContext from "../context/ThemeContext";
 import { useLoginContext } from "../context/LoginContext";
 import { Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const { darkMode } = useContext(ThemeContext);
- const {isLoggedin} = useLoginContext();
+  const navigate = useNavigate();
+  const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
 
-  if (!isLoggedin) {
-   
-    return <Navigate to="/" replace />;
-  }
+  // Retrieve isLoggedIn from sessionStorage on component mount
+  useEffect(() => {
+    const storedLoginStatus = sessionStorage.getItem("isLoggedin");
+    if (storedLoginStatus) {
+      setIsLoggedIn(storedLoginStatus === "true"); // Convert to boolean
+    } else {
+      setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
+    }
+  }, []);
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (isLoggedin === false) {
+      navigate("/");
+    }
+  }, [isLoggedin, navigate]);
 
   return (
     <>
@@ -43,7 +55,7 @@ const Dashboard = () => {
             darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-200"
           }`}
         >
-        <StockWatchlistSearch></StockWatchlistSearch>
+          <StockWatchlistSearch></StockWatchlistSearch>
           <StockWatchlist />
         </div>
       </div>
