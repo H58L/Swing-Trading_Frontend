@@ -20,6 +20,12 @@ import Header from "./components/Header";
 import { EmailProvider } from "./context/EmailContext";
 import Prediction from "./components/Prediction";
 import { AlertsProvider } from "./context/AlertsContext";
+import Admin from "./components/Admin";
+import LandingPage from "./components/LandingPage"
+import LoginDisplay from "./components/LoginDisplay"
+import { ValidTickerProvider } from "./context/ValidTickerContext";
+import LandingPage from "./components/LandingPage";
+import LoginDisplay from "./components/LoginDisplay";
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -34,12 +40,14 @@ const App = () => {
         <LoginProvider>
           <EmailProvider>
             <AlertsProvider>
+            <ValidTickerProvider>
               <Router>
                 <div className="App">
                   {" "}
                   {/* Wrap everything in the App class */}
                   <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route path="/" element={<Login />} />
+                    <Route path="/home" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/chart" element={<ChartContainer />} />
@@ -47,9 +55,12 @@ const App = () => {
                     <Route path="/data" element={<StockData />} />
                     <Route path="/alertform" element={<AlertForm />} />
                     <Route path="/prediction" element={<Prediction />} />
+                    <Route path="/admin" element={<Admin />} />
                   </Routes>
                 </div>
               </Router>
+            </ValidTickerProvider>
+              
             </AlertsProvider>
           </EmailProvider>
         </LoginProvider>

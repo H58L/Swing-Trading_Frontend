@@ -1,3 +1,4 @@
+// XXXX ADMIN LOGIN FOR REGISTERING NEW USER XXXXX
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
@@ -5,30 +6,38 @@ import "../style/Login.css";
 import { useLoginContext } from "../context/LoginContext";
 import Header from "./Header";
 import { useEmailContext } from "../context/EmailContext";
+import { Navigate } from "react-router-dom";
 
-const Login = () => {
+const Admin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState({});
-  const [isLoggedin, setIsLoggedIn] = useState(false); //use login context
-  // const { isLoggedin, setIsLoggedIn } = useLoginContext();
-  // const { userEmail, setUserEmail } = useEmailContext();
-
-  const navigate = useNavigate();
 
   const login = useGoogleLogin({
     onSuccess: (tokenResponse) => console.log(tokenResponse),
   });
 
-  // Redirect on successful login, React is asynchronoues
+  const navigate = useNavigate();
+  const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
+
+  // Retrieve isLoggedIn from sessionStorage on component mount
   useEffect(() => {
-    if (isLoggedin) {
-      console.log("login", isLoggedin);
-      console.log("email ", email);
+    const storedLoginStatus = sessionStorage.getItem("isLoggedin");
+    if (storedLoginStatus) {
+      setIsLoggedIn(storedLoginStatus === "true"); // Convert to boolean
+    } else {
+      setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
     }
-  }, [isLoggedin, email]);
+  }, []);
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (isLoggedin === false) {
+      navigate("/");
+    }
+  }, [isLoggedin, navigate]);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -74,9 +83,9 @@ const Login = () => {
       .then((data) => {
         if (data.message === "Successfully logged in!") {
           setIsLoggedIn(true);
-          sessionStorage.setItem("isLoggedin", true); // Store isLoggedin in sessionStorage
-          sessionStorage.setItem("userEmail", email); // Store email in sessionStorage
-          navigate("/home"); // Navigate to home
+          // setUserEmail(email);
+          sessionStorage.setItem("userEmail", email); // Save email to sessionStorage
+          navigate("/");
         } else {
           setMessage(data.message || "Invalid credentials.");
         }
@@ -89,7 +98,7 @@ const Login = () => {
 
   return (
     <div>
-      {/* <Header /> */}
+      <Header />
       <div
         className="bg-cover bg-center bg-no-repeat h-screen flex items-center justify-center login-page"
         style={{
@@ -100,7 +109,7 @@ const Login = () => {
         <div className="login-container">
           <form onSubmit={handleSubmit} className="p-6">
             <h1 className="text-center text-3xl font-semibold text-gray-700 mb-6">
-              Sign in
+              Verify your Identity to register a new User
             </h1>
 
             <div className="mb-4">
@@ -194,4 +203,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Admin;

@@ -1,12 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../style/Register.css"; // Import CSS styles
+import { useLoginContext } from "../context/LoginContext";
+import { Navigate } from "react-router-dom"; // Use Navigate for redirection
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({}); // Track validation errors
+  const navigate = useNavigate();
+  const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
+
+  // Retrieve isLoggedIn from sessionStorage on component mount
+  useEffect(() => {
+    const storedLoginStatus = sessionStorage.getItem("isLoggedin");
+    if (storedLoginStatus) {
+      setIsLoggedIn(storedLoginStatus === "true"); // Convert to boolean
+    } else {
+      setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
+    }
+  }, []);
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (isLoggedin === false) {
+      navigate("/");
+    }
+  }, [isLoggedin, navigate]);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -146,4 +168,3 @@ const Register = () => {
 };
 
 export default Register;
-

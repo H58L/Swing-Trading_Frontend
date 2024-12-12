@@ -1,32 +1,46 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 import ChartContainer from "./ChartContainer";
-import Counter from "./Counter";
 
 const Home = () => {
+  const navigate = useNavigate();
+  const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
+
+  // Retrieve isLoggedIn from sessionStorage on component mount
+  useEffect(() => {
+    const storedLoginStatus = sessionStorage.getItem("isLoggedin");
+    if (storedLoginStatus) {
+      setIsLoggedIn(storedLoginStatus === "true"); // Convert to boolean
+    } else {
+      setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
+    }
+  }, []);
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (isLoggedin === false) {
+      navigate("/");
+    }
+  }, [isLoggedin, navigate]);
+
   return (
     <div className="home-container">
-      
-      <div className="navigation">
-        {/* <Counter /> */}
-        {/* <Link to="/login" className="mr-4">
-          Login
-        </Link>
-        <Link to="/register" className="mr-4">
-          Register
-        </Link> */}
-          <Header></Header>
-        {/* Image with full width from the public folder */}
+      <Header />
+
+      {/* Full-width background image */}
+      <div className="image-container">
         <img
           src={`${process.env.PUBLIC_URL}/Landing_Page_bg.jpg`}
           alt="Landing Page Background"
-          className="w-screen h-auto" // Tailwind classes for full width
+          className="w-screen h-auto"
         />
-        <ChartContainer></ChartContainer>
-        <Footer></Footer>
       </div>
+
+      <ChartContainer />
+
+      <Footer />
     </div>
   );
 };
