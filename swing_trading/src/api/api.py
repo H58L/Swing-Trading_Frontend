@@ -1,131 +1,159 @@
-# app.py
 from flask import Flask, jsonify, request
-import yfinance as yf
-from flask_cors import CORS
 from charts import create_candlestick_chart
-from LSTM import get_lstm_predictions  # Import the modified LSTM prediction function
-from RNN import get_ohlc_predictions
-
-
+from RNN import get_rnn_predictions
+from LSTM import lstm_forecast
+from flask_cors import CORS
+import pandas as pd
 
 app = Flask(__name__)
 CORS(app)
-
-@app.route('/api/stock', methods=['GET'])
-def get_stock_data():
-    stock_ticker = request.args.get('ticker', 'RELIANCE.NS')  # Default to Reliance
-    period = request.args.get('period', '1mo')  # Default to 1 month
-
-    if not stock_ticker:
-        return jsonify({'error': 'Ticker symbol is required'}), 400
-
-    try:
-        stock = yf.Ticker(stock_ticker)
-        stock_info = stock.history(period=period)
-
-        if not stock_info.empty:
-            stock_data = {
-                'dates': stock_info.index.strftime('%Y-%m-%d').tolist(),
-                'open': stock_info['Open'].tolist(),
-                'high': stock_info['High'].tolist(),
-                'low': stock_info['Low'].tolist(),
-                'close': stock_info['Close'].tolist(),
-                'volume': stock_info['Volume'].tolist(),
-            }
-            return jsonify(stock_data)
-        else:
-            return jsonify({'error': f'No data found for the given ticker: {stock_ticker}'}), 404
-
-    except Exception as e:
-        print(f"Error occurred: {e}")
-        return jsonify({'error': str(e)}), 500
 
 @app.route('/candlestick-chart', methods=['GET'])
 def candlestick_chart():
     # Get stock symbol from query parameter (default: AAPL)
     stock_symbol = request.args.get('symbol', 'AAPL')
-    candlestick_data = create_candlestick_chart(stock_symbol)
+    period = request.args.get('period', '5y')  # Default period
+    candlestick_data = create_candlestick_chart(stock_symbol, period)
     return jsonify(candlestick_data)
-
-@app.route('/lstm', methods=['GET'])
-def combined_chart_lstm():
-    stock_symbol = request.args.get('symbol', 'AAPL')
-    forecast_days = int(request.args.get('forecast_days', 15))  # Default to 15 days forecast
-    
-    # Generate candlestick data
-    candlestick_data = create_candlestick_chart(stock_symbol)
-    if "error" in candlestick_data:
-        return jsonify(candlestick_data)
-    
-    # Get OHLC predictions (including next 15 days)
-    lstm_data = get_lstm_predictions(stock_symbol, forecast_days=forecast_days)
-    if "error" in lstm_data:
-        return jsonify(lstm_data)
-    
-    # Combine both datasets into one
-    combined_data = candlestick_data
-    
-    # Combine the historical predictions and forecast predictions
-    combined_data["data"].append({
-        "x": lstm_data["dates"],
-        "y": lstm_data["predictions"],
-        "type": "scatter",
-        "mode": "lines",
-        "name": "LSTM Predictions",
-        "line": {"color": "blue", "width": 2}
-    })
-
-    combined_data["data"].append({
-    "x": lstm_data["forecasted_dates"],
-    "y": lstm_data["forecasted_predictions"],
-    "type": "scatter",
-    "mode": "lines",
-    "name": "Forecasted Predictions",
-    "line": {"color": "green", "width": 2, "dash": "dash"}
-    })
-    
-    return jsonify(combined_data)
 
 @app.route('/rnn', methods=['GET'])
 def combined_chart_rnn():
     stock_symbol = request.args.get('symbol', 'AAPL')
-    forecast_days = int(request.args.get('forecast_days', 15))  # Default to 15 days forecast
+    period = request.args.get('period', '5y')  # Default period
+    forecast_days = int(request.args.get('forecast_days', 5))  # Default to 15 days forecast
     
     # Generate candlestick data
-    candlestick_data = create_candlestick_chart(stock_symbol)
+    candlestick_data = create_candlestick_chart(stock_symbol, period)
     if "error" in candlestick_data:
         return jsonify(candlestick_data)
     
-    # Get OHLC predictions (including next 15 days)
-    lstm_data = get_ohlc_predictions(stock_symbol, forecast_days=forecast_days)
-    if "error" in lstm_data:
-        return jsonify(lstm_data)
+    # Get RNN predictions (including next 5 days)
+    rnn_data = get_rnn_predictions(stock_symbol, forecast_days=forecast_days)
+    if "error" in rnn_data:
+        return jsonify(rnn_data)
     
-    # Combine both datasets into one
+     # Filter predictions to match the selected period
+    candlestick_dates = [item['x'] for item in candlestick_data['data'] if item['type'] == 'candlestick'][0]
+    start_date = pd.to_datetime(candlestick_dates[0]).tz_localize(None)  # Ensure timezone-naive
+    end_date = pd.to_datetime(candlestick_dates[-1]).tz_localize(None)  # Ensure timezone-naive
+    
+    # Filter predicted dates and values
+    filtered_predictions = [
+        (date, value) 
+        for date, value in zip(rnn_data["dates"], rnn_data["predicted"])
+        if start_date <= pd.to_datetime(date).tz_localize(None) <= end_date  # Ensure comparison is timezone-naive
+    ]
+    filtered_dates, filtered_values = zip(*filtered_predictions) if filtered_predictions else ([], [])
+    
+    # Update the combined chart data
     combined_data = candlestick_data
-    
-    # Combine the historical predictions and forecast predictions
     combined_data["data"].append({
-        "x": lstm_data["dates"],
-        "y": lstm_data["predicted"],
+        "x": filtered_dates,
+        "y": filtered_values,
         "type": "scatter",
         "mode": "lines",
         "name": "RNN Predictions",
         "line": {"color": "blue", "width": 2}
     })
+    
+    # # Combine both datasets into one
+    # combined_data = candlestick_data
+    
+    # # # Combine the historical predictions and forecast predictions
+    # # combined_data["data"].append({
+    # #     "x": lstm_data["dates"],
+    # #     "y": lstm_data["predicted"],
+    # #     "type": "scatter",
+    # #     "mode": "lines",
+    # #     "name": "RNN Predictions",
+    # #     "line": {"color": "blue", "width": 2}
+    # # })
 
     combined_data["data"].append({
-    "x": lstm_data["forecasted_dates"],
-    "y": lstm_data["forecasted_predictions"],
+    "x": rnn_data["forecasted_dates"],
+    "y": rnn_data["forecasted_predictions"],
     "type": "scatter",
     "mode": "lines",
     "name": "Forecasted Predictions",
     "line": {"color": "green", "width": 2, "dash": "dash"}
     })
+
+    # Include table data in the response
+    combined_data["table_data"] = {
+        "forecasted_dates": rnn_data["forecasted_dates"],
+        "forecasted_predictions": rnn_data["forecasted_predictions"]
+    }
     
     return jsonify(combined_data)
 
-        
+@app.route('/lstm', methods=['GET'])
+def combined_chart_lstm():
+    stock_symbol = request.args.get('symbol', 'AAPL')
+    period = request.args.get('period', '5y')  # Default period
+    forecast_days = int(request.args.get('forecast_days', 5))  # Default to 5 days forecast
+
+    # Generate candlestick data
+    candlestick_data = create_candlestick_chart(stock_symbol, period)
+    if "error" in candlestick_data:
+        return jsonify(candlestick_data)
+    
+    try:
+        # Call the updated LSTM function
+        lstm_result = lstm_forecast(stock_symbol, forecast_days=forecast_days)
+    except ValueError as e:
+        print("Error during LSTM forecast:", str(e))
+        return {"error": str(e)}
+    
+    # Filter candlestick chart's period
+    candlestick_dates = [
+        pd.to_datetime(item['x']).tz_localize(None) 
+        for item in candlestick_data['data'] if item['type'] == 'candlestick'
+    ][0]
+    start_date = candlestick_dates[0]
+    end_date = candlestick_dates[-1]
+    
+    # Historical Predictions: Filter LSTM data matching historical candlestick period
+    historical_predictions = [
+        (str(date), float(value))  # Convert to serializable types
+        for date, value in zip(lstm_result["historical_dates"], lstm_result["historical_predictions"])
+        if start_date <= pd.to_datetime(date) <= end_date
+    ]
+    historical_dates, historical_values = zip(*historical_predictions) if historical_predictions else ([], [])
+
+    # Forecasted Predictions: Already future-dated; no need for additional filtering
+    forecasted_dates = [str(date) for date in lstm_result["forecasted_dates"]]
+    forecasted_values = [float(value) for value in lstm_result["forecasted_predictions"]]
+
+    # Combine the historical data (blue line)
+    combined_data = candlestick_data
+    if historical_dates and historical_values:
+        combined_data["data"].append({
+            "x": historical_dates,
+            "y": historical_values,
+            "type": "scatter",
+            "mode": "lines",
+            "name": "LSTM Predictions (Historical)",
+            "line": {"color": "blue", "width": 2}
+        })
+    
+    # Combine the forecasted data (green dashed line)
+    if forecasted_dates and forecasted_values:
+        combined_data["data"].append({
+            "x": forecasted_dates,
+            "y": forecasted_values,
+            "type": "scatter",
+            "mode": "lines",
+            "name": "LSTM Predictions (Forecast)",
+            "line": {"color": "green", "width": 2, "dash": "dash"}
+        })
+
+    # Include table data in the response
+    combined_data["table_data"] = {
+        "forecasted_dates": forecasted_dates,
+        "forecasted_predictions": forecasted_values  # Ensure float
+    }
+
+    return jsonify(combined_data)
+
 if __name__ == '__main__':
     app.run(debug=True)
-
