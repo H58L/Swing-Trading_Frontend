@@ -21,6 +21,9 @@ import { EmailProvider } from "./context/EmailContext";
 import Prediction from "./components/Prediction";
 import { AlertsProvider } from "./context/AlertsContext";
 import Admin from "./components/Admin";
+import LandingPage from "./components/LandingPage"
+import LoginDisplay from "./components/LoginDisplay"
+import { ValidTickerProvider } from "./context/ValidTickerContext";
 import LandingPage from "./components/LandingPage";
 import LoginDisplay from "./components/LoginDisplay";
 
@@ -37,6 +40,7 @@ const App = () => {
         <LoginProvider>
           <EmailProvider>
             <AlertsProvider>
+            <ValidTickerProvider>
               <Router>
                 <div className="App">
                   {" "}
@@ -55,6 +59,8 @@ const App = () => {
                   </Routes>
                 </div>
               </Router>
+            </ValidTickerProvider>
+              
             </AlertsProvider>
           </EmailProvider>
         </LoginProvider>

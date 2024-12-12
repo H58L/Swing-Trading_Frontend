@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux"; // Added useSelector to 
 import ChartDisplay from "./ChartDisplay";
 import { useLoginContext } from "../context/LoginContext";
 import { Navigate } from "react-router-dom";
+import { useValidTickerContext } from "../context/ValidTickerContext";
 import { Link, useNavigate } from "react-router-dom";
 
 const StockData = () => {
@@ -21,6 +22,8 @@ const StockData = () => {
   const [previousClose, setPreviousClose] = useState(null); // Previous closing price
 
   const { stockSymbol } = useContext(StockContext);
+  const {isValidTicker, setIsValidTicker} = useValidTickerContext(); 
+
   const dispatch = useDispatch(); //allows the component to send actions to the Redux store.
 
   // This hook accesses the current stockData from the Redux store
@@ -91,20 +94,25 @@ const StockData = () => {
     setLoading(true);
   };
 
-  const chartTitle = `${stockSymbol} - ${
+  // const chartTitle = `${stockSymbol} - ${
+  //   chartType.charAt(0).toUpperCase() + chartType.slice(1)
+  // } Chart (${period})`;
+
+  const chartTitle = `${isValidTicker ? `${stockSymbol.toUpperCase()} - ` : 'Ticker is Invalid: '}${
     chartType.charAt(0).toUpperCase() + chartType.slice(1)
   } Chart (${period})`;
+  
 
   // Calculate price difference and percentage change
   const priceDifference =
-    realTimePrice && previousClose
+    isValidTicker && realTimePrice && previousClose
       ? (realTimePrice - previousClose).toFixed(2)
-      : null;
+      : 'Invalid';
 
   const percentageChange =
-    previousClose && realTimePrice
+    isValidTicker && previousClose && realTimePrice
       ? (((realTimePrice - previousClose) / previousClose) * 100).toFixed(2)
-      : null;
+      : 'Inavlid';
 
   return (
     <>
@@ -123,7 +131,7 @@ const StockData = () => {
             className={`text-3xl font-bold mb-6 text-center ${
               darkMode ? "text-gray-200" : "text-gray-800"
             }`}
-          >
+          >                 
             {chartTitle}
           </h1>
 
@@ -135,7 +143,7 @@ const StockData = () => {
               }`}
             >
               Current Price:{" "}
-              {realTimePrice ? `₹${realTimePrice.toFixed(2)}` : "Loading..."}
+              {isValidTicker ?  (realTimePrice ? `₹${realTimePrice.toFixed(2)}` : "Loading...") : "INVALID"}
             </span>
             {priceDifference !== null && (
               <div className="text-lg">

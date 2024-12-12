@@ -6,6 +6,7 @@ import "../style/Search.css";
 import ThemeContext from "../context/ThemeContext";
 import axios from "axios";
 import StockContext from "../context/StockContext";
+import { useValidTickerContext } from "../context/ValidTickerContext";
 
 const Search = () => {
   //intialize both these states to the mock data that was copypastes gfrom Finn hub
@@ -14,6 +15,7 @@ const Search = () => {
   //Will track the best matches being returned form the API
   const [error, setError] = useState("");
 
+  const {isValidTicker, setIsValidTicker} = useValidTickerContext();
   const { darkMode } = useContext(ThemeContext);
   const { setStockSymbol } = useContext(StockContext); // Get Setter for stock symol
   const clear = () => {
@@ -40,8 +42,13 @@ const Search = () => {
 
       //setBestMatches(response.data);
       setError("");
+      setIsValidTicker(true);
+      console.log(isValidTicker);
     } catch (err) {
+      setIsValidTicker(false);
+      console.log(isValidTicker);
       setError("Stock not found. Please try again.");
+      
       //setBestMatches([]);
     }
   };
@@ -59,10 +66,11 @@ const Search = () => {
         placeholder="Search Stock"
         onChange={(event) => {
           //Setting input to what is searchd in the bar
-          setInput(event.target.value);
+           setInput(event.target.value);
         }}
         onKeyPress={(event) => {
           if (event.key === "Enter") {
+            setInput(event.target.value);
             setStockSymbol(input);
             console.log(setStockSymbol);
             updateBestMatches();
@@ -95,9 +103,13 @@ const Search = () => {
 
       {/* Display search results */}
       {input && bestMatches.length > 0 ? (
-        <SearchResults results={bestMatches}></SearchResults>
+        <SearchResults results={bestMatches}></SearchResults> 
       ) : error ? (
-        <p>{error}</p> // Display error message if any
+        console.log({error}),
+     
+        <p>{error}</p>
+        
+         // Display error message if any
       ) : null}
     </div>
   );
