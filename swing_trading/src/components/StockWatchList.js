@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import ThemeContext from "../context/ThemeContext";
 import { useContext } from "react";
-import { FaPlus } from "react-icons/fa"; // Icon
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { useLoginContext } from "../context/LoginContext";
+import StockWatchlistSearch from "./StockWatchlistSearch";
 
 const StockWatchlist = () => {
   const { darkMode } = useContext(ThemeContext);
@@ -103,56 +103,83 @@ const StockWatchlist = () => {
     }
   }, [stocks]);
 
+  const removeEntry = async (ticker) => {
+    try {
+      // Post the ticker to the backend for removal
+      await axios.post("http://localhost:8080/api/watchlist/deleteWatchlist", {
+        ticker,
+      });
+
+      // After successful deletion, remove the stock from the local state
+      setStocks((prevStocks) =>
+        prevStocks.filter((stock) => stock.symbol !== ticker)
+      );
+    } catch (error) {
+      console.error("Error deleting stock from watchlist:", error);
+    }
+  };
+
   return (
-    <div className="p-0 h-full w-full">
-      <ul className="h-full">
-        {stockData.map((stock, index) => (
-          <li
-            key={index}
-            className={`stock-item mb-3 rounded p-4 shadow-sm border border-gray-100 w-full ${
-              darkMode ? "bg-gray-900 text-gray-100" : "bg-white"
-            }`}
-          >
-            <div className="flex items-center">
-              <button className="m-1 p-1">
-                <FaPlus className="text-xl text-gray-600 hover:text-gray-900" />
-              </button>
-              <div className="text-left ml-2">
-                <h3 className="text-lg font-semibold">
-                  {stock.symbol || "Unknown Company"}
-                </h3>
-                {/* <p>{stock.symbol}</p> */}
+    <>
+      <StockWatchlistSearch
+        stocks={stocks}
+        addStockToWatchlist={(newStock) => setStocks([...stocks, newStock])}
+      />
+      <div className="p-0 h-full w-full">
+        <ul className="h-full">
+          {stockData.map((stock, index) => (
+            <li
+              key={index}
+              className={`stock-item mb-3 rounded p-4 shadow-sm border border-gray-100 w-full ${
+                darkMode ? "bg-gray-900 text-gray-100" : "bg-white"
+              }`}
+            >
+              <div className="flex items-center">
+                <button className="m-1 p-1">
+                  <DeleteForeverIcon
+                    className="text-xl text-gray-600 hover:text-gray-900"
+                    onClick={() => removeEntry(stock.symbol)}
+                  />
+                </button>
+                <div className="text-left ml-2">
+                  <h3 className="text-lg font-semibold">
+                    {stock.symbol || "Unknown Company"}
+                  </h3>
+                  {/* <p>{stock.symbol}</p> */}
+                </div>
+                <div className="ml-auto text-right">
+                  <p
+                    className={`text-lg font-bold ${
+                      stock.change >= 0 ? "text-green-500" : "text-red-500"
+                    }`}
+                  >
+                    ₹
+                    {stock.price !== null
+                      ? stock.price.toFixed(2)
+                      : "Loading..."}
+                  </p>
+                  <p
+                    className={`text-sm ${
+                      stock.change >= 0 ? "text-green-500" : "text-red-500"
+                    }`}
+                  >
+                    {stock.change >= 0 ? "+" : ""}
+                    {stock.change} ({stock.percentageChange}%)
+                  </p>
+                  <p
+                    className={`text-xs ${
+                      darkMode ? "text-gray-300" : "text-gray-600"
+                    }`}
+                  >
+                    Volume: {stock.volume || "N/A"}
+                  </p>
+                </div>
               </div>
-              <div className="ml-auto text-right">
-                <p
-                  className={`text-lg font-bold ${
-                    stock.change >= 0 ? "text-green-500" : "text-red-500"
-                  }`}
-                >
-                  ₹
-                  {stock.price !== null ? stock.price.toFixed(2) : "Loading..."}
-                </p>
-                <p
-                  className={`text-sm ${
-                    stock.change >= 0 ? "text-green-500" : "text-red-500"
-                  }`}
-                >
-                  {stock.change >= 0 ? "+" : ""}
-                  {stock.change} ({stock.percentageChange}%)
-                </p>
-                <p
-                  className={`text-xs ${
-                    darkMode ? "text-gray-300" : "text-gray-600"
-                  }`}
-                >
-                  Volume: {stock.volume || "N/A"}
-                </p>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 };
 
