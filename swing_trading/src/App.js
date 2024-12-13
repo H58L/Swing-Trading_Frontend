@@ -24,8 +24,8 @@ import Admin from "./components/Admin";
 import LandingPage from "./components/LandingPage"
 import LoginDisplay from "./components/LoginDisplay"
 import { ValidTickerProvider } from "./context/ValidTickerContext";
-import LandingPage from "./components/LandingPage";
-import LoginDisplay from "./components/LoginDisplay";
+// import LandingPage from "./components/LandingPage";
+// import LoginDisplay from "./components/LoginDisplay";
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);

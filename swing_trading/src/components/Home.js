@@ -7,14 +7,14 @@ import ChartContainer from "./ChartContainer";
 const Home = () => {
   const navigate = useNavigate();
   const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
-
+  
   // Retrieve isLoggedIn from sessionStorage on component mount
   useEffect(() => {
-    const storedLoginStatus = sessionStorage.getItem("isLoggedin");
+   const storedLoginStatus = sessionStorage.getItem("isLoggedin");
     if (storedLoginStatus) {
       setIsLoggedIn(storedLoginStatus === "true"); // Convert to boolean
     } else {
-      setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
+       setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
     }
   }, []);
 

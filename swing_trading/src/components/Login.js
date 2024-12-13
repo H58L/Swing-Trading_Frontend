@@ -13,7 +13,7 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState({});
   const [isLoggedin, setIsLoggedIn] = useState(false); //use login context
-  // const { isLoggedin, setIsLoggedIn } = useLoginContext();
+  //  const { isLoggedin, setIsLoggedIn } = useLoginContext();
   // const { userEmail, setUserEmail } = useEmailContext();
 
   const navigate = useNavigate();
@@ -73,9 +73,10 @@ const Login = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.message === "Successfully logged in!") {
-          setIsLoggedIn(true);
+          
           sessionStorage.setItem("isLoggedin", true); // Store isLoggedin in sessionStorage
-          sessionStorage.setItem("userEmail", email); // Store email in sessionStorage
+          sessionStorage.setItem("userEmail", email);
+          setIsLoggedIn(true); // Store email in sessionStorage
           navigate("/home"); // Navigate to home
         } else {
           setMessage(data.message || "Invalid credentials.");
