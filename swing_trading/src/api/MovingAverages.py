@@ -1,3 +1,5 @@
+import pandas as pd
+
 #SIMPLE MOVING AVERAGES
 def calculate_MA2050100(data):
     data['MA20'] = data['Close'].rolling(window=20).mean()
@@ -47,3 +49,37 @@ def calculate_EMA100(data):
    
     return result
 
+#Moving Average COnvergance Divergence
+def calculate_ema(data, window):
+    """
+    Calculate Exponential Moving Average (EMA).
+
+    Args:
+        data (pd.Series): The closing price series.
+        window (int): The number of periods for EMA.
+
+    Returns:
+        pd.Series: EMA values.
+    """
+    return data.ewm(span=window, adjust=False).mean()
+
+def calculate_MACD(data):
+    # Ensure Date is in datetime format
+    data['Date'] = pd.to_datetime(data['Date'])
+
+    # Calculate MACD components
+    ema_12 = calculate_ema(data['Close'], 12)
+    ema_26 = calculate_ema(data['Close'], 26)
+    macd = ema_12 - ema_26
+    signal_line = macd.ewm(span=9, adjust=False).mean()
+
+    # Add MACD and Signal Line to the DataFrame
+    data['MACD'] = macd
+    data['Signal_line'] = signal_line
+
+    # Only return Date, Close, MACD, and Signal_line after calculation
+    result = data[['Date', 'Close', 'MACD', 'Signal_line']].dropna().reset_index(drop=True)
+    return result
+
+
+     

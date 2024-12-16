@@ -22,6 +22,7 @@ const IndicatorChart = () => {
     { label: 'Exponential Moving Averages - 50 Days', value: 'EMA50' },
     { label: 'Exponential Moving Averages - 100 Days', value: 'EMA100' },
     { label: 'Bollinger Bands - 20 Days', value: 'BB20' },
+    { label: 'Moving Average Convergence/divergence', value: 'MACD' },
     { label: 'Elliot Wave', value: 'ElliottWave' },
   ];
 
@@ -144,7 +145,29 @@ const plotData = () => {
         line: { color: 'red' },
       }
     );
-  } else if (selectedIndicator === 'ElliottWave') {
+  }
+  
+  // Handle MACD specifically
+  if (selectedIndicator === 'MACD') {
+    plots.push({
+      x: data.map((d) => d.Date),
+      y: data.map((d) => d.MACD),
+      type: 'scatter',
+      mode: 'lines',
+      name: 'MACD Line',
+      line: { color: 'blue' }, // Set a color for the MACD line
+    });
+    plots.push({
+      x: data.map((d) => d.Date),
+      y: data.map((d) => d.Signal_line),
+      type: 'scatter',
+      mode: 'lines',
+      name: 'Signal Line',
+      line: { color: 'orange' }, // Set a color for the signal line
+    });
+  }
+  
+  else if (selectedIndicator === 'ElliottWave') {
     // Handle Elliott Wave logic here
     // Similar to the previous example
   } else {
