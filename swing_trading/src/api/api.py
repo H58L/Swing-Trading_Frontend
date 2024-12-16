@@ -7,6 +7,7 @@ import pandas as pd
 import yfinance as yf
 from ElliotWave import calculate_elliott_wave
 from BollingerBands import calculate_BB
+from MovingAverages import calculate_MA20, calculate_MA50, calculate_MA100
 
 app = Flask(__name__)
 CORS(app)
@@ -169,14 +170,15 @@ def moving_averages():
         
         # Validate and calculate the specified moving average
         if indicator == 'MA20':
-            data['MA20'] = data['Close'].rolling(window=20).mean()
-            result = data[['Close', 'MA20']].dropna().reset_index()
+            result = calculate_MA20(data)
         elif indicator == 'MA50':
-            data['MA50'] = data['Close'].rolling(window=50).mean()
-            result = data[['Close', 'MA50']].dropna().reset_index()
+            # data['MA50'] = data['Close'].rolling(window=50).mean()
+            # result = data[['Close', 'MA50']].dropna().reset_index()
+            result = calculate_MA50(data)
         elif indicator == 'MA100':
-            data['MA100'] = data['Close'].rolling(window=100).mean()
-            result = data[['Close', 'MA100']].dropna().reset_index()
+            # data['MA100'] = data['Close'].rolling(window=100).mean()
+            # result = data[['Close', 'MA100']].dropna().reset_index()
+            result = calculate_MA100(data)
         elif indicator == 'BB20': #Bollinger Bands fro 20 days
             result = calculate_BB(data)
 
