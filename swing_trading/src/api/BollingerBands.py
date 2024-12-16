@@ -11,5 +11,5 @@ def calculate_BB(data):
             data['Lower Band'] = data['Middle Band'] - (num_std_dev * data['Standard Deviation'])
             
             # Drop rows with NaN values
-            result = data[['Close', 'Middle Band', 'Upper Band', 'Lower Band']].dropna().reset_index()
+            result = data[['Date','Close', 'Middle Band', 'Upper Band', 'Lower Band']].dropna().reset_index()
             return result
