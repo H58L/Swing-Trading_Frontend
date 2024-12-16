@@ -39,7 +39,7 @@ const StockWatchlist = () => {
       if (isLoggedin && userEmail) {
         try {
           const response = await axios.get(
-            `http://localhost:8080/api/watchlist/${userEmail}`
+            `https://swing-trading-backend-java-production.up.railway.app/api/watchlist/${userEmail}`
           );
           const watchlistData = response.data.map((item) => ({
             symbol: item.ticker, // Map `ticker` to `symbol`
@@ -106,9 +106,12 @@ const StockWatchlist = () => {
   const removeEntry = async (ticker) => {
     try {
       // Post the ticker to the backend for removal
-      await axios.post("http://localhost:8080/api/watchlist/deleteWatchlist", {
-        ticker,
-      });
+      await axios.post(
+        "https://swing-trading-backend-java-production.up.railway.app/api/watchlist/deleteWatchlist",
+        {
+          ticker,
+        }
+      );
 
       // After successful deletion, remove the stock from the local state
       setStocks((prevStocks) =>

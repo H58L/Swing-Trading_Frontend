@@ -75,13 +75,16 @@ const Register = () => {
     setErrors({});
 
     // Send the registration data to the backend
-    fetch("http://localhost:8080/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    })
+    fetch(
+      "https://swing-trading-backend-java-production.up.railway.app/api/register",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log(data.message); // Display success message

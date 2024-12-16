@@ -9,7 +9,6 @@ const Alerts = () => {
   const { darkMode } = useContext(ThemeContext);
   const { isLoggedin } = useLoginContext();
   const navigate = useNavigate();
-  // const { userEmail } = useEmailContext();
   const [userEmail, setUserEmail] = useState(""); // State for user email
 
   const [alerts, setAlerts] = useState([]);
@@ -27,7 +26,7 @@ const Alerts = () => {
       if (isLoggedin && userEmail) {
         try {
           const response = await axios.get(
-            `http://localhost:8080/api/alerts/${userEmail}`
+            `https://swing-trading-backend-java-production.up.railway.app/api/alerts/${userEmail}`
           );
           setAlerts(response.data);
         } catch (error) {

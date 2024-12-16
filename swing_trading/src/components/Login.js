@@ -62,18 +62,20 @@ const Login = () => {
     setErrors({});
 
     // Simulate API call
-    fetch("http://localhost:8080/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({ email, password }),
-    })
+    fetch(
+      "https://swing-trading-backend-java-production.up.railway.app/api/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         if (data.message === "Successfully logged in!") {
-          
           sessionStorage.setItem("isLoggedin", true); // Store isLoggedin in sessionStorage
           sessionStorage.setItem("userEmail", email);
           setIsLoggedIn(true); // Store email in sessionStorage
