@@ -11,13 +11,16 @@ function Counter() {
 
     // Send the updated count to the backend
     try {
-      const response = await fetch("http://localhost:8080/api/count", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ count: newCount }),
-      });
+      const response = await fetch(
+        "https://swing-trading-backend-java-production.up.railway.app/api/count",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ count: newCount }),
+        }
+      );
       if (!response.ok) {
         console.error("Failed to update count on the backend");
       }

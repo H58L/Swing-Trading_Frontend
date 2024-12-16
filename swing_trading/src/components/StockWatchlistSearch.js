@@ -62,7 +62,7 @@ const StockWatchlistSearch = ({ stocks, addStockToWatchlist }) => {
         // Step 2: If ticker is valid, proceed to add it to the database
         const newWatchlist = { ticker: query, emailId: userEmail };
         const createResponse = await fetch(
-          "http://localhost:8080/api/watchlist/createWatchlist",
+          "https://swing-trading-backend-java-production.up.railway.app/api/watchlist/createWatchlist",
           {
             method: "POST",
             headers: {

@@ -10,10 +10,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 const AlertForm = () => {
   const { darkMode } = useContext(ThemeContext);
-  const { addAlert } = useAlertsContext(); // Use the alerts context
-  // const { userEmail, setUserEmail } = useEmailContext();
-  // const userEmail = sessionStorage.getItem("userEmail"); // Retrieve email from sessionStorage
-  const [userEmail, setUserEmail] = useState(""); // State for user email
+  const { addAlert } = useAlertsContext();
+  const [userEmail, setUserEmail] = useState("");
   const [formData, setFormData] = useState({
     ticker: "",
     currentPrice: "",
@@ -23,6 +21,14 @@ const AlertForm = () => {
   const [latestPrice, setLatestPrice] = useState(null);
   const [supportResistanceData, setSupportResistanceData] = useState([]);
   const [pivotPoint, setPivotPoint] = useState(null);
+
+  // Retrieve userEmail from sessionStorage on component mount
+  useEffect(() => {
+    const storedEmail = sessionStorage.getItem("userEmail");
+    if (storedEmail) {
+      setUserEmail(storedEmail); // Store the retrieved email in state
+    }
+  }, []);
 
   const navigate = useNavigate();
   const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
@@ -72,14 +78,17 @@ const AlertForm = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/api/alerts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // Send token if required
-        },
-        body: JSON.stringify(newAlert),
-      });
+      const response = await fetch(
+        "https://swing-trading-backend-java-production.up.railway.app/api/alerts",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Send token if required
+          },
+          body: JSON.stringify(newAlert),
+        }
+      );
 
       if (response.ok) {
         console.log("Alert created successfully");
