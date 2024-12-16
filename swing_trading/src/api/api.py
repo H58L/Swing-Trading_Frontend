@@ -4,6 +4,9 @@ from RNN import get_rnn_predictions
 from LSTM import lstm_forecast
 from flask_cors import CORS
 import pandas as pd
+import yfinance as yf
+from ElliotWave import calculate_elliott_wave
+from BollingerBands import calculate_BB
 
 app = Flask(__name__)
 CORS(app)
@@ -155,5 +158,106 @@ def combined_chart_lstm():
 
     return jsonify(combined_data)
 
+@app.route('/indicators', methods=['GET'])
+def moving_averages():
+    ticker = request.args.get('ticker', 'AAPL')  # Default to 'AAPL' if no ticker is provided
+    indicator = request.args.get('indicator', 'MA20')  # Default to 'MA20' if no indicator is provided
+
+    try:
+        # Download 6 months of data
+        data = yf.download(ticker, period="6mo")
+        
+        # Validate and calculate the specified moving average
+        if indicator == 'MA20':
+            data['MA20'] = data['Close'].rolling(window=20).mean()
+            result = data[['Close', 'MA20']].dropna().reset_index()
+        elif indicator == 'MA50':
+            data['MA50'] = data['Close'].rolling(window=50).mean()
+            result = data[['Close', 'MA50']].dropna().reset_index()
+        elif indicator == 'MA100':
+            data['MA100'] = data['Close'].rolling(window=100).mean()
+            result = data[['Close', 'MA100']].dropna().reset_index()
+        elif indicator == 'BB20': #Bollinger Bands fro 20 days
+            result = calculate_BB(data)
+
+        elif indicator == 'ElliottWave':
+            # Perform Elliott Wave analysis
+            waves = calculate_elliott_wave(data)
+            return jsonify(waves)                  
+                    
+        else:
+            return jsonify({"error": f"Indicator '{indicator}' is not supported."}), 400
+
+        # Convert Date to string for JSON response
+        result['Date'] = result['Date'].astype(str)
+        return jsonify(result.to_dict(orient='records'))
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
+
+# from flask import Flask, jsonify, request
+# from charts import create_candlestick_chart
+# from RNN import get_rnn_predictions
+# from LSTM import lstm_forecast
+# from ElliotWave import calculate_elliott_wave
+# from flask_cors import CORS
+# import pandas as pd
+# import yfinance as yf
+
+# app = Flask(__name__)
+# CORS(app)
+
+# @app.route('/indicators', methods=['GET'])
+# def moving_averages():
+#     ticker = request.args.get('ticker', 'AAPL')  # Default to 'AAPL' if no ticker is provided
+#     indicator = request.args.get('indicator', 'MA20')  # Default to 'MA20' if no indicator is provided
+
+#     try:
+#         # Download 6 months of data
+#         data = yf.download(ticker, period="6mo")
+        
+#         # Validate and calculate the specified moving average
+#         if indicator == 'MA20':
+#             data['MA20'] = data['Close'].rolling(window=20).mean()
+#             result = data[['Close', 'MA20']].dropna().reset_index()
+#         elif indicator == 'MA50':
+#             data['MA50'] = data['Close'].rolling(window=50).mean()
+#             result = data[['Close', 'MA50']].dropna().reset_index()
+#         elif indicator == 'MA100':
+#             data['MA100'] = data['Close'].rolling(window=100).mean()
+#             result = data[['Close', 'MA100']].dropna().reset_index()
+#         elif indicator == 'BB20':
+#             num_std_dev = 2
+#             # Calculate the middle band (20-day moving average by default)
+#             data['Middle Band'] = data['Close'].rolling(window=20).mean()
+            
+#             # Calculate standard deviation
+#             data['Standard Deviation'] = data['Close'].rolling(window=20).std()
+            
+#             # Calculate upper and lower bands
+#             data['Upper Band'] = data['Middle Band'] + (num_std_dev * data['Standard Deviation'])
+#             data['Lower Band'] = data['Middle Band'] - (num_std_dev * data['Standard Deviation'])
+            
+#             # Drop rows with NaN values
+#             result = data[['Close', 'Middle Band', 'Upper Band', 'Lower Band']].dropna().reset_index()
+#         elif indicator == 'ElliottWave':
+#             # Perform Elliott Wave analysis
+#             waves = calculate_elliott_wave(data)
+#             return jsonify(waves)
+#         else:
+#             return jsonify({"error": f"Indicator '{indicator}' is not supported."}), 400
+                    
+#         # Convert Date to string for JSON response
+#         result['Date'] = result['Date'].astype(str)
+#         return jsonify(result.to_dict(orient='records'))
+
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 400
+
+# if __name__ == '__main__':
+#     app.run(debug=True)

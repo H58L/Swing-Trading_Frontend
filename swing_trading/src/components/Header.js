@@ -98,6 +98,10 @@ const Header = ({ name, onLogin, onLogout }) => {
     navigate("/admin");
   };
 
+  const handleIndicators = () => {
+    navigate("/indicators");
+  };
+
   return (
     <div>
       <Navbar expand="lg" className="navbar-custom">
@@ -154,16 +158,18 @@ const Header = ({ name, onLogin, onLogout }) => {
               )}
             </NavDropdown>
           </div>
-          <Navbar.Toggle aria-controls="navbarScroll" />
-          <Navbar.Collapse id="navbarScroll">
+          <Navbar.Toggle aria-controls="navbarScroll" onClick={() => console.log("Toggle clicked")} />
+          {/* <Navbar.Collapse id="navbarScroll" > */}
             <Nav className="hamburger">
               <Nav.Link onClick={handlePredicition}>Prediction</Nav.Link>
+              <Nav.Link onClick={handleIndicators}>Indicators</Nav.Link>
               <Nav.Link onClick={handleData}>Data</Nav.Link>
               <Nav.Link onClick={handleDashboard}>Dashboard</Nav.Link>
-              <Nav.Link onClick={handleChart}>Chart</Nav.Link>
+              {/* <Nav.Link onClick={handleChart}>Chart</Nav.Link> */}
+              
               {/* <Nav.Link onClick={handleAdmin}>Admin</Nav.Link> */}
             </Nav>
-          </Navbar.Collapse>
+          {/* </Navbar.Collapse> */}
         </Container>
       </Navbar>
     </div>
@@ -171,3 +177,7 @@ const Header = ({ name, onLogin, onLogout }) => {
 };
 
 export default Header;
+
+
+// TRYIGN TO FIX CSS
+

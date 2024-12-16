@@ -24,8 +24,9 @@ import Admin from "./components/Admin";
 import LandingPage from "./components/LandingPage"
 import LoginDisplay from "./components/LoginDisplay"
 import { ValidTickerProvider } from "./context/ValidTickerContext";
-import LandingPage from "./components/LandingPage";
-import LoginDisplay from "./components/LoginDisplay";
+// import LandingPage from "./components/LandingPage";
+// import LoginDisplay from "./components/LoginDisplay";
+import IndicatorChart from "./components/IndicatorChart";
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -56,6 +57,7 @@ const App = () => {
                     <Route path="/alertform" element={<AlertForm />} />
                     <Route path="/prediction" element={<Prediction />} />
                     <Route path="/admin" element={<Admin />} />
+                    <Route path="/indicators" element={<IndicatorChart />} />
                   </Routes>
                 </div>
               </Router>

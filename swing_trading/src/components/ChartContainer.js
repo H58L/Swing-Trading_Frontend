@@ -226,6 +226,262 @@
 
 // export default ChartContainer;
 
+// import React, { useContext, useState, useEffect } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { Navigate } from "react-router-dom";
+// import Header_Stock from "./Header_Stock";
+// import ChartDisplay from "./ChartDisplay";
+// import Overview from "./Overview";
+// import ThemeContext from "../context/ThemeContext";
+// import StockContext from "../context/StockContext";
+// import { useLoginContext } from "../context/LoginContext";
+// import { fetchStockData } from "../redux/actions/StockActions";
+// import { useValidTickerContext } from "../context/ValidTickerContext";
+// // import { Navigate } from "react-router-dom";
+// import { Link, useNavigate } from "react-router-dom";
+
+// const ChartContainer = () => {
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+//   const [period, setPeriod] = useState("1mo");
+//   const [realTimePrice, setRealTimePrice] = useState(null);
+//   const [previousClose, setPreviousClose] = useState(null);
+//   const [returns, setReturns] = useState({});
+//   const {isValidTicker, setIsValidTicker} = useValidTickerContext();
+
+//   const { darkMode } = useContext(ThemeContext);
+//   const { stockSymbol } = useContext(StockContext);
+//   const dispatch = useDispatch();
+//   const stockData = useSelector((state) => state.stockData);
+//   // Set real-time and previous close prices from the stock data
+
+//   const navigate = useNavigate();
+//   const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
+
+//   // Retrieve isLoggedIn from sessionStorage on component mount
+//   useEffect(() => {
+//     const storedLoginStatus = sessionStorage.getItem("isLoggedin");
+//     if (storedLoginStatus) {
+//       setIsLoggedIn(storedLoginStatus === "true"); // Convert to boolean
+//     } else {
+//       setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
+//     }
+//   }, []);
+
+//   // Redirect if not logged in
+//   useEffect(() => {
+//     if (isLoggedin === false) {
+//       navigate("/");
+//     }
+//   }, [isLoggedin, navigate]);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         setLoading(true);
+//         await dispatch(fetchStockData(stockSymbol, period));
+//         setLoading(false);
+//       } catch (err) {
+//         setError("Failed to fetch stock data.");
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchData();
+//     const intervalId = setInterval(fetchData, 30000);
+
+//     return () => clearInterval(intervalId);
+//   }, [stockSymbol, dispatch, period]);
+
+//   useEffect(() => {
+//     if (stockData?.close && stockData.close.length > 1) {
+//       setRealTimePrice(stockData.close[stockData.close.length - 1]);
+//       setPreviousClose(stockData.close[stockData.close.length - 2]);
+//     }
+//   }, [stockData]);
+
+//   const handlePeriodChange = async (newPeriod) => {
+//     setPeriod(newPeriod);
+//     try {
+//       setLoading(true);
+//       await dispatch(fetchStockData(stockSymbol, newPeriod));
+//       if (stockData?.close?.length > 1) {
+//         const periodReturn =
+//           ((stockData.close[stockData.close.length - 1] -
+//             stockData.close[0]) /
+//             stockData.close[0]) *
+//           100;
+//         setReturns((prevReturns) => ({
+//           ...prevReturns,
+//           [newPeriod]: periodReturn.toFixed(2),
+//         }));
+//       }
+//       setLoading(false);
+//     } catch (err) {
+//       setError("Failed to fetch stock data.");
+//       setLoading(false);
+//     }
+//   };
+
+//   const priceDifference =
+//    isValidTicker ? ( realTimePrice && previousClose
+//       ? (realTimePrice - previousClose).toFixed(2)
+//       : null) : "Invalid";
+
+//   const percentageChange =
+//     isValidTicker ?  (previousClose && realTimePrice
+//       ? (((realTimePrice - previousClose) / previousClose) * 100).toFixed(2)
+//       : null) : "Inavlid";
+
+//   if (!isLoggedin) {
+//     return <Navigate to="/" replace />;
+//   }
+
+
+//   return (
+//     <div
+//       className={`h-screen flex flex-col space-y-6 p-6 font-quicksand ${
+//         darkMode ? "bg-gray-900 text-gray-300" : "bg-neutral-100"
+//       }`}
+//     >
+//       {/* Header */}
+//       <header className="flex justify-between items-center">
+//         <Header_Stock />
+//         <Overview
+//           price={isValidTicker ? (realTimePrice ? `${realTimePrice.toFixed(2)}` : "Loading...") : 'Invalid'}
+//           change={
+//             priceDifference >= 0
+//               ? `+₹${priceDifference}`
+//               : `-₹${Math.abs(priceDifference)}`
+//           }
+//           percentageChange={
+//             percentageChange >= 0
+//               ? `+${percentageChange}%`
+//               : `${percentageChange}%`
+//           }
+//           currency={"INR"}
+//         />
+//       </header>
+
+//       {/* Content Section */}
+//       <div className="flex flex-1">
+//         {/* Buttons on the left */}
+//         <aside className="flex flex-col space-y-2 w-1/6">
+//           {["1d", "1mo", "6mo", "1y", "5y", "10y", "all"].map((periodLabel) => (
+//             <button
+//               key={periodLabel}
+//               className={`px-4 py-2 rounded ${
+//                 period === periodLabel
+//                   ? "bg-blue-500 text-white"
+//                   : darkMode
+//                   ? "bg-gray-800 text-gray-300"
+//                   : "bg-gray-200 text-gray-900"
+//               } hover:bg-blue-500 hover:text-white transition-all duration-200`}
+//               onClick={() => handlePeriodChange(periodLabel)}
+//             >
+//               {periodLabel.toUpperCase()}
+//               {returns[periodLabel] && (
+//                 <span className="ml-2 text-sm">
+//                   {returns[periodLabel] >= 0 ? "+" : ""}
+//                   {returns[periodLabel]}%
+//                 </span>
+//               )}
+//             </button>
+//           ))}
+//         </aside>
+
+//         {/* Chart in the center */}
+//         <main className="flex-1">
+//           {loading ? (
+//             <p>Loading chart...</p>
+//           ) : error ? (
+//             <p className="text-red-500">{error}</p>
+//           ) : (
+//             <ChartDisplay />
+//           )}
+//         </main>
+
+//       {periodLabel.toUpperCase()}
+//       {returns[periodLabel] ? (
+//         <span className="ml-2 text-sm">
+//           {returns[periodLabel] >= 0 ? "+" : ""}
+//           {returns[periodLabel]}%
+//         </span>
+//       ) : null}
+//     </button>
+    
+//   ))}
+  
+// </div> 
+
+//         {/* Header row */}
+//         <div className="col-span-1 md:col-span-2 xl:col-span-3 row-span-1 flex justify-between items-center">
+//           {/* Header on the left */}
+//           <div>
+//             <Header_Stock />
+//           </div>
+
+//           {/* Buttons on the right */}
+//           <div className="flex space-x-2">
+//             {["1d", "1mo", "6mo", "1y", "5y", "10y", "all"].map(
+//               (periodLabel) => (
+//                 <button
+//                   key={periodLabel}
+//                   className={`px-4 py-2 rounded ${
+//                     darkMode
+//                       ? "bg-gray-800 text-gray-300"
+//                       : "bg-gray-200 text-gray-900"
+//                   } hover:bg-blue-500 hover:text-white transition-all duration-200`}
+//                   onClick={() => handlePeriodChange(periodLabel)}
+//                 >
+//                   {periodLabel.toUpperCase()}
+//                   {returns[periodLabel] ? (
+//                     <span className="ml-2 text-sm">
+//                       {returns[periodLabel] >= 0 ? "+" : ""}
+//                       {returns[periodLabel]}%
+//                     </span>
+//                   ) : null}
+//                 </button>
+//               )
+//             )}
+//           </div>
+//         </div>
+
+//         {/* Chart box */}
+//         <div className="md:col-span-2 row-span-4">
+//           <ChartDisplay />
+//           {/* <StockChart></StockChart> */}
+//         </div>
+
+//         {/* Overview box */}
+//         <div>
+//           <Overview
+//             price={realTimePrice ? `${realTimePrice.toFixed(2)}` : "Loading..."}
+//             change={
+//               priceDifference >= 0
+//                 ? `+₹${priceDifference}`
+//                 : `-₹${Math.abs(priceDifference)}`
+//             }
+//             percentageChange={
+//               percentageChange >= 0
+//                 ? `+${percentageChange}%`
+//                 : `${percentageChange}%`
+//             }
+//             currency={"INR"}
+//           ></Overview>
+//         </div>
+
+//         {/* Company details */}
+//         <div className="row-span-2 xl:row-span-3">
+//           <Details details={mockCompanyDetails}></Details>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ChartContainer;
+
 import React, { useContext, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
@@ -234,11 +490,9 @@ import ChartDisplay from "./ChartDisplay";
 import Overview from "./Overview";
 import ThemeContext from "../context/ThemeContext";
 import StockContext from "../context/StockContext";
-import { useLoginContext } from "../context/LoginContext";
 import { fetchStockData } from "../redux/actions/StockActions";
 import { useValidTickerContext } from "../context/ValidTickerContext";
-import { Navigate } from "react-router-dom";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ChartContainer = () => {
   const [loading, setLoading] = useState(true);
@@ -247,34 +501,30 @@ const ChartContainer = () => {
   const [realTimePrice, setRealTimePrice] = useState(null);
   const [previousClose, setPreviousClose] = useState(null);
   const [returns, setReturns] = useState({});
-  const {isValidTicker, setIsValidTicker} = useValidTickerContext();
-
+  const { isValidTicker } = useValidTickerContext();
   const { darkMode } = useContext(ThemeContext);
   const { stockSymbol } = useContext(StockContext);
   const dispatch = useDispatch();
   const stockData = useSelector((state) => state.stockData);
-  // Set real-time and previous close prices from the stock data
-
   const navigate = useNavigate();
-  const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
-
-  // Retrieve isLoggedIn from sessionStorage on component mount
-  useEffect(() => {
-    const storedLoginStatus = sessionStorage.getItem("isLoggedin");
-    if (storedLoginStatus) {
-      setIsLoggedIn(storedLoginStatus === "true"); // Convert to boolean
-    } else {
-      setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
-    }
-  }, []);
-
-  // Redirect if not logged in
-  useEffect(() => {
-    if (isLoggedin === false) {
-      navigate("/");
-    }
-  }, [isLoggedin, navigate]);
-
+    const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
+    
+    // Retrieve isLoggedIn from sessionStorage on component mount
+    useEffect(() => {
+     const storedLoginStatus = sessionStorage.getItem("isLoggedin");
+      if (storedLoginStatus) {
+        setIsLoggedIn(storedLoginStatus === "true"); // Convert to boolean
+      } else {
+         setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
+      }
+    }, []);
+  
+    // Redirect if not logged in
+    useEffect(() => {
+      if (isLoggedin === false) {
+        navigate("/");
+      }
+    }, [isLoggedin, navigate]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -294,7 +544,7 @@ const ChartContainer = () => {
   }, [stockSymbol, dispatch, period]);
 
   useEffect(() => {
-    if (stockData?.close && stockData.close.length > 1) {
+    if (stockData?.close?.length > 1) {
       setRealTimePrice(stockData.close[stockData.close.length - 1]);
       setPreviousClose(stockData.close[stockData.close.length - 2]);
     }
@@ -305,17 +555,16 @@ const ChartContainer = () => {
     try {
       setLoading(true);
       await dispatch(fetchStockData(stockSymbol, newPeriod));
-      if (stockData?.close?.length > 1) {
-        const periodReturn =
-          ((stockData.close[stockData.close.length - 1] -
-            stockData.close[0]) /
-            stockData.close[0]) *
+      const periodReturn =
+        stockData.close &&
+        stockData.close.length > 1 &&
+        ((stockData.close[stockData.close.length - 1] - stockData.close[0]) /
+          stockData.close[0]) *
           100;
-        setReturns((prevReturns) => ({
-          ...prevReturns,
-          [newPeriod]: periodReturn.toFixed(2),
-        }));
-      }
+      setReturns((prevReturns) => ({
+        ...prevReturns,
+        [newPeriod]: periodReturn?.toFixed(2),
+      }));
       setLoading(false);
     } catch (err) {
       setError("Failed to fetch stock data.");
@@ -324,19 +573,22 @@ const ChartContainer = () => {
   };
 
   const priceDifference =
-   isValidTicker ? ( realTimePrice && previousClose
-      ? (realTimePrice - previousClose).toFixed(2)
-      : null) : "Invalid";
+    isValidTicker
+      ? realTimePrice && previousClose
+        ? (realTimePrice - previousClose).toFixed(2)
+        : null
+      : "Invalid";
 
   const percentageChange =
-    isValidTicker ?  (previousClose && realTimePrice
-      ? (((realTimePrice - previousClose) / previousClose) * 100).toFixed(2)
-      : null) : "Inavlid";
+    isValidTicker
+      ? previousClose && realTimePrice
+        ? (((realTimePrice - previousClose) / previousClose) * 100).toFixed(2)
+        : null
+      : "Invalid";
 
-  if (!isLoggedin) {
-    return <Navigate to="/" replace />;
-  }
-
+  // if (!isLoggedin) {
+  //   return <Navigate to="/" replace />;
+  // }
 
   return (
     <div
@@ -344,11 +596,16 @@ const ChartContainer = () => {
         darkMode ? "bg-gray-900 text-gray-300" : "bg-neutral-100"
       }`}
     >
-      {/* Header */}
       <header className="flex justify-between items-center">
         <Header_Stock />
         <Overview
-          price={isValidTicker ? (realTimePrice ? `${realTimePrice.toFixed(2)}` : "Loading...") : 'Invalid'}
+          price={
+            isValidTicker
+              ? realTimePrice
+                ? `${realTimePrice.toFixed(2)}`
+                : "Loading..."
+              : "Invalid"
+          }
           change={
             priceDifference >= 0
               ? `+₹${priceDifference}`
@@ -362,35 +619,32 @@ const ChartContainer = () => {
           currency={"INR"}
         />
       </header>
-
-      {/* Content Section */}
       <div className="flex flex-1">
-        {/* Buttons on the left */}
         <aside className="flex flex-col space-y-2 w-1/6">
-          {["1d", "1mo", "6mo", "1y", "5y", "10y", "all"].map((periodLabel) => (
-            <button
-              key={periodLabel}
-              className={`px-4 py-2 rounded ${
-                period === periodLabel
-                  ? "bg-blue-500 text-white"
-                  : darkMode
-                  ? "bg-gray-800 text-gray-300"
-                  : "bg-gray-200 text-gray-900"
-              } hover:bg-blue-500 hover:text-white transition-all duration-200`}
-              onClick={() => handlePeriodChange(periodLabel)}
-            >
-              {periodLabel.toUpperCase()}
-              {returns[periodLabel] && (
-                <span className="ml-2 text-sm">
-                  {returns[periodLabel] >= 0 ? "+" : ""}
-                  {returns[periodLabel]}%
-                </span>
-              )}
-            </button>
-          ))}
+          {["1d", "1mo", "6mo", "1y", "5y", "10y", "all"].map(
+            (periodLabel) => (
+              <button
+                key={periodLabel}
+                className={`px-4 py-2 rounded ${
+                  period === periodLabel
+                    ? "bg-blue-500 text-white"
+                    : darkMode
+                    ? "bg-gray-800 text-gray-300"
+                    : "bg-gray-200 text-gray-900"
+                } hover:bg-blue-500 hover:text-white transition-all duration-200`}
+                onClick={() => handlePeriodChange(periodLabel)}
+              >
+                {periodLabel.toUpperCase()}
+                {returns[periodLabel] && (
+                  <span className="ml-2 text-sm">
+                    {returns[periodLabel] >= 0 ? "+" : ""}
+                    {returns[periodLabel]}%
+                  </span>
+                )}
+              </button>
+            )
+          )}
         </aside>
-
-        {/* Chart in the center */}
         <main className="flex-1">
           {loading ? (
             <p>Loading chart...</p>
@@ -400,79 +654,6 @@ const ChartContainer = () => {
             <ChartDisplay />
           )}
         </main>
-
-      {periodLabel.toUpperCase()}
-      {returns[periodLabel] ? (
-        <span className="ml-2 text-sm">
-          {returns[periodLabel] >= 0 ? "+" : ""}
-          {returns[periodLabel]}%
-        </span>
-      ) : null}
-    </button>
-  ))}
-</div> */}
-
-        {/* Header row */}
-        <div className="col-span-1 md:col-span-2 xl:col-span-3 row-span-1 flex justify-between items-center">
-          {/* Header on the left */}
-          <div>
-            <Header_Stock />
-          </div>
-
-          {/* Buttons on the right */}
-          <div className="flex space-x-2">
-            {["1d", "1mo", "6mo", "1y", "5y", "10y", "all"].map(
-              (periodLabel) => (
-                <button
-                  key={periodLabel}
-                  className={`px-4 py-2 rounded ${
-                    darkMode
-                      ? "bg-gray-800 text-gray-300"
-                      : "bg-gray-200 text-gray-900"
-                  } hover:bg-blue-500 hover:text-white transition-all duration-200`}
-                  onClick={() => handlePeriodChange(periodLabel)}
-                >
-                  {periodLabel.toUpperCase()}
-                  {returns[periodLabel] ? (
-                    <span className="ml-2 text-sm">
-                      {returns[periodLabel] >= 0 ? "+" : ""}
-                      {returns[periodLabel]}%
-                    </span>
-                  ) : null}
-                </button>
-              )
-            )}
-          </div>
-        </div>
-
-        {/* Chart box */}
-        <div className="md:col-span-2 row-span-4">
-          <ChartDisplay />
-          {/* <StockChart></StockChart> */}
-        </div>
-
-        {/* Overview box */}
-        <div>
-          <Overview
-            price={realTimePrice ? `${realTimePrice.toFixed(2)}` : "Loading..."}
-            change={
-              priceDifference >= 0
-                ? `+₹${priceDifference}`
-                : `-₹${Math.abs(priceDifference)}`
-            }
-            percentageChange={
-              percentageChange >= 0
-                ? `+${percentageChange}%`
-                : `${percentageChange}%`
-            }
-            currency={"INR"}
-          ></Overview>
-        </div>
-
-        {/* Company details */}
-        <div className="row-span-2 xl:row-span-3">
-          <Details details={mockCompanyDetails}></Details>
-        </div>
       </div>
     </div>
   );
