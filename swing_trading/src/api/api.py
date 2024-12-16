@@ -234,6 +234,7 @@ from MovingAverages import (
     calculate_EMA20, calculate_EMA100, calculate_EMA50,
     calculate_MA2050100, calculate_EMA2050100, calculate_MACD
 )
+from AverageTrueRange import calculate_atr
 
 app = Flask(__name__)
 CORS(app)
@@ -411,6 +412,10 @@ def moving_averages():
         # MACD
         elif indicator == 'MACD':
             result = calculate_MACD(data)
+
+        #Average True Range
+        elif indicator == 'ATR':
+            result = calculate_atr(data,14)
 
         elif indicator == 'ElliottWave':
             # Perform Elliott Wave analysis

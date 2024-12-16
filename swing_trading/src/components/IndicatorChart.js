@@ -23,6 +23,7 @@ const IndicatorChart = () => {
     { label: 'Exponential Moving Averages - 100 Days', value: 'EMA100' },
     { label: 'Bollinger Bands - 20 Days', value: 'BB20' },
     { label: 'Moving Average Convergence/divergence', value: 'MACD' },
+    { label: 'Average True Range (ATR)', value: 'ATR' }, 
     { label: 'Elliot Wave', value: 'ElliottWave' },
   ];
 
@@ -148,7 +149,7 @@ const plotData = () => {
   }
   
   // Handle MACD specifically
-  if (selectedIndicator === 'MACD') {
+  else if (selectedIndicator === 'MACD') {
     plots.push({
       x: data.map((d) => d.Date),
       y: data.map((d) => d.MACD),
@@ -164,6 +165,17 @@ const plotData = () => {
       mode: 'lines',
       name: 'Signal Line',
       line: { color: 'orange' }, // Set a color for the signal line
+    });
+  }
+
+  else if (selectedIndicator === 'ATR') {
+    plots.push({
+      x: data.map((d) => d.Date),
+      y: data.map((d) => d.ATR || null),  // ATR values from the backend
+      type: 'scatter',
+      mode: 'lines',
+      name: 'ATR (14 Days)',
+      line: { color: 'purple' },  // Color for ATR line
     });
   }
   
