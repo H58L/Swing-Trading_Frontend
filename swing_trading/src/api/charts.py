@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 import json
 import pandas as pd
 
-def create_candlestick_chart(stock_symbol="AAPL", period="5y"):
+def create_candlestick_chart(stock_symbol="RECLTD.NS", period="5y"):
     # Fetch data for the past 5 years
     stock_data = yf.download(stock_symbol, period=period, interval="1d")
     

@@ -4,7 +4,7 @@ import LSTM_Chart from './LSTM_Charts'; // LSTM chart component
 import ChartControls from './ChartControls'; // Chart controls component
 
 const Prediction = () => {
-    const [symbol, setSymbol] = useState('AAPL'); // State for stock symbol
+    const [symbol, setSymbol] = useState('RECLTD.NS'); // State for stock symbol
     const [period, setPeriod] = useState('5y'); // State for period selection
     const [selectedModel, setSelectedModel] = useState('RNN'); // Default model is RNN
 
