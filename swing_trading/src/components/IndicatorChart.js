@@ -314,7 +314,7 @@ const plotData = () => {
     
    
   
-  else if (selectedIndicator === 'EW00') {
+  if (selectedIndicator === 'EW00') {
     console.log("Inside Elliot Wave if else");
     console.log("Recieved Data in EW00 block",data);
 
