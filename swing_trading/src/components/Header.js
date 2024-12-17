@@ -20,11 +20,11 @@ import { useEffect } from "react";
 const Header = ({ name, onLogin, onLogout }) => {
   const [showAlerts, setShowAlerts] = useState(false);
   const navigate = useNavigate();
-
   const { darkMode, setDarkMode } = useContext(ThemeContext);
   const { isLoggedin, setIsLoggedIn } = useLoginContext();
-  const { userEmail, setUserEmail } = useEmailContext();
-  console.log("Header email: ", userEmail);
+  // const { userEmail, setUserEmail } = useEmailContext();
+  // const userEmail = sessionStorage.getItem("userEmail"); // Retrieve email from sessionStorage
+  const [userEmail, setUserEmail] = useState("");
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -47,13 +47,21 @@ const Header = ({ name, onLogin, onLogout }) => {
 
   const [loggedOut, setLoggedOut] = useState(false);
 
+  useEffect(() => {
+    // Sync login state and email from sessionStorage
+    const storedEmail = sessionStorage.getItem("userEmail");
+    if (storedEmail) {
+      setUserEmail(storedEmail);
+      setIsLoggedIn(true);
+    }
+  }, [setIsLoggedIn]);
+
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUserEmail("");
-    setLoggedOut(true);
-    // console.log(isLoggedin);
-    // console.log(userEmail);
-    // navigate("/");
+    sessionStorage.removeItem("userEmail");
+    sessionStorage.setItem("isLoggedin", false); //
+    navigate("/");
   };
 
   useEffect(() => {
@@ -71,7 +79,7 @@ const Header = ({ name, onLogin, onLogout }) => {
   };
 
   const handleHome = () => {
-    navigate("/");
+    navigate("/home");
   };
 
   const handlePredicition = () => {
@@ -86,11 +94,19 @@ const Header = ({ name, onLogin, onLogout }) => {
     navigate("/chart");
   };
 
+  const handleAdmin = () => {
+    navigate("/admin");
+  };
+
   return (
     <div>
       <Navbar expand="lg" className="navbar-custom">
         <Container className="nav-container">
-          <Navbar.Brand onClick={handleHome} className="brand-link">
+          <Navbar.Brand
+            onClick={handleHome}
+            className="brand-link"
+            style={{ cursor: "pointer" }}
+          >
             ChartView
           </Navbar.Brand>
 
@@ -145,6 +161,7 @@ const Header = ({ name, onLogin, onLogout }) => {
               <Nav.Link onClick={handleData}>Data</Nav.Link>
               <Nav.Link onClick={handleDashboard}>Dashboard</Nav.Link>
               <Nav.Link onClick={handleChart}>Chart</Nav.Link>
+              {/* <Nav.Link onClick={handleAdmin}>Admin</Nav.Link> */}
             </Nav>
           </Navbar.Collapse>
         </Container>

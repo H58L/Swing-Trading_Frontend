@@ -7,6 +7,10 @@ import Header from "./Header";
 import { fetchStockData } from "../redux/actions/StockActions";
 import { useDispatch, useSelector } from "react-redux"; // Added useSelector to access data
 import ChartDisplay from "./ChartDisplay";
+import { useLoginContext } from "../context/LoginContext";
+import { Navigate } from "react-router-dom";
+import { useValidTickerContext } from "../context/ValidTickerContext";
+import { Link, useNavigate } from "react-router-dom";
 
 const StockData = () => {
   const { darkMode } = useContext(ThemeContext);
@@ -18,10 +22,32 @@ const StockData = () => {
   const [previousClose, setPreviousClose] = useState(null); // Previous closing price
 
   const { stockSymbol } = useContext(StockContext);
+  const {isValidTicker, setIsValidTicker} = useValidTickerContext(); 
+
   const dispatch = useDispatch(); //allows the component to send actions to the Redux store.
 
   // This hook accesses the current stockData from the Redux store
   const stockData = useSelector((state) => state.stockData);
+
+  const navigate = useNavigate();
+  const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
+
+  // Retrieve isLoggedIn from sessionStorage on component mount
+  useEffect(() => {
+    const storedLoginStatus = sessionStorage.getItem("isLoggedin");
+    if (storedLoginStatus) {
+      setIsLoggedIn(storedLoginStatus === "true"); // Convert to boolean
+    } else {
+      setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
+    }
+  }, []);
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (isLoggedin === false) {
+      navigate("/");
+    }
+  }, [isLoggedin, navigate]);
 
   // Set real-time and previous close prices from the stock data
 
@@ -53,6 +79,12 @@ const StockData = () => {
     }
   }, [stockData]); // This effect updates real-time prices whenever stockData changes
 
+  //Locking
+  // if (!isLoggedin) {
+
+  //   return <Navigate to="/" replace />;
+  // }
+
   const handleChartTypeChange = (e) => {
     setChartType(e.target.value);
   };
@@ -62,20 +94,25 @@ const StockData = () => {
     setLoading(true);
   };
 
-  const chartTitle = `${stockSymbol} - ${
+  // const chartTitle = `${stockSymbol} - ${
+  //   chartType.charAt(0).toUpperCase() + chartType.slice(1)
+  // } Chart (${period})`;
+
+  const chartTitle = `${isValidTicker ? `${stockSymbol.toUpperCase()} - ` : 'Ticker is Invalid: '}${
     chartType.charAt(0).toUpperCase() + chartType.slice(1)
   } Chart (${period})`;
+  
 
   // Calculate price difference and percentage change
   const priceDifference =
-    realTimePrice && previousClose
+    isValidTicker && realTimePrice && previousClose
       ? (realTimePrice - previousClose).toFixed(2)
-      : null;
+      : 'Invalid';
 
   const percentageChange =
-    previousClose && realTimePrice
+    isValidTicker && previousClose && realTimePrice
       ? (((realTimePrice - previousClose) / previousClose) * 100).toFixed(2)
-      : null;
+      : 'Inavlid';
 
   return (
     <>
@@ -94,7 +131,7 @@ const StockData = () => {
             className={`text-3xl font-bold mb-6 text-center ${
               darkMode ? "text-gray-200" : "text-gray-800"
             }`}
-          >
+          >                 
             {chartTitle}
           </h1>
 
@@ -106,7 +143,7 @@ const StockData = () => {
               }`}
             >
               Current Price:{" "}
-              {realTimePrice ? `₹${realTimePrice.toFixed(2)}` : "Loading..."}
+              {isValidTicker ?  (realTimePrice ? `₹${realTimePrice.toFixed(2)}` : "Loading...") : "INVALID"}
             </span>
             {priceDifference !== null && (
               <div className="text-lg">
