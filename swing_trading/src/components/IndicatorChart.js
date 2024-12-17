@@ -25,7 +25,7 @@ const IndicatorChart = () => {
     { label: 'Bollinger Bands - 20 Days', value: 'BB20' },
     { label: 'Moving Average Convergence/divergence', value: 'MACD' },
     { label: 'Average True Range (ATR)', value: 'ATR' }, 
-    { label: 'Fibonacci Retracement', value: 'FR' },
+    // { label: 'Fibonacci Retracement', value: 'FR' },
     { label: 'Elliot Wave', value: 'EW00' },
   ];
 
@@ -269,6 +269,7 @@ const plotData = () => {
    
     
       else if (indicators.length > 0 && selectedIndicator === 'FR') {
+      
         console.log("Inside FR if");
         console.log('Received Data:', data);
     
@@ -314,13 +315,36 @@ const plotData = () => {
     
    
   
-  if (selectedIndicator === 'EW00') {
-    console.log("Inside Elliot Wave if else");
-    console.log("Recieved Data in EW00 block",data);
+  // if (selectedIndicator === 'EW00') {
+  //   console.log("Inside Elliot Wave if else");
+  //   console.log("Recieved Data in EW00 block",data);
 
     
 
-  } 
+  // } 
+
+  else if (selectedIndicator === 'EW00') {
+    if (!data.buy_signals || !data.sell_signals) return [];  // Check if buy/sell signals exist
+    
+    // Buy and Sell Signals for Elliot Wave
+    plots.push({
+      x: data.buy_signals.map((d) => d.date),
+      y: data.buy_signals.map((d) => d.price),
+      type: 'scatter',
+      mode: 'markers',
+      name: 'Buy Signals',
+      marker: { color: 'green', size: 8 },  // Set marker color and size for buy signals
+    });
+  
+    plots.push({
+      x: data.sell_signals.map((d) => d.date),
+      y: data.sell_signals.map((d) => d.price),
+      type: 'scatter',
+      mode: 'markers',
+      name: 'Sell Signals',
+      marker: { color: 'red', size: 8 },  // Set marker color and size for sell signals
+    });
+  }
   
   else {
     // Handle other indicators (e.g., Moving Averages)
