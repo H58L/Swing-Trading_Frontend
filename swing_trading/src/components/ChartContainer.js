@@ -237,7 +237,7 @@ import StockContext from "../context/StockContext";
 import { useLoginContext } from "../context/LoginContext";
 import { fetchStockData } from "../redux/actions/StockActions";
 import { useValidTickerContext } from "../context/ValidTickerContext";
-import { Navigate } from "react-router-dom";
+// import { Navigate } from "react-router-dom";
 import { Link, useNavigate } from "react-router-dom";
 
 const ChartContainer = () => {
