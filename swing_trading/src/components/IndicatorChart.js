@@ -149,7 +149,35 @@ const plotData = () => {
   }
   
   // Handle MACD specifically
+  // else if (selectedIndicator === 'MACD') {
+  //   plots.push({
+  //     x: data.map((d) => d.Date),
+  //     y: data.map((d) => d.MACD),
+  //     type: 'scatter',
+  //     mode: 'lines',
+  //     name: 'MACD Line',
+  //     line: { color: 'blue' }, // Set a color for the MACD line
+  //   });
+  //   plots.push({
+  //     x: data.map((d) => d.Date),
+  //     y: data.map((d) => d.Signal_line),
+  //     type: 'scatter',
+  //     mode: 'lines',
+  //     name: 'Signal Line',
+  //     line: { color: 'orange' }, // Set a color for the signal line
+  //   });
+  // }
+
   else if (selectedIndicator === 'MACD') {
+    plots.push({
+      x: data.map((d) => d.Date),
+      y: data.map((d) => d.Close),
+      type: 'scatter',
+      mode: 'lines',
+      name: 'Close Price',
+      line: { color: 'green' }, // Set a color for the Close price line
+      yaxis: 'y', // Assign this trace to the primary y-axis
+    });
     plots.push({
       x: data.map((d) => d.Date),
       y: data.map((d) => d.MACD),
@@ -157,6 +185,7 @@ const plotData = () => {
       mode: 'lines',
       name: 'MACD Line',
       line: { color: 'blue' }, // Set a color for the MACD line
+      yaxis: 'y2', // Assign this trace to the secondary y-axis
     });
     plots.push({
       x: data.map((d) => d.Date),
@@ -165,17 +194,40 @@ const plotData = () => {
       mode: 'lines',
       name: 'Signal Line',
       line: { color: 'orange' }, // Set a color for the signal line
+      yaxis: 'y2', // Assign this trace to the secondary y-axis
     });
   }
-
+   
+  
+  // else if (selectedIndicator === 'ATR') {
+  //   plots.push({
+  //     x: data.map((d) => d.Date),
+  //     y: data.map((d) => d.ATR || null),  // ATR values from the backend
+  //     type: 'scatter',
+  //     mode: 'lines',
+  //     name: 'ATR (14 Days)',
+  //     line: { color: 'purple' },  // Color for ATR line
+  //   });
+  // }
+  
   else if (selectedIndicator === 'ATR') {
     plots.push({
       x: data.map((d) => d.Date),
-      y: data.map((d) => d.ATR || null),  // ATR values from the backend
+      y: data.map((d) => d.Close),
+      type: 'scatter',
+      mode: 'lines',
+      name: 'Close Price',
+      line: { color: 'green' }, // Color for the Close price line
+      yaxis: 'y', // Assign this trace to the primary y-axis
+    });
+    plots.push({
+      x: data.map((d) => d.Date),
+      y: data.map((d) => d.ATR || null), // ATR values from the backend
       type: 'scatter',
       mode: 'lines',
       name: 'ATR (14 Days)',
-      line: { color: 'purple' },  // Color for ATR line
+      line: { color: 'purple' }, // Color for the ATR line
+      yaxis: 'y2', // Assign this trace to the secondary y-axis
     });
   }
   
@@ -185,13 +237,16 @@ const plotData = () => {
   } else {
     // Handle other indicators (e.g., Moving Averages)
     plots.push({
-      // x: data.map((d) => d.Date),
-      // y: data.map((d) => d[selectedIndicator]),
-      // type: 'scatter',
-      // mode: 'lines',
-      // //name: indicators.find((ind) => ind.value === selectedIndicator)?.label,
+      x: data.map((d) => d.Date),
+      y: data.map((d) => d[selectedIndicator]),
+      //name: {selectedIndicator},
+      type: 'scatter',
+      mode: 'lines',
+      name: indicators.find((ind) => ind.value === selectedIndicator)?.label,
     });
   }
+
+
 
   return plots;
 };
@@ -239,14 +294,60 @@ const plotData = () => {
       {/* Plot */}
       {data.length > 0 && selectedIndicator && (
         <Plot
-          data={plotData()}
-          layout={{
-            title: `${ticker} ${indicators.find((ind) => ind.value === selectedIndicator)?.label}`,
-            xaxis: { title: 'Date' },
-            yaxis: { title: 'Price' },
-            dragmode: 'pan',
-          }}
-        />
+          // data={plotData()}
+          // layout={{
+          //   title: `${ticker} ${indicators.find((ind) => ind.value === selectedIndicator)?.label}`,
+          //   xaxis: { title: 'Date' },
+          //   yaxis: { title: 'Price' },
+          //   dragmode: 'pan',
+          // }}
+
+  //         data={plotData()}
+  // layout={{
+  //   title: `${ticker} ${indicators.find((ind) => ind.value === selectedIndicator)?.label}`,
+  //   xaxis: { title: 'Date' },
+  //   yaxis: { 
+  //     title: 'Price', 
+  //     side: 'left', 
+  //     showgrid: true 
+  //   }, // Primary y-axis
+  //   yaxis2: {
+  //     title: 'MACD & Signal Line',
+  //     side: 'right',
+  //     overlaying: 'y', // Overlay the secondary y-axis on the primary
+  //     showgrid: false, // Optional: Disable grid for the secondary y-axis
+  //   },
+  //   dragmode: 'pan',
+  // }}
+
+ 
+  data={plotData()}
+  layout={{
+    title: `${ticker} ${indicators.find((ind) => ind.value === selectedIndicator)?.label}`,
+    xaxis: { title: 'Date' },
+    yaxis: {
+      title: 'Price',
+      side: 'left',
+      showgrid: true,
+    }, // Primary y-axis for Close Price
+    ...(selectedIndicator === 'MACD' || selectedIndicator === 'ATR'
+      ? {
+          yaxis2: {
+            title: selectedIndicator === 'MACD' ? 'MACD & Signal Line' : 'ATR',
+            side: 'right',
+            overlaying: 'y', // Overlay on primary y-axis
+            showgrid: false,
+          },
+        }
+      : {}),
+    dragmode: 'pan',
+  }}
+/>
+
+          
+       
+      
+
       )}
     </div>
     </>
