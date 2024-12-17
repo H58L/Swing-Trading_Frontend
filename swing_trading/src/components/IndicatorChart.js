@@ -44,6 +44,8 @@ const IndicatorChart = () => {
       const response = await axios.get('http://localhost:5000/indicators', {
         params: { ticker, indicator: selectedIndicator },
       });
+
+      console.log("Recieved Data in fetch",response.data);
       setData(response.data);
     } catch (err) {
       setError(err.response?.data?.error || 'Error fetching data');
@@ -52,7 +54,7 @@ const IndicatorChart = () => {
 
 const plotData = () => {
   console.log("plotData called, selectedIndicator:", selectedIndicator);
-  if (!data.length || !selectedIndicator) return [];
+  if (!Array.isArray(data) || !data.length || !selectedIndicator) return [];
 
   const plots = [
     {
@@ -312,11 +314,17 @@ const plotData = () => {
     
    
   
-  else if (selectedIndicator === 'ElliottWave') {
-    // Handle Elliott Wave logic here
-    // Similar to the previous example
-  } else {
+  else if (selectedIndicator === 'EW00') {
+    console.log("Inside Elliot Wave if else");
+    console.log("Recieved Data in EW00 block",data);
+
+    
+
+  } 
+  
+  else {
     // Handle other indicators (e.g., Moving Averages)
+    console.log("Inside else block");
     plots.push({
       x: data.map((d) => d.Date),
       y: data.map((d) => d[selectedIndicator]),
@@ -409,3 +417,129 @@ const plotData = () => {
 };
 
 export default IndicatorChart;
+
+// // SOMETHING WORKS
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
+// import Plot from 'react-plotly.js';
+// import '../style/MovingAveragesChart.css';
+// import Header from "./Header";
+
+// const IndicatorChart = () => {
+//   const [ticker, setTicker] = useState('AAPL');
+//   const [data, setData] = useState([]); // General Data
+//   const [buySignals, setBuySignals] = useState([]); // Buy Signals for EW00
+//   const [error, setError] = useState(null);
+//   const [selectedIndicator, setSelectedIndicator] = useState('');
+
+//   // Dropdown menu for selecting indicators
+//   const indicators = [
+//     { label: 'Simple Moving Averages - 20,50,100 Days', value: 'MA' },
+//     { label: 'Exponential Moving Averages - 20,50,100 Days', value: 'EMA' },
+//     { label: 'Bollinger Bands - 20 Days', value: 'BB20' },
+//     { label: 'Moving Average Convergence/divergence', value: 'MACD' },
+//     { label: 'Average True Range (ATR)', value: 'ATR' },
+//     { label: 'Fibonacci Retracement', value: 'FR' },
+//     { label: 'Elliot Wave', value: 'EW00' },
+//   ];
+
+//   useEffect(() => {
+//     if (selectedIndicator) {
+//       fetchIndicatorData();
+//     }
+//   }, [selectedIndicator]);
+
+//   // Fetch data from the backend
+//   const fetchIndicatorData = async () => {
+//     setError(null);
+//     try {
+//       const response = await axios.get('http://localhost:5000/indicators', {
+//         params: { ticker, indicator: selectedIndicator },
+//       });
+//       console.log("Received Data:", response.data);
+
+//       if (selectedIndicator === 'EW00') {
+//         setData(response.data.data || []);
+//         setBuySignals(response.data.buy_signals || []);
+//       } else {
+//         setData(response.data);
+//         setBuySignals([]);
+//       }
+//     } catch (err) {
+//       setError(err.response?.data?.error || 'Error fetching data');
+//     }
+//   };
+
+//   // Prepare plot data for Plotly
+//   const plotData = () => {
+//     if (!Array.isArray(data) || !data.length) return [];
+
+//     const plots = [
+//       {
+//         x: data.map((d) => d.Date),
+//         y: data.map((d) => d.Close),
+//         type: 'scatter',
+//         mode: 'lines',
+//         name: 'Close Price',
+//         line: { color: 'black' },
+//       },
+//     ];
+
+//     // Add buy signals for EW00
+//     if (selectedIndicator === 'EW00' && Array.isArray(buySignals) && buySignals.length) {
+//       plots.push({
+//         x: buySignals.map((signal) => signal.date),
+//         y: buySignals.map((signal) => signal.price),
+//         type: 'scatter',
+//         mode: 'markers',
+//         name: 'Buy Signals',
+//         marker: { color: 'red', size: 10, symbol: 'diamond' },
+//       });
+//     }
+
+//     return plots;
+//   };
+
+//   return (
+//     <div className="indicator-chart-container">
+//       <Header />
+//       <h2>Indicator Chart</h2>
+
+//       {/* Dropdown Menu */}
+//       <div>
+//         <label>Select Indicator:</label>
+//         <select
+//           value={selectedIndicator}
+//           onChange={(e) => setSelectedIndicator(e.target.value)}
+//         >
+//           <option value="">Select...</option>
+//           {indicators.map((indicator) => (
+//             <option key={indicator.value} value={indicator.value}>
+//               {indicator.label}
+//             </option>
+//           ))}
+//         </select>
+//       </div>
+
+//       {/* Plotly Chart */}
+//       <div className="chart">
+//         {error ? (
+//           <p style={{ color: 'red' }}>{error}</p>
+//         ) : (
+//           <Plot
+//             data={plotData()}
+//             layout={{
+//               title: `Indicator: ${selectedIndicator}`,
+//               xaxis: { title: 'Date' },
+//               yaxis: { title: 'Price' },
+//               showlegend: true,
+//             }}
+//             style={{ width: '100%', height: '500px' }}
+//           />
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default IndicatorChart;

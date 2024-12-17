@@ -227,7 +227,7 @@ from charts import create_candlestick_chart
 from RNN import get_rnn_predictions
 from LSTM import lstm_forecast
 from flask_cors import CORS
-from ElliotWave import calculate_elliott_wave
+from ElliotWave import calculate_elliott_wave, identify_buy_sell_signals
 from BollingerBands import calculate_BB
 from MovingAverages import (
     calculate_MA20, calculate_MA50, calculate_MA100, 
@@ -424,10 +424,31 @@ def moving_averages():
             result = calculate_fibonacci_retracement(stock_data)
             return jsonify(result)
         
-        elif indicator == 'ElliottWave':
+        elif indicator == 'EW00':
             # Perform Elliott Wave analysis
-            waves = calculate_elliott_wave(data)
-            return jsonify(waves)                  
+            # waves = calculate_elliott_wave(data)
+            # return jsonify(waves)
+            
+            #  TEJAS
+            peaks, troughs, prices, dates = calculate_elliott_wave(data)
+            buy_signals, sell_signals = identify_buy_sell_signals(peaks, troughs, prices, dates)
+
+            # Create a DataFrame with Close Prices, Peaks, and Troughs
+            df = pd.DataFrame({'Date': dates, 'Close': prices})
+            df['Peak'] = pd.Series(prices[peaks], index=dates[peaks])
+            df['Trough'] = pd.Series(prices[troughs], index=dates[troughs])
+
+            # Reset index for JSON serialization
+            df.reset_index(drop=True, inplace=True)
+
+            # Include buy/sell signals in the result
+            result = {
+                "data": df.dropna(subset=["Peak", "Trough"], how="all").to_dict(orient='records'),
+                "buy_signals": [{"date": str(date), "price": price} for date, price in buy_signals],
+                "sell_signals": [{"date": str(date), "price": price} for date, price in sell_signals]
+            }
+
+            return jsonify(result)            
 
         else:
             return jsonify({"error": f"Indicator '{indicator}' is not supported."}), 400
