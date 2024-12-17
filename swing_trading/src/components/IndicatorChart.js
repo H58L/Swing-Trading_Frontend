@@ -4,6 +4,7 @@ import axios from 'axios';
 import Plot from 'react-plotly.js';
 import '../style/MovingAveragesChart.css';
 import Header from "./Header";
+import { useEffect } from 'react';
 
 const IndicatorChart = () => {
   const [ticker, setTicker] = useState('AAPL');
@@ -25,12 +26,21 @@ const IndicatorChart = () => {
     { label: 'Moving Average Convergence/divergence', value: 'MACD' },
     { label: 'Average True Range (ATR)', value: 'ATR' }, 
     { label: 'Fibonacci Retracement', value: 'FR' },
-    { label: 'Elliot Wave', value: 'ElliottWave' },
+    { label: 'Elliot Wave', value: 'EW00' },
   ];
+
+  useEffect(() => {
+    if (selectedIndicator) {
+      fetchIndicatorData();
+    }
+  }, [selectedIndicator]);
+  
 
   const fetchIndicatorData = async () => {
     setError(null);
     try {
+      console.log("Selected Indicator: ", selectedIndicator);
+
       const response = await axios.get('http://localhost:5000/indicators', {
         params: { ticker, indicator: selectedIndicator },
       });
@@ -41,6 +51,7 @@ const IndicatorChart = () => {
   };
 
 const plotData = () => {
+  console.log("plotData called, selectedIndicator:", selectedIndicator);
   if (!data.length || !selectedIndicator) return [];
 
   const plots = [
@@ -187,6 +198,7 @@ const plotData = () => {
  
   
   else if (selectedIndicator === 'ATR') {
+    console.log('Received Data ATR:', data);
     plots.push({
       x: data.map((d) => d.Date),
       y: data.map((d) => d.Close),
@@ -207,46 +219,98 @@ const plotData = () => {
     });
   }
 
+  
 
-    else if (selectedIndicator === 'FR') {
-      console.log('Received Data:', data);
+    // else if (indicators.length > 0 && selectedIndicator === 'FR') {
+    //   console.log("Inside FR if");
+    //   console.log('Received Data Inside FR:', data);
 
-      // Extract Fibonacci levels and stock data
-      const fibonacciLevels = data.fibonacci_levels; // From backend response
-      const stockData = data.stock_data; // Stock data
+    //   if (!data.stock_data || data.stock_data.length === 0) {
+    //     return []; // Return an empty array if no data is available
+    //   }
+
+    //   // Extract Fibonacci levels and stock data
+    //   const fibonacciLevels = data.fibonacci_levels; // From backend response
+    //   const stockData = data.stock_data; // Stock data
     
-      // Get date range
-      const startDate = stockData[0]?.Date;
-      const endDate = stockData[stockData.length - 1]?.Date;
+    //   // Get date range
+    //   const startDate = stockData[0]?.Date;
+    //   const endDate = stockData[stockData.length - 1]?.Date;
     
-      // Iterate over Fibonacci levels and push each retracement line
-      Object.entries(fibonacciLevels).forEach(([levelName, levelPrice]) => {
+    //   // Iterate over Fibonacci levels and push each retracement line
+    //   Object.entries(fibonacciLevels).forEach(([levelName, levelPrice]) => {
+    //     plots.push({
+    //       x: [startDate, endDate], // Span across the full date range
+    //       y: [levelPrice, levelPrice], // Horizontal line at retracement price
+    //       type: 'scatter',
+    //       mode: 'lines',
+    //       name: levelName, // E.g., "23.6%", "50.0%", etc.
+    //       line: {
+    //         dash: 'dash',
+    //         color: 'rgba(77, 102, 255, 0.7)', // Adjust color and style
+    //         width: 2,
+    //       },
+    //     });
+    //   });
+    
+    //   // Add close price line for stock data
+    //   plots.push({
+    //     x: stockData.map((d) => d.Date),
+    //     y: stockData.map((d) => d.Close),
+    //     type: 'scatter',
+    //     mode: 'lines',
+    //     name: 'Close Price',
+    //     line: { color: 'black' },
+    //   });
+    // }
+    
+   
+    
+      else if (indicators.length > 0 && selectedIndicator === 'FR') {
+        console.log("Inside FR if");
+        console.log('Received Data:', data);
+    
+        // Check for empty data
+        if (!data.stock_data || data.stock_data.length === 0) {
+          return []; // Return empty array if no data
+        }
+    
+        // Extract Fibonacci levels and stock data
+        const fibonacciLevels = data.fibonacci_levels;
+        const stockData = data.stock_data;
+    
+        // Get date range (handle missing dates if needed)
+        const startDate = data.stock_data?.[0]?.Date || '2023-12-01';
+        const endDate = data.stock_data?.[data.stock_data.length - 1]?.Date || new Date();
+    
+        // Iterate over Fibonacci levels and push each retracement line
+        Object.entries(fibonacciLevels).forEach(([levelName, levelPrice]) => {
+          plots.push({
+            x: [startDate, endDate],
+            y: [levelPrice, levelPrice],
+            type: 'scatter',
+            mode: 'lines',
+            name: levelName,
+            line: {
+              dash: 'dash',
+              color: 'rgba(77, 102, 255, 0.7)',
+              width: 2,
+            },
+          });
+        });
+    
+        // Add close price line for stock data
         plots.push({
-          x: [startDate, endDate], // Span across the full date range
-          y: [levelPrice, levelPrice], // Horizontal line at retracement price
+          x: stockData.map((d) => d.Date),
+          y: stockData.map((d) => d.Close),
           type: 'scatter',
           mode: 'lines',
-          name: levelName, // E.g., "23.6%", "50.0%", etc.
-          line: {
-            dash: 'dash',
-            color: 'rgba(77, 102, 255, 0.7)', // Adjust color and style
-            width: 2,
-          },
+          name: 'Close Price',
+          line: { color: 'black' },
         });
-      });
+      }
     
-      // Add close price line for stock data
-      plots.push({
-        x: stockData.map((d) => d.Date),
-        y: stockData.map((d) => d.Close),
-        type: 'scatter',
-        mode: 'lines',
-        name: 'Close Price',
-        line: { color: 'black' },
-      });
-    }
-    
-    
+   
   
   else if (selectedIndicator === 'ElliottWave') {
     // Handle Elliott Wave logic here
