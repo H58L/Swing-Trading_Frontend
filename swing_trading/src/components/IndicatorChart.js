@@ -24,6 +24,7 @@ const IndicatorChart = () => {
     { label: 'Bollinger Bands - 20 Days', value: 'BB20' },
     { label: 'Moving Average Convergence/divergence', value: 'MACD' },
     { label: 'Average True Range (ATR)', value: 'ATR' }, 
+    { label: 'Fibonacci Retracement', value: 'FR' },
     { label: 'Elliot Wave', value: 'ElliottWave' },
   ];
 
@@ -49,6 +50,7 @@ const plotData = () => {
       type: 'scatter',
       mode: 'lines',
       name: 'Close Price',
+      line: {color: 'black'}
     },
   ];
 
@@ -148,25 +150,8 @@ const plotData = () => {
     );
   }
   
-  // Handle MACD specifically
-  // else if (selectedIndicator === 'MACD') {
-  //   plots.push({
-  //     x: data.map((d) => d.Date),
-  //     y: data.map((d) => d.MACD),
-  //     type: 'scatter',
-  //     mode: 'lines',
-  //     name: 'MACD Line',
-  //     line: { color: 'blue' }, // Set a color for the MACD line
-  //   });
-  //   plots.push({
-  //     x: data.map((d) => d.Date),
-  //     y: data.map((d) => d.Signal_line),
-  //     type: 'scatter',
-  //     mode: 'lines',
-  //     name: 'Signal Line',
-  //     line: { color: 'orange' }, // Set a color for the signal line
-  //   });
-  // }
+  
+
 
   else if (selectedIndicator === 'MACD') {
     plots.push({
@@ -199,16 +184,7 @@ const plotData = () => {
   }
    
   
-  // else if (selectedIndicator === 'ATR') {
-  //   plots.push({
-  //     x: data.map((d) => d.Date),
-  //     y: data.map((d) => d.ATR || null),  // ATR values from the backend
-  //     type: 'scatter',
-  //     mode: 'lines',
-  //     name: 'ATR (14 Days)',
-  //     line: { color: 'purple' },  // Color for ATR line
-  //   });
-  // }
+ 
   
   else if (selectedIndicator === 'ATR') {
     plots.push({
@@ -230,6 +206,47 @@ const plotData = () => {
       yaxis: 'y2', // Assign this trace to the secondary y-axis
     });
   }
+
+
+    else if (selectedIndicator === 'FR') {
+      console.log('Received Data:', data);
+
+      // Extract Fibonacci levels and stock data
+      const fibonacciLevels = data.fibonacci_levels; // From backend response
+      const stockData = data.stock_data; // Stock data
+    
+      // Get date range
+      const startDate = stockData[0]?.Date;
+      const endDate = stockData[stockData.length - 1]?.Date;
+    
+      // Iterate over Fibonacci levels and push each retracement line
+      Object.entries(fibonacciLevels).forEach(([levelName, levelPrice]) => {
+        plots.push({
+          x: [startDate, endDate], // Span across the full date range
+          y: [levelPrice, levelPrice], // Horizontal line at retracement price
+          type: 'scatter',
+          mode: 'lines',
+          name: levelName, // E.g., "23.6%", "50.0%", etc.
+          line: {
+            dash: 'dash',
+            color: 'rgba(77, 102, 255, 0.7)', // Adjust color and style
+            width: 2,
+          },
+        });
+      });
+    
+      // Add close price line for stock data
+      plots.push({
+        x: stockData.map((d) => d.Date),
+        y: stockData.map((d) => d.Close),
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Close Price',
+        line: { color: 'black' },
+      });
+    }
+    
+    
   
   else if (selectedIndicator === 'ElliottWave') {
     // Handle Elliott Wave logic here
@@ -293,34 +310,7 @@ const plotData = () => {
 
       {/* Plot */}
       {data.length > 0 && selectedIndicator && (
-        <Plot
-          // data={plotData()}
-          // layout={{
-          //   title: `${ticker} ${indicators.find((ind) => ind.value === selectedIndicator)?.label}`,
-          //   xaxis: { title: 'Date' },
-          //   yaxis: { title: 'Price' },
-          //   dragmode: 'pan',
-          // }}
-
-  //         data={plotData()}
-  // layout={{
-  //   title: `${ticker} ${indicators.find((ind) => ind.value === selectedIndicator)?.label}`,
-  //   xaxis: { title: 'Date' },
-  //   yaxis: { 
-  //     title: 'Price', 
-  //     side: 'left', 
-  //     showgrid: true 
-  //   }, // Primary y-axis
-  //   yaxis2: {
-  //     title: 'MACD & Signal Line',
-  //     side: 'right',
-  //     overlaying: 'y', // Overlay the secondary y-axis on the primary
-  //     showgrid: false, // Optional: Disable grid for the secondary y-axis
-  //   },
-  //   dragmode: 'pan',
-  // }}
-
- 
+        <Plot      
   data={plotData()}
   layout={{
     title: `${ticker} ${indicators.find((ind) => ind.value === selectedIndicator)?.label}`,

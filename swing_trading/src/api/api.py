@@ -235,6 +235,7 @@ from MovingAverages import (
     calculate_MA2050100, calculate_EMA2050100, calculate_MACD
 )
 from AverageTrueRange import calculate_atr
+from FibonacciRetracement import calculate_fibonacci_retracement
 
 app = Flask(__name__)
 CORS(app)
@@ -417,6 +418,12 @@ def moving_averages():
         elif indicator == 'ATR':
             result = calculate_atr(data,14)
 
+        #Fibonacci Retracement
+        elif indicator == 'FR':
+            stock_data = pd.DataFrame(data)
+            result = calculate_fibonacci_retracement(stock_data)
+            return jsonify(result)
+        
         elif indicator == 'ElliottWave':
             # Perform Elliott Wave analysis
             waves = calculate_elliott_wave(data)

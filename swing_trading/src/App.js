@@ -56,7 +56,7 @@ const App = () => {
                     <Route path="/data" element={<StockData />} />
                     <Route path="/alertform" element={<AlertForm />} />
                     <Route path="/prediction" element={<Prediction />} />
-                    <Route path="/admin" element={<Admin />} />
+                    {/* <Route path="/admin" element={<Admin />} /> */}
                     <Route path="/indicators" element={<IndicatorChart />} />
                   </Routes>
                 </div>
