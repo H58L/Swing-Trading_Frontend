@@ -102,6 +102,10 @@ const Header = ({ name, onLogin, onLogout }) => {
     navigate("/indicators");
   };
 
+  const handleRegister = () => {
+    navigate("/register");
+  };
+
   return (
     <div>
       <Navbar expand="lg" className="navbar-custom">
@@ -156,6 +160,11 @@ const Header = ({ name, onLogin, onLogout }) => {
                   Dark Mode
                 </NavDropdown.Item>
               )}
+
+              <NavDropdown.Item onClick={handleRegister}>
+                  Register a new User
+                </NavDropdown.Item>
+
             </NavDropdown>
           </div>
           <Navbar.Toggle aria-controls="navbarScroll" onClick={() => console.log("Toggle clicked")} />

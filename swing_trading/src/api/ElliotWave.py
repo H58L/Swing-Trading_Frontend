@@ -1,7 +1,11 @@
+import yfinance as yf
 from scipy.signal import find_peaks
+import pandas as pd
+
 def calculate_elliott_wave(data):
+    # Ensure the data has a 'Close' column and drop any NaN values
     prices = data['Close'].dropna().values
-    dates = data.index
+    dates = data['Date']  # Using the 'Date' column after reset_index
 
     # Find peaks (local maxima)
     peaks, _ = find_peaks(prices, distance=5)
@@ -12,6 +16,8 @@ def calculate_elliott_wave(data):
     return peaks, troughs, prices, dates
 
 def identify_buy_sell_signals(peaks, troughs, prices, dates):
-    buy_signals = [(dates[trough], prices[trough]) for trough in troughs]
-    sell_signals = [(dates[peak], prices[peak]) for peak in peaks]
+    # Convert dates to string format for JSON serialization
+    buy_signals = [(dates[trough].strftime("%Y-%m-%d"), prices[trough]) for trough in troughs]
+    sell_signals = [(dates[peak].strftime("%Y-%m-%d"), prices[peak]) for peak in peaks]
     return buy_signals, sell_signals
+
