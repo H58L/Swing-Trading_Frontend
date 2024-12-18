@@ -219,15 +219,17 @@ def moving_averages():
             df['Date'] = pd.to_datetime(df['Date'], errors='coerce')  # Ensure dates are in datetime format
             df['Date'] = df['Date'].dt.strftime("%Y-%m-%d")  # Format as string
             
-            df['Peak'] = pd.Series(prices[peaks], index=peaks)
-            df['Trough'] = pd.Series(prices[troughs], index=troughs)
+            # df['Peak'] = pd.Series(prices[peaks], index=peaks)
+            # df['Trough'] = pd.Series(prices[troughs], index=troughs)
 
             # Reset index for JSON serialization
             df.reset_index(drop=True, inplace=True)
 
             # Include buy/sell signals in the result
             result = {
-                #"data": df.dropna(subset=["Peak", "Trough"], how="all").to_dict(orient='records'),
+                "data": df.to_dict(orient='records'),
+                #.dropna(subset=["Peak", "Trough"], how="all")
+                # .dropna(subset=["Peak", "Trough"], how="all").to_dict(orient='records'),
                 "buy_signals": [{"date": date, "price": price} for date, price in buy_signals],
                 "sell_signals": [{"date": date, "price": price} for date, price in sell_signals]
             }

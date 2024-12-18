@@ -1,71 +1,39 @@
-
-
-import React, { useState, useContext } from 'react';
-import axios from 'axios';
-import Plot from 'react-plotly.js';
-import '../style/MovingAveragesChart.css';
+import React, { useState } from "react";
+import axios from "axios";
+import Plot from "react-plotly.js";
+import "../style/MovingAveragesChart.css";
 import Header from "./Header";
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import ThemeContext from "../context/ThemeContext";
-import '../style/IndicatorChart.css';
+import { useEffect } from "react";
 
 const IndicatorChart = () => {
-  const { darkMode } = useContext(ThemeContext);
-  const [ticker, setTicker] = useState('AAPL');
+  const [ticker, setTicker] = useState("AAPL");
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
-  const [selectedIndicator, setSelectedIndicator] = useState('');
-   const navigate = useNavigate();
-  const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
-  
+  const [selectedIndicator, setSelectedIndicator] = useState("");
+
   // Mapping between dropdown labels and backend keys
   const indicators = [
-    { label: 'Simple Moving Averages - 20,50,100 Days', value: 'MA' },
-    { label: 'Simple Moving Averages - 20 Days', value: 'MA20' },
-    { label: 'Simple Moving Averages - 50 Days', value: 'MA50' },
-    { label: 'Simple Moving Averages - 100 Days', value: 'MA100' },
-    { label: 'Exponential Moving Averages - 20,50,100 Days', value: 'EMA' },
-    { label: 'Exponential Moving Averages - 20 Days', value: 'EMA20' },
-    { label: 'Exponential Moving Averages - 50 Days', value: 'EMA50' },
-    { label: 'Exponential Moving Averages - 100 Days', value: 'EMA100' },
-    { label: 'Bollinger Bands - 20 Days', value: 'BB20' },
-    { label: 'Moving Average Convergence/divergence', value: 'MACD' },
-    { label: 'Average True Range (ATR)', value: 'ATR' }, 
-    { label: 'Elliot Wave', value: 'EW00' },
-    // { label: 'Fibonacci Retracement', value: 'FR' },
-    
+    { label: "Simple Moving Averages - 20,50,100 Days", value: "MA" },
+    { label: "Simple Moving Averages - 20 Days", value: "MA20" },
+    { label: "Simple Moving Averages - 50 Days", value: "MA50" },
+    { label: "Simple Moving Averages - 100 Days", value: "MA100" },
+    { label: "Exponential Moving Averages - 20,50,100 Days", value: "EMA" },
+    { label: "Exponential Moving Averages - 20 Days", value: "EMA20" },
+    { label: "Exponential Moving Averages - 50 Days", value: "EMA50" },
+    { label: "Exponential Moving Averages - 100 Days", value: "EMA100" },
+    { label: "Bollinger Bands - 20 Days", value: "BB20" },
+    { label: "Moving Average Convergence/divergence", value: "MACD" },
+    { label: "Average True Range (ATR)", value: "ATR" },
+    { label: "Fibonacci Retracement", value: "FR" },
+    { label: "Elliot Wave", value: "EW00" },
   ];
 
-  // LOGGED IN OR NOT 
-    useEffect(() => {
-      const storedLoginStatus = sessionStorage.getItem("isLoggedin");
-      if (storedLoginStatus) {
-        setIsLoggedIn(storedLoginStatus === "true"); // Convert to boolean
-      } else {
-        setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
-      }
-    }, []);
-  
-    // Redirect if not logged in
-    useEffect(() => {
-      if (isLoggedin === false) {
-        navigate("/");
-      }
-    }, [isLoggedin, navigate]);
-
-
-  // useEffect(() => {
-  //   if (selectedIndicator) {
-  //     fetchIndicatorData();
-  //   }
-  // }, [selectedIndicator]);
-
   useEffect(() => {
-    document.body.className = darkMode ? 'dark-mode' : 'light-mode';
-  }, [darkMode]);
-  
-  
+    if (selectedIndicator) {
+      fetchIndicatorData();
+    }
+  }, [selectedIndicator]);
+
   const fetchIndicatorData = async () => {
     setError(null);
     try {
@@ -101,49 +69,6 @@ const IndicatorChart = () => {
     ) {
       const fibonacciLevels = data.fibonacci_levels;
       const stockData = data.stock_data;
-
-      const plotData = () => {
-  console.log("plotData called, selectedIndicator:", selectedIndicator);
-   if (!Array.isArray(data) || !data.length || !selectedIndicator) return [];
-
-  const plots = [
-    {
-      x: data.map((d) => d.Date),
-      y: data.map((d) => d.Close),
-      type: 'scatter',
-      mode: 'lines',
-      name: 'Close Price',
-      // line: {color: 'black'}
-      line: { color: darkMode ? 'white' : 'black' },
-    },
-  ];
-
-      plots = [
-        {
-          x: stockData.map((d) => d.Date),
-          y: stockData.map((d) => d.Close),
-          type: "scatter",
-          mode: "lines",
-          name: "Close Price",
-          line: { color: "black" },
-        },
-        {
-          x: Object.keys(fibonacciLevels),
-          y: Object.values(fibonacciLevels),
-          type: "scatter",
-          mode: "lines+markers",
-          name: "Fibonacci Levels",
-          line: { dash: "dot", color: "blue" },
-          marker: { color: "red", size: 8 },
-        },
-      ];
-    } else if (
-      selectedIndicator === "EW00" &&
-      data.buy_signals &&
-      Array.isArray(data.data)
-    ) {
-      const fibonacciLevels = data.buy_signals;
-      const stockData = data.data;
 
       plots = [
         {
@@ -236,6 +161,8 @@ const IndicatorChart = () => {
       });
     }
     if (selectedIndicator === "EMA100") {
+      console.log("ema: ", data);
+
       plots.push({
         x: data.map((d) => d.Date),
         y: data.map((d) => d.EMA100),
@@ -383,6 +310,17 @@ const IndicatorChart = () => {
       // Extract signals from object of objects
       const buySignalsArray = Object.values(data.buy_signals); // Convert buy_signals object to array
       const sellSignalsArray = Object.values(data.sell_signals); // Convert sell_signals object to array
+      const closeDataArray = Object.values(data.data); // Convert sell_signals object to array
+
+      plots.push({
+        x: closeDataArray.map((d) => d.Date), // Dates are already in the correct string format
+        y: closeDataArray.map((d) => d.Close),
+        type: "scatter",
+        mode: "lines",
+        name: "Close Price",
+        line: { color: "black" },
+        //line: { color: darkMode ? 'white' : 'black' },//   // Set marker color and size for buy signals
+      });
 
       // Buy and Sell Signals for Elliot Wave
       plots.push({
@@ -411,7 +349,6 @@ const IndicatorChart = () => {
         data.fibonacci_levels &&
         Array.isArray(data.stock_data)
       ) {
-
         const fibonacciLevels = data.fibonacci_levels;
         const stockData = data.stock_data;
 
@@ -446,183 +383,16 @@ const IndicatorChart = () => {
             ?.label,
         });
       }
+    }
 
-    
-   
-  
-  // if (selectedIndicator === 'EW00') {
-  //   console.log("Inside Elliot Wave if else");
-  //   console.log("Recieved Data in EW00 block",data);
-
-    
-
-  // } 
-
- 
-else if (selectedIndicator === 'EW00') {
-  console.log("Inside if EW")
-  console.log("Recieved Data EW before fetch", data)
-  // fetchIndicatorData();
-  console.log("Recieved Data EW after fetch", data)
-
-  if (!data.buy_signals || !data.sell_signals) {
-    console.log("Inside Empty data if, returning empty array")
-    return [];}
-      // Check if buy/sell signals exist
-  console.log("Inside if EW, below if")
-  // Extract signals from object of objects
-  const buySignalsArray = Object.values(data.buy_signals);  // Convert buy_signals object to array
-  const sellSignalsArray = Object.values(data.sell_signals);  // Convert sell_signals object to array
-
-  // Buy and Sell Signals for Elliot Wave
-  plots.push({
-    x: buySignalsArray.map((d) => d.date),  // Dates are already in the correct string format
-    y: buySignalsArray.map((d) => d.price),
-    type: 'scatter',
-    mode: 'markers',
-    name: 'Buy Signals',
-    marker: { color: 'green', size: 8 },  // Set marker color and size for buy signals
-  });
-
-  plots.push({
-    x: sellSignalsArray.map((d) => d.date),  // Dates are already in the correct string format
-    y: sellSignalsArray.map((d) => d.price),
-    type: 'scatter',
-    mode: 'markers',
-    name: 'Sell Signals',
-    marker: { color: 'red', size: 8 },  // Set marker color and size for sell signals
-  });
-}
-
-  // else if (selectedIndicator === 'EW00') {
-  //   if (!data.buy_signals || !data.sell_signals) return []; // Check if buy/sell signals exist
-
-  //   // Prepare Buy and Sell Signals for Elliott Wave
-  //   plots.push({
-  //     x: data.data.map((d) => d.Date),
-  //     y: data.data.map((d) => d.Close),
-  //     type: 'scatter',
-  //     mode: 'lines',
-  //     name: 'Close Prices',
-  //     line: { color: 'blue' }, // Line color for close prices
-  //   });
-
-  //   plots.push({
-  //     x: data.buy_signals.map((d) => d.date),
-  //     y: data.buy_signals.map((d) => d.price),
-  //     type: 'scatter',
-  //     mode: 'markers',
-  //     name: 'Buy Signals',
-  //     marker: { color: 'green', size: 8 }, // Set marker color and size for buy signals
-  //   });
-
-  //   plots.push({
-  //     x: data.sell_signals.map((d) => d.date),
-  //     y: data.sell_signals.map((d) => d.price),
-  //     type: 'scatter',
-  //     mode: 'markers',
-  //     name: 'Sell Signals',
-  //     marker: { color: 'red', size: 8 }, // Set marker color and size for sell signals
-  //   });
-  // }
-
-  
-  else {
-    // Handle other indicators (e.g., Moving Averages)
-    console.log("Inside else block");
-    plots.push({
-      x: data.map((d) => d.Date),
-      y: data.map((d) => d[selectedIndicator]),
-      //name: {selectedIndicator},
-      type: 'scatter',
-      mode: 'lines',
-      name: indicators.find((ind) => ind.value === selectedIndicator)?.label,
-    });
-  }
-
-
-
-  return plots;
-};
+    return plots;
+  };
 
   return (
-//     <>
-//     <Header />
-//     <div className="chart-container" >
-//       <h2>Stock Indicators Chart</h2>
-//       <div className="input-container">
-//         {/* Ticker Input */}
-//         <input
-//           type="text"
-//           value={ticker}
-//           onChange={(e) => setTicker(e.target.value.toUpperCase())}
-//           placeholder="Enter Ticker (e.g., AAPL)"
-//           className="ticker-input"
-//         />
-
-//         {/* Dropdown for Indicator Selection */}
-//         <select
-//           value={selectedIndicator}
-//           onChange={(e) => setSelectedIndicator(e.target.value)}
-//           className="indicator-dropdown"
-//         >
-//           <option value="" disabled>
-//             Select Indicator
-//           </option>
-//           {indicators.map((indicator) => (
-//             <option key={indicator.value} value={indicator.value}>
-//               {indicator.label}
-//             </option>
-//           ))}
-//         </select>
-
-//         {/* Fetch Button */}
-//         <button onClick={fetchIndicatorData} className="fetch-button" disabled={!selectedIndicator}>
-//           Get Data
-//         </button>
-//       </div>
-
-//       {/* Error Message */}
-//       {error && <p className="error-message">{error}</p>}
-
-//       {/* Plot */}
-//       {data.length > 0 && selectedIndicator && (
-//         <Plot    
-//   data={plotData()}
-//   layout={{
-//     title: `${ticker} ${indicators.find((ind) => ind.value === selectedIndicator)?.label}`,
-//     xaxis: { title: 'Date' },
-//     yaxis: {
-//       title: 'Price',
-//       side: 'left',
-//       showgrid: true,
-//     }, // Primary y-axis for Close Price
-//     ...(selectedIndicator === 'MACD' || selectedIndicator === 'ATR'
-//       ? {
-//           yaxis2: {
-//             title: selectedIndicator === 'MACD' ? 'MACD & Signal Line' : 'ATR',
-//             side: 'right',
-//             overlaying: 'y', // Overlay on primary y-axis
-//             showgrid: false,
-//           },
-//         }
-//       : {}),
-//     dragmode: 'pan',
-//   }}
-// />
-
-          
-       
-      
-
-//       )}
-//     </div>
-//     </>
-
-<>
+    <>
       <Header />
-      <div className={`chart-container ${darkMode ? 'dark-mode' : 'light-mode'}`}>
-        <b><h1 className={darkMode ? 'dark-mode-h1' : 'light-mode-h1'}>Stock Indicators Chart</h1></b>
+      <div className="chart-container">
+        <h2>Stock Indicators Chart</h2>
         <div className="input-container">
           {/* Ticker Input */}
           <input
@@ -630,16 +400,14 @@ else if (selectedIndicator === 'EW00') {
             value={ticker}
             onChange={(e) => setTicker(e.target.value.toUpperCase())}
             placeholder="Enter Ticker (e.g., AAPL)"
-  
-            className={`ticker-input ${darkMode ? 'dark-input' : 'light-input'}`}
+            className="ticker-input"
           />
 
           {/* Dropdown for Indicator Selection */}
           <select
             value={selectedIndicator}
             onChange={(e) => setSelectedIndicator(e.target.value)}
-
-            className={`indicator-dropdown ${darkMode ? 'dark-dropdown' : 'light-dropdown'}`}
+            className="indicator-dropdown"
           >
             <option value="" disabled>
               Select Indicator
@@ -654,56 +422,53 @@ else if (selectedIndicator === 'EW00') {
           {/* Fetch Button */}
           <button
             onClick={fetchIndicatorData}
-
-            className={`fetch-button ${darkMode ? 'dark-button' : 'light-button'}`}
-            disabled={!selectedIndicator}
+            className="fetch-button"
+            // disabled={!selectedIndicator}
           >
             Get Data
           </button>
         </div>
 
         {/* Error Message */}
-        {error && <p className={`error-message ${darkMode ? 'dark-error' : 'light-error'}`}>{error}</p>}
+        {error && <p className="error-message">{error}</p>}
 
         {/* Plot */}
-        {data.length > 0 && selectedIndicator && (
+
+        {console.log("Plot data:", data)}
+
+        {selectedIndicator && (
           <Plot
             data={plotData()}
             layout={{
-              title: `${ticker} ${indicators.find((ind) => ind.value === selectedIndicator)?.label}`,
-              xaxis: { title: 'Date' },
+              title: `${ticker} ${
+                indicators.find((ind) => ind.value === selectedIndicator)?.label
+              }`,
+              xaxis: { title: "Date" },
               yaxis: {
-                title: 'Price',
-                side: 'left',
+                title: "Price",
+                side: "left",
                 showgrid: true,
-              },
-              ...(selectedIndicator === 'MACD' || selectedIndicator === 'ATR'
+              }, // Primary y-axis for Close Price
+              ...(selectedIndicator === "MACD" || selectedIndicator === "ATR"
                 ? {
                     yaxis2: {
-                      title: selectedIndicator === 'MACD' ? 'MACD & Signal Line' : 'ATR',
-                      side: 'right',
-                      overlaying: 'y',
+                      title:
+                        selectedIndicator === "MACD"
+                          ? "MACD & Signal Line"
+                          : "ATR",
+                      side: "right",
+                      overlaying: "y", // Overlay on primary y-axis
                       showgrid: false,
                     },
                   }
                 : {}),
-
-              dragmode: 'pan',
-              paper_bgcolor: darkMode ? '#2b2b2b' : '#ffffff',
-              plot_bgcolor: darkMode ? '#1e1e1e' : '#f8f9fa',
-              font: {
-                color: darkMode ? '#ffffff' : '#000000',
-              },
+              dragmode: "pan",
             }}
           />
         )}
       </div>
     </>
-
-
   );
 };
 
 export default IndicatorChart;
-
-
