@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import Plot from "react-plotly.js";
 import "../style/MovingAveragesChart.css";
@@ -51,6 +51,7 @@ const IndicatorChart = () => {
   }, [isLoggedin, navigate]);
 
   useEffect(() => {
+    console.log("Inside useeffect");
     if (selectedIndicator) {
       fetchIndicatorData();
     }
@@ -133,7 +134,10 @@ const IndicatorChart = () => {
     }
 
     if (selectedIndicator === "MA") {
-      const smaPeriods = [20, 50, 100]; // Periods for all desired SMAs
+      console.log("Inside MA");
+      if (Array.isArray(data))
+      {
+        const smaPeriods = [20, 50, 100]; // Periods for all desired SMAs
       for (const period of smaPeriods) {
         plots.push({
           x: data.map((d) => d.Date),
@@ -146,9 +150,27 @@ const IndicatorChart = () => {
           }, // Assign different colors
         });
       }
+      }
+      // const smaPeriods = [20, 50, 100]; // Periods for all desired SMAs
+      // for (const period of smaPeriods) {
+      //   plots.push({
+      //     x: data.map((d) => d.Date),
+      //     y: data.map((d) => (`MA${period}` ? d[`MA${period}`] : null)), // Check if key exists
+      //     type: "scatter",
+      //     mode: "lines",
+      //     name: `SMA${period}`,
+      //     line: {
+      //       color: period === 20 ? "orange" : period === 50 ? "blue" : "green",
+      //     }, // Assign different colors
+      //   });
+      // }
     }
+
     if (selectedIndicator === "EMA") {
-      const smaPeriods = [20, 50, 100]; // Periods for all desired SMAs
+      console.log("Inside EMA");
+      if (Array.isArray(data))
+      {
+        const smaPeriods = [20, 50, 100]; // Periods for all desired SMAs
       for (const period of smaPeriods) {
         plots.push({
           x: data.map((d) => d.Date),
@@ -161,41 +183,80 @@ const IndicatorChart = () => {
           }, // Assign different colors
         });
       }
+      }
+      // const smaPeriods = [20, 50, 100]; // Periods for all desired SMAs
+      // for (const period of smaPeriods) {
+      //   plots.push({
+      //     x: data.map((d) => d.Date),
+      //     y: data.map((d) => (`EMA${period}` ? d[`EMA${period}`] : null)), // Check if key exists
+      //     type: "scatter",
+      //     mode: "lines",
+      //     name: `EMA${period}`,
+      //     line: {
+      //       color: period === 20 ? "orange" : period === 50 ? "blue" : "green",
+      //     }, // Assign different colors
+      //   });
+      // }
     }
     if (selectedIndicator === "EMA20") {
-      plots.push({
-        x: data.map((d) => d.Date),
-        y: data.map((d) => d.EMA20),
-        type: "scatter",
-        mode: "lines",
-        name: "EMA20",
-        line: { color: "orange" },
-      });
+      console.log("Inside EMA20");
+      if (Array.isArray(data))
+      {
+        plots.push({
+          x: data.map((d) => d.Date),
+          y: data.map((d) => d.EMA20),
+          type: "scatter",
+          mode: "lines",
+          name: "EMA20",
+          line: { color: "orange" },
+        });
+      }
+     
     }
     if (selectedIndicator === "EMA50") {
-      plots.push({
-        x: data.map((d) => d.Date),
-        y: data.map((d) => d.EMA50),
-        type: "scatter",
-        mode: "lines",
-        name: "EMA50",
-        line: { color: "orange" },
-      });
+      console.log("Inside EMA50");
+      if (Array.isArray(data))
+      {
+        plots.push({
+          x: data.map((d) => d.Date),
+          y: data.map((d) => d.EMA50),
+          type: "scatter",
+          mode: "lines",
+          name: "EMA50",
+          line: { color: "orange" },
+        });
+      }
+      
     }
     if (selectedIndicator === "EMA100") {
-      console.log("ema: ", data);
-
-      plots.push({
-        x: data.map((d) => d.Date),
-        y: data.map((d) => d.EMA100),
-        type: "scatter",
-        mode: "lines",
-        name: "EMA100",
-        line: { color: "orange" },
-      });
+      //console.log("ema: ", data);
+      console.log("Inside EMA100");
+      if (Array.isArray(data))
+      {
+        plots.push({
+          x: data.map((d) => d.Date),
+          y: data.map((d) => d.EMA100),
+          type: "scatter",
+          mode: "lines",
+          name: "EMA100",
+          line: { color: "orange" },
+        });
+      }
+      // plots.push({
+      //   x: data.map((d) => d.Date),
+      //   y: data.map((d) => d.EMA100),
+      //   type: "scatter",
+      //   mode: "lines",
+      //   name: "EMA100",
+      //   line: { color: "orange" },
+      // });
     }
     if (selectedIndicator === "BB20") {
-      console.log("bb");
+
+      console.log("Inside BB20");
+      if (Array.isArray(data))
+      {
+         console.log("bb");
 
       plots.push(
         {
@@ -223,6 +284,8 @@ const IndicatorChart = () => {
           line: { color: "red" },
         }
       );
+      }
+     
     }
     if (selectedIndicator === "MACD") {
       plots.push({
@@ -254,7 +317,10 @@ const IndicatorChart = () => {
       });
     }
     if (selectedIndicator === "ATR") {
-      plots.push({
+      console.log("Inside ATR");
+      if (Array.isArray(data))
+      {
+        plots.push({
         x: data.map((d) => d.Date),
         y: data.map((d) => d.Close),
         type: "scatter",
@@ -272,9 +338,12 @@ const IndicatorChart = () => {
         line: { color: "purple" }, // Color for the ATR line
         yaxis: "y2", // Assign this trace to the secondary y-axis
       });
+      }
+      
     }
 
     if (indicators.length > 0 && selectedIndicator === "FR") {
+      
       console.log("FR Received Data:", data);
 
       // Check for empty data
@@ -395,15 +464,26 @@ const IndicatorChart = () => {
           marker: { color: "red", size: 8 },
         });
       } else {
+        if (Array.isArray(data))
+        {
+          plots.push({
+            x: data.map((d) => d.Date),
+            y: data.map((d) => d[selectedIndicator]),
+            type: "scatter",
+            mode: "lines",
+            name: indicators.find((ind) => ind.value === selectedIndicator)
+              ?.label,
+          });
+        }
         // For other indicators (Moving Averages, etc.)
-        plots.push({
-          x: data.map((d) => d.Date),
-          y: data.map((d) => d[selectedIndicator]),
-          type: "scatter",
-          mode: "lines",
-          name: indicators.find((ind) => ind.value === selectedIndicator)
-            ?.label,
-        });
+        // plots.push({
+        //   x: data.map((d) => d.Date),
+        //   y: data.map((d) => d[selectedIndicator]),
+        //   type: "scatter",
+        //   mode: "lines",
+        //   name: indicators.find((ind) => ind.value === selectedIndicator)
+        //     ?.label,
+        // });
       }
     }
 
@@ -429,6 +509,8 @@ const IndicatorChart = () => {
           <select
             value={selectedIndicator}
             onChange={(e) => setSelectedIndicator(e.target.value)}
+            
+
             className="indicator-dropdown"
           >
             <option value="" disabled>
@@ -455,7 +537,7 @@ const IndicatorChart = () => {
         {error && <p className="error-message">{error}</p>}
 
         {/* Plot */}
-
+        
         {console.log("Plot data:", data)}
 
         {selectedIndicator && (
