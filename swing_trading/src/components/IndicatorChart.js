@@ -1,13 +1,16 @@
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import Plot from 'react-plotly.js';
 import '../style/MovingAveragesChart.css';
 import Header from "./Header";
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ThemeContext from "../context/ThemeContext";
+import '../style/IndicatorChart.css';
 
 const IndicatorChart = () => {
+  const { darkMode } = useContext(ThemeContext);
   const [ticker, setTicker] = useState('AAPL');
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
@@ -51,11 +54,15 @@ const IndicatorChart = () => {
     }, [isLoggedin, navigate]);
 
 
+  // useEffect(() => {
+  //   if (selectedIndicator) {
+  //     fetchIndicatorData();
+  //   }
+  // }, [selectedIndicator]);
+
   useEffect(() => {
-    if (selectedIndicator) {
-      fetchIndicatorData();
-    }
-  }, [selectedIndicator]);
+    document.body.className = darkMode ? 'dark-mode' : 'light-mode';
+  }, [darkMode]);
   
   // useEffect(() => {
   //   if (selectedIndicator && data.length > 0) {
@@ -90,7 +97,8 @@ const plotData = () => {
       type: 'scatter',
       mode: 'lines',
       name: 'Close Price',
-      line: {color: 'black'}
+      // line: {color: 'black'}
+      line: { color: darkMode ? 'white' : 'black' },
     },
   ];
 
@@ -438,205 +446,158 @@ else if (selectedIndicator === 'EW00') {
 };
 
   return (
-    <>
-    <Header />
-    <div className="chart-container">
-      <h2>Stock Indicators Chart</h2>
-      <div className="input-container">
-        {/* Ticker Input */}
-        <input
-          type="text"
-          value={ticker}
-          onChange={(e) => setTicker(e.target.value.toUpperCase())}
-          placeholder="Enter Ticker (e.g., AAPL)"
-          className="ticker-input"
-        />
+//     <>
+//     <Header />
+//     <div className="chart-container" >
+//       <h2>Stock Indicators Chart</h2>
+//       <div className="input-container">
+//         {/* Ticker Input */}
+//         <input
+//           type="text"
+//           value={ticker}
+//           onChange={(e) => setTicker(e.target.value.toUpperCase())}
+//           placeholder="Enter Ticker (e.g., AAPL)"
+//           className="ticker-input"
+//         />
 
-        {/* Dropdown for Indicator Selection */}
-        <select
-          value={selectedIndicator}
-          onChange={(e) => setSelectedIndicator(e.target.value)}
-          className="indicator-dropdown"
-        >
-          <option value="" disabled>
-            Select Indicator
-          </option>
-          {indicators.map((indicator) => (
-            <option key={indicator.value} value={indicator.value}>
-              {indicator.label}
-            </option>
-          ))}
-        </select>
-
-        {/* Fetch Button */}
-        <button onClick={fetchIndicatorData} className="fetch-button" disabled={!selectedIndicator}>
-          Get Data
-        </button>
-      </div>
-
-      {/* Error Message */}
-      {error && <p className="error-message">{error}</p>}
-
-      {/* Plot */}
-      {data.length > 0 && selectedIndicator && (
-        <Plot      
-  data={plotData()}
-  layout={{
-    title: `${ticker} ${indicators.find((ind) => ind.value === selectedIndicator)?.label}`,
-    xaxis: { title: 'Date' },
-    yaxis: {
-      title: 'Price',
-      side: 'left',
-      showgrid: true,
-    }, // Primary y-axis for Close Price
-    ...(selectedIndicator === 'MACD' || selectedIndicator === 'ATR'
-      ? {
-          yaxis2: {
-            title: selectedIndicator === 'MACD' ? 'MACD & Signal Line' : 'ATR',
-            side: 'right',
-            overlaying: 'y', // Overlay on primary y-axis
-            showgrid: false,
-          },
-        }
-      : {}),
-    dragmode: 'pan',
-  }}
-/>
-
-          
-       
-      
-
-      )}
-    </div>
-    </>
-  );
-};
-
-export default IndicatorChart;
-
-// // SOMETHING WORKS
-// import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-// import Plot from 'react-plotly.js';
-// import '../style/MovingAveragesChart.css';
-// import Header from "./Header";
-
-// const IndicatorChart = () => {
-//   const [ticker, setTicker] = useState('AAPL');
-//   const [data, setData] = useState([]); // General Data
-//   const [buySignals, setBuySignals] = useState([]); // Buy Signals for EW00
-//   const [error, setError] = useState(null);
-//   const [selectedIndicator, setSelectedIndicator] = useState('');
-
-//   // Dropdown menu for selecting indicators
-//   const indicators = [
-//     { label: 'Simple Moving Averages - 20,50,100 Days', value: 'MA' },
-//     { label: 'Exponential Moving Averages - 20,50,100 Days', value: 'EMA' },
-//     { label: 'Bollinger Bands - 20 Days', value: 'BB20' },
-//     { label: 'Moving Average Convergence/divergence', value: 'MACD' },
-//     { label: 'Average True Range (ATR)', value: 'ATR' },
-//     { label: 'Fibonacci Retracement', value: 'FR' },
-//     { label: 'Elliot Wave', value: 'EW00' },
-//   ];
-
-//   useEffect(() => {
-//     if (selectedIndicator) {
-//       fetchIndicatorData();
-//     }
-//   }, [selectedIndicator]);
-
-//   // Fetch data from the backend
-//   const fetchIndicatorData = async () => {
-//     setError(null);
-//     try {
-//       const response = await axios.get('http://localhost:5000/indicators', {
-//         params: { ticker, indicator: selectedIndicator },
-//       });
-//       console.log("Received Data:", response.data);
-
-//       if (selectedIndicator === 'EW00') {
-//         setData(response.data.data || []);
-//         setBuySignals(response.data.buy_signals || []);
-//       } else {
-//         setData(response.data);
-//         setBuySignals([]);
-//       }
-//     } catch (err) {
-//       setError(err.response?.data?.error || 'Error fetching data');
-//     }
-//   };
-
-//   // Prepare plot data for Plotly
-//   const plotData = () => {
-//     if (!Array.isArray(data) || !data.length) return [];
-
-//     const plots = [
-//       {
-//         x: data.map((d) => d.Date),
-//         y: data.map((d) => d.Close),
-//         type: 'scatter',
-//         mode: 'lines',
-//         name: 'Close Price',
-//         line: { color: 'black' },
-//       },
-//     ];
-
-//     // Add buy signals for EW00
-//     if (selectedIndicator === 'EW00' && Array.isArray(buySignals) && buySignals.length) {
-//       plots.push({
-//         x: buySignals.map((signal) => signal.date),
-//         y: buySignals.map((signal) => signal.price),
-//         type: 'scatter',
-//         mode: 'markers',
-//         name: 'Buy Signals',
-//         marker: { color: 'red', size: 10, symbol: 'diamond' },
-//       });
-//     }
-
-//     return plots;
-//   };
-
-//   return (
-//     <div className="indicator-chart-container">
-//       <Header />
-//       <h2>Indicator Chart</h2>
-
-//       {/* Dropdown Menu */}
-//       <div>
-//         <label>Select Indicator:</label>
+//         {/* Dropdown for Indicator Selection */}
 //         <select
 //           value={selectedIndicator}
 //           onChange={(e) => setSelectedIndicator(e.target.value)}
+//           className="indicator-dropdown"
 //         >
-//           <option value="">Select...</option>
+//           <option value="" disabled>
+//             Select Indicator
+//           </option>
 //           {indicators.map((indicator) => (
 //             <option key={indicator.value} value={indicator.value}>
 //               {indicator.label}
 //             </option>
 //           ))}
 //         </select>
+
+//         {/* Fetch Button */}
+//         <button onClick={fetchIndicatorData} className="fetch-button" disabled={!selectedIndicator}>
+//           Get Data
+//         </button>
 //       </div>
 
-//       {/* Plotly Chart */}
-//       <div className="chart">
-//         {error ? (
-//           <p style={{ color: 'red' }}>{error}</p>
-//         ) : (
-//           <Plot
-//             data={plotData()}
-//             layout={{
-//               title: `Indicator: ${selectedIndicator}`,
-//               xaxis: { title: 'Date' },
-//               yaxis: { title: 'Price' },
-//               showlegend: true,
-//             }}
-//             style={{ width: '100%', height: '500px' }}
-//           />
-//         )}
-//       </div>
+//       {/* Error Message */}
+//       {error && <p className="error-message">{error}</p>}
+
+//       {/* Plot */}
+//       {data.length > 0 && selectedIndicator && (
+//         <Plot    
+//   data={plotData()}
+//   layout={{
+//     title: `${ticker} ${indicators.find((ind) => ind.value === selectedIndicator)?.label}`,
+//     xaxis: { title: 'Date' },
+//     yaxis: {
+//       title: 'Price',
+//       side: 'left',
+//       showgrid: true,
+//     }, // Primary y-axis for Close Price
+//     ...(selectedIndicator === 'MACD' || selectedIndicator === 'ATR'
+//       ? {
+//           yaxis2: {
+//             title: selectedIndicator === 'MACD' ? 'MACD & Signal Line' : 'ATR',
+//             side: 'right',
+//             overlaying: 'y', // Overlay on primary y-axis
+//             showgrid: false,
+//           },
+//         }
+//       : {}),
+//     dragmode: 'pan',
+//   }}
+// />
+
+          
+       
+      
+
+//       )}
 //     </div>
-//   );
-// };
+//     </>
 
-// export default IndicatorChart;
+<>
+      <Header />
+      <div className={`chart-container ${darkMode ? 'dark-mode' : 'light-mode'}`}>
+        <b><h1 className={darkMode ? 'dark-mode-h1' : 'light-mode-h1'}>Stock Indicators Chart</h1></b>
+        <div className="input-container">
+          {/* Ticker Input */}
+          <input
+            type="text"
+            value={ticker}
+            onChange={(e) => setTicker(e.target.value.toUpperCase())}
+            placeholder="Enter Ticker (e.g., AAPL)"
+            className={`ticker-input ${darkMode ? 'dark-input' : 'light-input'}`}
+          />
+
+          {/* Dropdown for Indicator Selection */}
+          <select
+            value={selectedIndicator}
+            onChange={(e) => setSelectedIndicator(e.target.value)}
+            className={`indicator-dropdown ${darkMode ? 'dark-dropdown' : 'light-dropdown'}`}
+          >
+            <option value="" disabled>
+              Select Indicator
+            </option>
+            {indicators.map((indicator) => (
+              <option key={indicator.value} value={indicator.value}>
+                {indicator.label}
+              </option>
+            ))}
+          </select>
+
+          {/* Fetch Button */}
+          <button
+            onClick={fetchIndicatorData}
+            className={`fetch-button ${darkMode ? 'dark-button' : 'light-button'}`}
+            disabled={!selectedIndicator}
+          >
+            Get Data
+          </button>
+        </div>
+
+        {/* Error Message */}
+        {error && <p className={`error-message ${darkMode ? 'dark-error' : 'light-error'}`}>{error}</p>}
+
+        {/* Plot */}
+        {data.length > 0 && selectedIndicator && (
+          <Plot
+            data={plotData()}
+            layout={{
+              title: `${ticker} ${indicators.find((ind) => ind.value === selectedIndicator)?.label}`,
+              xaxis: { title: 'Date' },
+              yaxis: {
+                title: 'Price',
+                side: 'left',
+                showgrid: true,
+              },
+              ...(selectedIndicator === 'MACD' || selectedIndicator === 'ATR'
+                ? {
+                    yaxis2: {
+                      title: selectedIndicator === 'MACD' ? 'MACD & Signal Line' : 'ATR',
+                      side: 'right',
+                      overlaying: 'y',
+                      showgrid: false,
+                    },
+                  }
+                : {}),
+              dragmode: 'pan',
+              paper_bgcolor: darkMode ? '#2b2b2b' : '#ffffff',
+              plot_bgcolor: darkMode ? '#1e1e1e' : '#f8f9fa',
+              font: {
+                color: darkMode ? '#ffffff' : '#000000',
+              },
+            }}
+          />
+        )}
+      </div>
+    </>
+
+  );
+};
+
+export default IndicatorChart;
+
