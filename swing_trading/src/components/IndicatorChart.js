@@ -5,12 +5,15 @@ import Plot from 'react-plotly.js';
 import '../style/MovingAveragesChart.css';
 import Header from "./Header";
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const IndicatorChart = () => {
   const [ticker, setTicker] = useState('AAPL');
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [selectedIndicator, setSelectedIndicator] = useState('');
+   const navigate = useNavigate();
+  const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
   
   // Mapping between dropdown labels and backend keys
   const indicators = [
@@ -25,9 +28,28 @@ const IndicatorChart = () => {
     { label: 'Bollinger Bands - 20 Days', value: 'BB20' },
     { label: 'Moving Average Convergence/divergence', value: 'MACD' },
     { label: 'Average True Range (ATR)', value: 'ATR' }, 
-    // { label: 'Fibonacci Retracement', value: 'FR' },
     { label: 'Elliot Wave', value: 'EW00' },
+    // { label: 'Fibonacci Retracement', value: 'FR' },
+    
   ];
+
+  // LOGGED IN OR NOT 
+    useEffect(() => {
+      const storedLoginStatus = sessionStorage.getItem("isLoggedin");
+      if (storedLoginStatus) {
+        setIsLoggedIn(storedLoginStatus === "true"); // Convert to boolean
+      } else {
+        setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
+      }
+    }, []);
+  
+    // Redirect if not logged in
+    useEffect(() => {
+      if (isLoggedin === false) {
+        navigate("/");
+      }
+    }, [isLoggedin, navigate]);
+
 
   useEffect(() => {
     if (selectedIndicator) {
@@ -35,7 +57,12 @@ const IndicatorChart = () => {
     }
   }, [selectedIndicator]);
   
-
+  // useEffect(() => {
+  //   if (selectedIndicator && data.length > 0) {
+  //     plotData();
+  //   }
+  // }, [data, selectedIndicator]);
+  
   const fetchIndicatorData = async () => {
     setError(null);
     try {
@@ -54,7 +81,7 @@ const IndicatorChart = () => {
 
 const plotData = () => {
   console.log("plotData called, selectedIndicator:", selectedIndicator);
-  if (!Array.isArray(data) || !data.length || !selectedIndicator) return [];
+   if (!Array.isArray(data) || !data.length || !selectedIndicator) return [];
 
   const plots = [
     {
@@ -323,28 +350,74 @@ const plotData = () => {
 
   // } 
 
-  else if (selectedIndicator === 'EW00') {
-    if (!data.buy_signals || !data.sell_signals) return [];  // Check if buy/sell signals exist
-    
-    // Buy and Sell Signals for Elliot Wave
-    plots.push({
-      x: data.buy_signals.map((d) => d.date),
-      y: data.buy_signals.map((d) => d.price),
-      type: 'scatter',
-      mode: 'markers',
-      name: 'Buy Signals',
-      marker: { color: 'green', size: 8 },  // Set marker color and size for buy signals
-    });
-  
-    plots.push({
-      x: data.sell_signals.map((d) => d.date),
-      y: data.sell_signals.map((d) => d.price),
-      type: 'scatter',
-      mode: 'markers',
-      name: 'Sell Signals',
-      marker: { color: 'red', size: 8 },  // Set marker color and size for sell signals
-    });
-  }
+ 
+else if (selectedIndicator === 'EW00') {
+  console.log("Inside if EW")
+  console.log("Recieved Data EW before fetch", data)
+  // fetchIndicatorData();
+  console.log("Recieved Data EW after fetch", data)
+
+  if (!data.buy_signals || !data.sell_signals) {
+    console.log("Inside Empty data if, returning empty array")
+    return [];}
+      // Check if buy/sell signals exist
+  console.log("Inside if EW, below if")
+  // Extract signals from object of objects
+  const buySignalsArray = Object.values(data.buy_signals);  // Convert buy_signals object to array
+  const sellSignalsArray = Object.values(data.sell_signals);  // Convert sell_signals object to array
+
+  // Buy and Sell Signals for Elliot Wave
+  plots.push({
+    x: buySignalsArray.map((d) => d.date),  // Dates are already in the correct string format
+    y: buySignalsArray.map((d) => d.price),
+    type: 'scatter',
+    mode: 'markers',
+    name: 'Buy Signals',
+    marker: { color: 'green', size: 8 },  // Set marker color and size for buy signals
+  });
+
+  plots.push({
+    x: sellSignalsArray.map((d) => d.date),  // Dates are already in the correct string format
+    y: sellSignalsArray.map((d) => d.price),
+    type: 'scatter',
+    mode: 'markers',
+    name: 'Sell Signals',
+    marker: { color: 'red', size: 8 },  // Set marker color and size for sell signals
+  });
+}
+
+  // else if (selectedIndicator === 'EW00') {
+  //   if (!data.buy_signals || !data.sell_signals) return []; // Check if buy/sell signals exist
+
+  //   // Prepare Buy and Sell Signals for Elliott Wave
+  //   plots.push({
+  //     x: data.data.map((d) => d.Date),
+  //     y: data.data.map((d) => d.Close),
+  //     type: 'scatter',
+  //     mode: 'lines',
+  //     name: 'Close Prices',
+  //     line: { color: 'blue' }, // Line color for close prices
+  //   });
+
+  //   plots.push({
+  //     x: data.buy_signals.map((d) => d.date),
+  //     y: data.buy_signals.map((d) => d.price),
+  //     type: 'scatter',
+  //     mode: 'markers',
+  //     name: 'Buy Signals',
+  //     marker: { color: 'green', size: 8 }, // Set marker color and size for buy signals
+  //   });
+
+  //   plots.push({
+  //     x: data.sell_signals.map((d) => d.date),
+  //     y: data.sell_signals.map((d) => d.price),
+  //     type: 'scatter',
+  //     mode: 'markers',
+  //     name: 'Sell Signals',
+  //     marker: { color: 'red', size: 8 }, // Set marker color and size for sell signals
+  //   });
+  // }
+
   
   else {
     // Handle other indicators (e.g., Moving Averages)
