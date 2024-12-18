@@ -134,20 +134,20 @@ const Login = () => {
 
             <div className="flex items-center justify-between mb-4">
               <label className="flex items-center space-x-2">
-                <input
+                {/* <input
                   type="checkbox"
                   checked={rememberMe}
                   onChange={() => setRememberMe(!rememberMe)}
                   className="form-checkbox text-blue-500"
                 />
-                <span className="text-gray-600 text-sm">Remember me</span>
+                <span className="text-gray-600 text-sm">Remember me</span> */}
               </label>
-              <Link
+              {/* <Link
                 to="/forgot-password"
                 className="text-sm text-gray-500 hover:underline"
               >
                 Forgot Password?
-              </Link>
+              </Link> */}
             </div>
 
             <button
@@ -161,7 +161,7 @@ const Login = () => {
               <p className="mt-4 text-center text-red-500">{message}</p>
             )}
 
-            <div className="mt-6 text-center">
+            {/* <div className="mt-6 text-center">
               <div className="flex items-center justify-center">
                 <hr className="w-1/3 border-gray-300" />
                 <span className="px-2 text-sm text-gray-500">
@@ -182,7 +182,7 @@ const Login = () => {
                   Continue with Google
                 </span>
               </button>
-            </div>
+            </div> */}
 
             <p className="mt-4 text-sm text-center text-gray-600">
               Don’t have an account?{" "}
