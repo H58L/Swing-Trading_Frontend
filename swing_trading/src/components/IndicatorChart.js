@@ -89,6 +89,33 @@ const IndicatorChart = () => {
           marker: { color: "red", size: 8 },
         },
       ];
+    } else if (
+      selectedIndicator === "EW00" &&
+      data.buy_signals &&
+      Array.isArray(data.data)
+    ) {
+      const fibonacciLevels = data.buy_signals;
+      const stockData = data.data;
+
+      plots = [
+        {
+          x: stockData.map((d) => d.Date),
+          y: stockData.map((d) => d.Close),
+          type: "scatter",
+          mode: "lines",
+          name: "Close Price",
+          line: { color: "black" },
+        },
+        {
+          x: Object.keys(fibonacciLevels),
+          y: Object.values(fibonacciLevels),
+          type: "scatter",
+          mode: "lines+markers",
+          name: "Fibonacci Levels",
+          line: { dash: "dot", color: "blue" },
+          marker: { color: "red", size: 8 },
+        },
+      ];
     } else {
       // Default plot for other indicators
       if (Array.isArray(data)) {
@@ -294,20 +321,83 @@ const IndicatorChart = () => {
       });
     }
     if (selectedIndicator === "EW00") {
-      console.log("Received Data for Elliot:", data);
+      console.log("Inside if EW");
+      console.log("Recieved Data EW before fetch", data);
+      // fetchIndicatorData();
+      console.log("Recieved Data EW after fetch", data);
+
+      if (!data.buy_signals || !data.sell_signals) {
+        console.log("Inside Empty data if, returning empty array");
+        return [];
+      }
+      // Check if buy/sell signals exist
+      console.log("Inside if EW, below if");
+      // Extract signals from object of objects
+      const buySignalsArray = Object.values(data.buy_signals); // Convert buy_signals object to array
+      const sellSignalsArray = Object.values(data.sell_signals); // Convert sell_signals object to array
+
+      // Buy and Sell Signals for Elliot Wave
+      plots.push({
+        x: buySignalsArray.map((d) => d.date), // Dates are already in the correct string format
+        y: buySignalsArray.map((d) => d.price),
+        type: "scatter",
+        mode: "markers",
+        name: "Buy Signals",
+        marker: { color: "green", size: 8 }, // Set marker color and size for buy signals
+      });
+
+      plots.push({
+        x: sellSignalsArray.map((d) => d.date), // Dates are already in the correct string format
+        y: sellSignalsArray.map((d) => d.price),
+        type: "scatter",
+        mode: "markers",
+        name: "Sell Signals",
+        marker: { color: "red", size: 8 }, // Set marker color and size for sell signals
+      });
+    } else {
+      // Handle other indicators (e.g., Moving Averages)
+      console.log("Inside else block");
+
+      if (
+        selectedIndicator === "FR" &&
+        data.fibonacci_levels &&
+        Array.isArray(data.stock_data)
+      ) {
+        const fibonacciLevels = data.fibonacci_levels;
+        const stockData = data.stock_data;
+
+        // Plotting the Close Price
+        plots.push({
+          x: stockData.map((d) => d.Date),
+          y: stockData.map((d) => d.Close),
+          type: "scatter",
+          mode: "lines",
+          name: "Close Price",
+          line: { color: "black" },
+        });
+
+        // Plotting Fibonacci levels
+        plots.push({
+          x: Object.keys(fibonacciLevels),
+          y: Object.values(fibonacciLevels),
+          type: "scatter",
+          mode: "lines+markers",
+          name: "Fibonacci Levels",
+          line: { dash: "dot", color: "blue" },
+          marker: { color: "red", size: 8 },
+        });
+      } else {
+        // For other indicators (Moving Averages, etc.)
+        plots.push({
+          x: data.map((d) => d.Date),
+          y: data.map((d) => d[selectedIndicator]),
+          type: "scatter",
+          mode: "lines",
+          name: indicators.find((ind) => ind.value === selectedIndicator)
+            ?.label,
+        });
+      }
     }
-    // else {
-    //   // Handle other indicators (e.g., Moving Averages)
-    //   console.log("Inside else block");
-    //   plots.push({
-    //     x: data.map((d) => d.Date),
-    //     y: data.map((d) => d[selectedIndicator]),
-    //     //name: {selectedIndicator},
-    //     type: "scatter",
-    //     mode: "lines",
-    //     name: indicators.find((ind) => ind.value === selectedIndicator)?.label,
-    //   });
-    // }
 
     return plots;
   };
