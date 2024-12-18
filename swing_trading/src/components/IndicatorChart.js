@@ -288,7 +288,10 @@ const IndicatorChart = () => {
      
     }
     if (selectedIndicator === "MACD") {
-      plots.push({
+      console.log("Inside MACD");
+      if (Array.isArray(data))
+      {
+        plots.push({
         x: data.map((d) => d.Date),
         y: data.map((d) => d.Close),
         type: "scatter",
@@ -315,6 +318,8 @@ const IndicatorChart = () => {
         line: { color: "orange" }, // Set a color for the signal line
         yaxis: "y2", // Assign this trace to the secondary y-axis
       });
+      }
+      
     }
     if (selectedIndicator === "ATR") {
       console.log("Inside ATR");
