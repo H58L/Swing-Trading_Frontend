@@ -425,18 +425,23 @@ def moving_averages():
             return jsonify(result)
         
         elif indicator == 'EW00':
-            # Perform Elliott Wave analysis
-            # waves = calculate_elliott_wave(data)
-            # return jsonify(waves)
-            
-            #  TEJAS
+                    # Perform Elliott Wave analysis
             peaks, troughs, prices, dates = calculate_elliott_wave(data)
             buy_signals, sell_signals = identify_buy_sell_signals(peaks, troughs, prices, dates)
+            
+            # Debugging print statements
+            print("Peaks:", peaks)
+            print("Troughs:", troughs)
+            print("Prices:", prices)
+            print("Dates:", dates)
 
             # Create a DataFrame with Close Prices, Peaks, and Troughs
             df = pd.DataFrame({'Date': dates, 'Close': prices})
-            df['Peak'] = pd.Series(prices[peaks], index=dates[peaks])
-            df['Trough'] = pd.Series(prices[troughs], index=dates[troughs])
+            df['Date'] = pd.to_datetime(df['Date'], errors='coerce')  # Ensure dates are in datetime format
+            df['Date'] = df['Date'].dt.strftime("%Y-%m-%d")  # Format as string
+            
+            df['Peak'] = pd.Series(prices[peaks], index=peaks)
+            df['Trough'] = pd.Series(prices[troughs], index=troughs)
 
             # Reset index for JSON serialization
             df.reset_index(drop=True, inplace=True)
@@ -444,8 +449,8 @@ def moving_averages():
             # Include buy/sell signals in the result
             result = {
                 "data": df.dropna(subset=["Peak", "Trough"], how="all").to_dict(orient='records'),
-                "buy_signals": [{"date": str(date), "price": price} for date, price in buy_signals],
-                "sell_signals": [{"date": str(date), "price": price} for date, price in sell_signals]
+                "buy_signals": [{"date": date, "price": price} for date, price in buy_signals],
+                "sell_signals": [{"date": date, "price": price} for date, price in sell_signals]
             }
 
             return jsonify(result)            
