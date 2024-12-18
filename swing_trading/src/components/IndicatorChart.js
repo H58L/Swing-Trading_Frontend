@@ -4,12 +4,17 @@ import Plot from "react-plotly.js";
 import "../style/MovingAveragesChart.css";
 import Header from "./Header";
 import { useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+import ThemeContext from "../context/ThemeContext";
+import '../style/IndicatorChart.css';
 
 const IndicatorChart = () => {
   const [ticker, setTicker] = useState("AAPL");
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [selectedIndicator, setSelectedIndicator] = useState("");
+  const navigate = useNavigate();
+  const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
 
   // Mapping between dropdown labels and backend keys
   const indicators = [
@@ -27,6 +32,23 @@ const IndicatorChart = () => {
     { label: "Fibonacci Retracement", value: "FR" },
     { label: "Elliot Wave", value: "EW00" },
   ];
+
+  // LOGGED IN OR NOT 
+  useEffect(() => {
+    const storedLoginStatus = sessionStorage.getItem("isLoggedin");
+    if (storedLoginStatus) {
+      setIsLoggedIn(storedLoginStatus === "true"); // Convert to boolean
+    } else {
+      setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
+    }
+  }, []);
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (isLoggedin === false) {
+      navigate("/");
+    }
+  }, [isLoggedin, navigate]);
 
   useEffect(() => {
     if (selectedIndicator) {
