@@ -448,7 +448,7 @@ def moving_averages():
 
             # Include buy/sell signals in the result
             result = {
-                "data": df.dropna(subset=["Peak", "Trough"], how="all").to_dict(orient='records'),
+                #"data": df.dropna(subset=["Peak", "Trough"], how="all").to_dict(orient='records'),
                 "buy_signals": [{"date": date, "price": price} for date, price in buy_signals],
                 "sell_signals": [{"date": date, "price": price} for date, price in sell_signals]
             }
