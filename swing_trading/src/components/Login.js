@@ -62,12 +62,27 @@ const Login = () => {
     setErrors({});
 
     // Simulate API call
+    // fetch(
+    //   "https://swing-trading-backend-java-production.up.railway.app/api/login",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     credentials: "include",
+    //     body: JSON.stringify({ email, password }),
+    //   }
+    // )
     fetch(
       "https://swing-trading-backend-java-production.up.railway.app/api/login",
       {
+        // ... your request options
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Origin: "https://h58l.github.io/Swing-Trading_Frontend/",
+          "Access-Control-Request-Method": "POST",
+          "Access-Control-Request-Headers": "Content-Type, Authorization", // Adjust as needed
         },
         credentials: "include",
         body: JSON.stringify({ email, password }),
