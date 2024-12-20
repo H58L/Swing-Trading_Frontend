@@ -62,11 +62,14 @@ const IndicatorChart = () => {
     try {
       console.log("Selected Indicator: ", selectedIndicator);
 
+
       // const response = await axios.get("http://localhost:5000/indicators", {
       //   params: { ticker, indicator: selectedIndicator },
       // });
 
       const response = await axios.get("https://swingtrading-production.up.railway.app/indicators", {
+
+
         params: { ticker, indicator: selectedIndicator },
       });
 
