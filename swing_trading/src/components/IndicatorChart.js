@@ -66,13 +66,13 @@ const IndicatorChart = () => {
       //   params: { ticker, indicator: selectedIndicator },
       // });
 
-      // const response = await axios.get("https://swingtrading-production.up.railway.app/indicators", {
-      //   params: { ticker, indicator: selectedIndicator },
-      // });
-
-      const response = await axios.get("http://localhost:5000/indicators", {
+      const response = await axios.get("https://swingtrading-production.up.railway.app/indicators", {
         params: { ticker, indicator: selectedIndicator },
       });
+
+      // const response = await axios.get("http://localhost:5000/indicators", {
+      //   params: { ticker, indicator: selectedIndicator },
+      // });
 
       console.log("Recieved Data in fetch", response.data);
       setData(response.data);
