@@ -137,6 +137,134 @@
 #     except Exception as e:
 #         return {"error": str(e)}
 
+# import os
+# import numpy as np
+# import pandas as pd
+# import yfinance as yf
+# from sklearn.preprocessing import MinMaxScaler
+# from tensorflow.keras.models import Sequential, load_model
+# from tensorflow.keras.layers import LSTM, Dense, Input, Dropout, Bidirectional
+# from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+# import joblib
+
+# def get_rnn_predictions(stock_symbol="RECLTD.NS", forecast_days=5):
+#     try:
+#         # Fetch stock data
+#         data = yf.download(stock_symbol, period="max", interval="1d")
+#         if data.empty:
+#             return {"error": "No data found for this symbol"}
+        
+#         # Ensure OHLC data and include 'Volume' if available
+#         if 'Volume' in data.columns:
+#             data = data[['Open', 'High', 'Low', 'Close', 'Volume']]
+#         else:
+#             data = data[['Open', 'High', 'Low', 'Close']]
+
+#         # Scaler handling
+#         scaler_path = "./model/rnn_scaler.pkl"
+#         if os.path.exists(scaler_path):
+#             scaler = joblib.load(scaler_path)
+#         else:
+#             scaler = MinMaxScaler(feature_range=(0, 1))
+#             scaler.fit(data.values)
+#             os.makedirs("model", exist_ok=True)
+#             joblib.dump(scaler, scaler_path)
+
+#         scaled_data = scaler.transform(data.values)
+
+#         # Parameters
+#         train_size = 0.8
+#         time_steps = 60  # Increased time window for better context
+
+#         # Dataset creation
+#         def create_dataset(dataset, time_steps):
+#             x, y = [], []
+#             for i in range(time_steps, len(dataset)):
+#                 x.append(dataset[i - time_steps:i])
+#                 y.append(dataset[i])
+#             return np.array(x), np.array(y)
+
+#         train_data_len = int(len(scaled_data) * train_size)
+#         train_data = scaled_data[:train_data_len]
+#         test_data = scaled_data[train_data_len:]
+
+#         x_train, y_train = create_dataset(train_data, time_steps)
+#         x_test, y_test = create_dataset(test_data, time_steps)
+
+#         # Reshape for LSTM
+#         x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], x_train.shape[2]))
+#         x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], x_test.shape[2]))
+
+#         # Validation split
+#         val_size = int(len(x_train) * 0.1)
+#         x_val, y_val = x_train[-val_size:], y_train[-val_size:]
+#         x_train, y_train = x_train[:-val_size], y_train[:-val_size]
+
+#         model_path = "./model/rnn_model.h5"
+
+#         # Load or train the model
+#         if os.path.exists(model_path):
+#             model = load_model(model_path)
+#         else:
+#             model = Sequential([
+#                 Input(shape=(x_train.shape[1], x_train.shape[2])),
+#                 Bidirectional(LSTM(50, return_sequences=True)),  # Reduced units slightly
+#                 Dropout(0.2),  # Lower dropout for faster training
+#                 Bidirectional(LSTM(50, return_sequences=False)),
+#                 Dropout(0.2),
+#                 Dense(32, activation='relu'),
+#                 Dense(y_train.shape[1])
+#             ])
+
+#             model.compile(optimizer='adam', loss='mean_squared_error')
+
+#             # Callbacks
+#             early_stopping = EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True)
+#             lr_scheduler = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=2, verbose=1)
+
+#             # Train model
+#             model.fit(
+#                 x_train, y_train,
+#                 validation_data=(x_val, y_val),
+#                 batch_size=64,  # Increased batch size
+#                 epochs=10,  # Reduced epochs
+#                 callbacks=[early_stopping, lr_scheduler],
+#                 verbose=1
+#             )
+#             model.save(model_path)
+
+
+#         # Predictions
+#         predicted_ohlc = model.predict(x_test)
+#         y_test_unscaled = scaler.inverse_transform(y_test)
+#         predicted_ohlc_unscaled = scaler.inverse_transform(predicted_ohlc)
+
+#         # Future predictions
+#         next_5_days_predictions = []
+#         last_sequence = scaled_data[-time_steps:]
+
+#         for _ in range(forecast_days):
+#             next_day = model.predict(np.reshape(last_sequence, (1, time_steps, last_sequence.shape[1])))
+#             next_day_unscaled = scaler.inverse_transform(next_day)
+#             next_5_days_predictions.append(float(next_day_unscaled[0, 3]))
+#             last_sequence = np.vstack([last_sequence[1:], next_day])
+
+#         test_dates = data.index[train_data_len + time_steps:]
+#         future_dates = pd.date_range(test_dates[-1], periods=forecast_days + 1)[1:].strftime('%Y-%m-%d').tolist()
+
+#         response = {
+#             "dates": test_dates.strftime('%Y-%m-%d').tolist(),
+#             "actual": y_test_unscaled[:, 3].astype(float).tolist(),
+#             "predicted": predicted_ohlc_unscaled[:, 3].astype(float).tolist(),
+#             "forecasted_dates": future_dates,
+#             "forecasted_predictions": next_5_days_predictions
+#         }
+
+#         return response
+
+#     except Exception as e:
+#         return {"error": str(e)}
+
 import os
 import numpy as np
 import pandas as pd
@@ -149,6 +277,11 @@ import joblib
 
 def get_rnn_predictions(stock_symbol="RECLTD.NS", forecast_days=5):
     try:
+        # Define paths
+        model_dir = "./model"
+        model_path = os.path.join(model_dir, f"{stock_symbol}_rnn_model.h5")
+        scaler_path = os.path.join(model_dir, f"{stock_symbol}_rnn_scaler.pkl")
+        
         # Fetch stock data
         data = yf.download(stock_symbol, period="max", interval="1d")
         if data.empty:
@@ -161,13 +294,12 @@ def get_rnn_predictions(stock_symbol="RECLTD.NS", forecast_days=5):
             data = data[['Open', 'High', 'Low', 'Close']]
 
         # Scaler handling
-        scaler_path = "./model/rnn_scaler.pkl"
         if os.path.exists(scaler_path):
             scaler = joblib.load(scaler_path)
         else:
             scaler = MinMaxScaler(feature_range=(0, 1))
             scaler.fit(data.values)
-            os.makedirs("model", exist_ok=True)
+            os.makedirs(model_dir, exist_ok=True)
             joblib.dump(scaler, scaler_path)
 
         scaled_data = scaler.transform(data.values)
@@ -200,8 +332,6 @@ def get_rnn_predictions(stock_symbol="RECLTD.NS", forecast_days=5):
         x_val, y_val = x_train[-val_size:], y_train[-val_size:]
         x_train, y_train = x_train[:-val_size], y_train[:-val_size]
 
-        model_path = "./model/rnn_model.h5"
-
         # Load or train the model
         if os.path.exists(model_path):
             model = load_model(model_path)
@@ -233,13 +363,12 @@ def get_rnn_predictions(stock_symbol="RECLTD.NS", forecast_days=5):
             )
             model.save(model_path)
 
-
         # Predictions
         predicted_ohlc = model.predict(x_test)
         y_test_unscaled = scaler.inverse_transform(y_test)
         predicted_ohlc_unscaled = scaler.inverse_transform(predicted_ohlc)
 
-        # Future predictions
+        # Future predictions (constant for the symbol)
         next_5_days_predictions = []
         last_sequence = scaled_data[-time_steps:]
 
