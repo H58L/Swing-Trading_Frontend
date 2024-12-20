@@ -103,16 +103,27 @@ const StockWatchlist = () => {
     }
   }, [stocks]);
 
-  const removeEntry = async (ticker) => {
+  // const removeEntry = async (ticker) => {
+  //   try {
+  //     // Post the ticker to the backend for removal
+  //     await axios.post(
+  //       "https://swing-trading-backend-java-production.up.railway.app/api/watchlist/deleteWatchlist",
+  //       {
+  //         ticker,
+  //       }
+  //     );
+  const removeEntry = async (ticker, userEmail) => {
     try {
       // Post the ticker to the backend for removal
       await axios.post(
         "https://swing-trading-backend-java-production.up.railway.app/api/watchlist/deleteWatchlist",
+        // "http://localhost:8080/api/watchlist/deleteWatchlist",
+
         {
           ticker,
+          emailId: userEmail,
         }
       );
-
       // After successful deletion, remove the stock from the local state
       setStocks((prevStocks) =>
         prevStocks.filter((stock) => stock.symbol !== ticker)
@@ -121,6 +132,8 @@ const StockWatchlist = () => {
       console.error("Error deleting stock from watchlist:", error);
     }
   };
+
+  
 
   return (
     <>
@@ -141,7 +154,7 @@ const StockWatchlist = () => {
                 <button className="m-1 p-1">
                   <DeleteForeverIcon
                     className="text-xl text-gray-600 hover:text-gray-900"
-                    onClick={() => removeEntry(stock.symbol)}
+                    onClick={() => removeEntry(stock.symbol,userEmail)}
                   />
                 </button>
                 <div className="text-left ml-2">
