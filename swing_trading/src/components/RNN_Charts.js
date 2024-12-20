@@ -9,7 +9,8 @@ const RNN_Chart = ({ symbol, period }) => {
 
     useEffect(() => {
         setLoading(true);
-        fetch(`http://127.0.0.1:5000/rnn?symbol=${symbol}&period=${period}&forecast_days=5`)
+        // fetch(`http://127.0.0.1:5000/rnn?symbol=${symbol}&period=${period}&forecast_days=5`)
+        fetch(`https://swingtradingprediction-production.up.railway.app/rnn?symbol=${symbol}&period=${period}&forecast_days=5`)
             .then((response) => response.json())
             .then((data) => {
                 setLoading(false);
