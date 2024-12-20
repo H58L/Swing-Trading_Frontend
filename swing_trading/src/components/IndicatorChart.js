@@ -62,7 +62,8 @@ const IndicatorChart = () => {
     try {
       console.log("Selected Indicator: ", selectedIndicator);
 
-      // const response = await axios.get("https://swing-trading-backend-fdrx.vercel.app/indicators", {
+
+      // const response = await axios.get("http://localhost:5000/indicators", {
       //   params: { ticker, indicator: selectedIndicator },
       // });
 
