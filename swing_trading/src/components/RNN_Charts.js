@@ -40,30 +40,61 @@ const RNN_Chart = ({ symbol, period }) => {
     <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
       <div style={{ flex: 1 }}>
         {tableData && !loading && (
-          <div className="table-container">
-            {tableData && !loading && (
-              <div>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Prediction (Close)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tableData.forecasted_dates.map((date, index) => (
-                      <tr key={index}>
-                        <td>{date || "N/A"}</td>
-                        <td>
-                          {tableData.forecasted_predictions[index].toFixed(2) ||
-                            "N/A"}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+          <div>
+            {/* <h3>5-Day Predictions</h3> */}
+            <table
+              style={{
+                borderCollapse: "collapse",
+                width: "100%",
+                textAlign: "left",
+              }}
+            >
+              <thead>
+                <tr>
+                  <th
+                    style={{
+                      border: "1px solid #ddd",
+                      padding: "8px",
+                      backgroundColor: "#f2f2f2",
+                    }}
+                  >
+                    Date
+                  </th>
+                  <th
+                    style={{
+                      border: "1px solid #ddd",
+                      padding: "8px",
+                      backgroundColor: "#f2f2f2",
+                    }}
+                  >
+                    Prediction (Close)
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {tableData.forecasted_dates.map((date, index) => (
+                  <tr key={index}>
+                    <td
+                      style={{
+                        border: "1px solid #ddd",
+                        padding: "8px",
+                      }}
+                    >
+                      {date || "N/A"}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid #ddd",
+                        padding: "8px",
+                      }}
+                    >
+                      {tableData.forecasted_predictions[index].toFixed(2) ||
+                        "N/A"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
 
