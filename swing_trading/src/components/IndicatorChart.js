@@ -4,9 +4,9 @@ import Plot from "react-plotly.js";
 import "../style/MovingAveragesChart.css";
 import Header from "./Header";
 import { useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import ThemeContext from "../context/ThemeContext";
-import '../style/IndicatorChart.css';
+import "../style/IndicatorChart.css";
 
 const IndicatorChart = () => {
   const [ticker, setTicker] = useState("AAPL");
@@ -15,6 +15,8 @@ const IndicatorChart = () => {
   const [selectedIndicator, setSelectedIndicator] = useState("");
   const navigate = useNavigate();
   const [isLoggedin, setIsLoggedIn] = useState(); // Initialize with null to avoid premature redirects
+  const { darkMode } = useContext(ThemeContext);
+  // const [darkMode, setDarkMode] = useState("");
 
   // Mapping between dropdown labels and backend keys
   const indicators = [
@@ -33,7 +35,7 @@ const IndicatorChart = () => {
     { label: "Elliot Wave", value: "EW00" },
   ];
 
-  // LOGGED IN OR NOT 
+  // LOGGED IN OR NOT
   useEffect(() => {
     const storedLoginStatus = sessionStorage.getItem("isLoggedin");
     if (storedLoginStatus) {
@@ -42,6 +44,8 @@ const IndicatorChart = () => {
       setIsLoggedIn(false); // If no value in sessionStorage, assume not logged in
     }
   }, []);
+
+  useEffect(() => {}, [darkMode]);
 
   // Redirect if not logged in
   useEffect(() => {
@@ -62,14 +66,16 @@ const IndicatorChart = () => {
     try {
       console.log("Selected Indicator: ", selectedIndicator);
 
-
       // const response = await axios.get("http://localhost:5000/indicators", {
       //   params: { ticker, indicator: selectedIndicator },
       // });
 
-      const response = await axios.get("https://swingtrading-production.up.railway.app/indicators", {
-        params: { ticker, indicator: selectedIndicator },
-      });
+      const response = await axios.get(
+        "https://swingtrading-production.up.railway.app/indicators",
+        {
+          params: { ticker, indicator: selectedIndicator },
+        }
+      );
 
       // const response = await axios.get("http://localhost:5000/indicators", {
       //   params: { ticker, indicator: selectedIndicator },
@@ -109,7 +115,7 @@ const IndicatorChart = () => {
           type: "scatter",
           mode: "lines",
           name: "Close Price",
-          line: { color: "black" },
+          line: { color: darkMode ? "#FF69B4" : "#FF69B4" },
         },
         {
           x: Object.keys(fibonacciLevels),
@@ -131,7 +137,7 @@ const IndicatorChart = () => {
             type: "scatter",
             mode: "lines",
             name: "Close Price",
-            line: { color: "black" },
+            line: { color: darkMode ? "#FF69B4" : "#FF69B4" },
           },
         ];
       } else {
@@ -144,73 +150,46 @@ const IndicatorChart = () => {
 
     if (selectedIndicator === "MA") {
       console.log("Inside MA");
-      if (Array.isArray(data))
-      {
+      if (Array.isArray(data)) {
         const smaPeriods = [20, 50, 100]; // Periods for all desired SMAs
-      for (const period of smaPeriods) {
-        plots.push({
-          x: data.map((d) => d.Date),
-          y: data.map((d) => (`MA${period}` ? d[`MA${period}`] : null)), // Check if key exists
-          type: "scatter",
-          mode: "lines",
-          name: `SMA${period}`,
-          line: {
-            color: period === 20 ? "orange" : period === 50 ? "blue" : "green",
-          }, // Assign different colors
-        });
+        for (const period of smaPeriods) {
+          plots.push({
+            x: data.map((d) => d.Date),
+            y: data.map((d) => (`MA${period}` ? d[`MA${period}`] : null)), // Check if key exists
+            type: "scatter",
+            mode: "lines",
+            name: `SMA${period}`,
+            line: {
+              color:
+                period === 20 ? "orange" : period === 50 ? "blue" : "green",
+            }, // Assign different colors
+          });
+        }
       }
-      }
-      // const smaPeriods = [20, 50, 100]; // Periods for all desired SMAs
-      // for (const period of smaPeriods) {
-      //   plots.push({
-      //     x: data.map((d) => d.Date),
-      //     y: data.map((d) => (`MA${period}` ? d[`MA${period}`] : null)), // Check if key exists
-      //     type: "scatter",
-      //     mode: "lines",
-      //     name: `SMA${period}`,
-      //     line: {
-      //       color: period === 20 ? "orange" : period === 50 ? "blue" : "green",
-      //     }, // Assign different colors
-      //   });
-      // }
     }
 
     if (selectedIndicator === "EMA") {
       console.log("Inside EMA");
-      if (Array.isArray(data))
-      {
+      if (Array.isArray(data)) {
         const smaPeriods = [20, 50, 100]; // Periods for all desired SMAs
-      for (const period of smaPeriods) {
-        plots.push({
-          x: data.map((d) => d.Date),
-          y: data.map((d) => (`EMA${period}` ? d[`EMA${period}`] : null)), // Check if key exists
-          type: "scatter",
-          mode: "lines",
-          name: `EMA${period}`,
-          line: {
-            color: period === 20 ? "orange" : period === 50 ? "blue" : "green",
-          }, // Assign different colors
-        });
+        for (const period of smaPeriods) {
+          plots.push({
+            x: data.map((d) => d.Date),
+            y: data.map((d) => (`EMA${period}` ? d[`EMA${period}`] : null)), // Check if key exists
+            type: "scatter",
+            mode: "lines",
+            name: `EMA${period}`,
+            line: {
+              color:
+                period === 20 ? "orange" : period === 50 ? "blue" : "green",
+            }, // Assign different colors
+          });
+        }
       }
-      }
-      // const smaPeriods = [20, 50, 100]; // Periods for all desired SMAs
-      // for (const period of smaPeriods) {
-      //   plots.push({
-      //     x: data.map((d) => d.Date),
-      //     y: data.map((d) => (`EMA${period}` ? d[`EMA${period}`] : null)), // Check if key exists
-      //     type: "scatter",
-      //     mode: "lines",
-      //     name: `EMA${period}`,
-      //     line: {
-      //       color: period === 20 ? "orange" : period === 50 ? "blue" : "green",
-      //     }, // Assign different colors
-      //   });
-      // }
     }
     if (selectedIndicator === "EMA20") {
       console.log("Inside EMA20");
-      if (Array.isArray(data))
-      {
+      if (Array.isArray(data)) {
         plots.push({
           x: data.map((d) => d.Date),
           y: data.map((d) => d.EMA20),
@@ -220,12 +199,10 @@ const IndicatorChart = () => {
           line: { color: "orange" },
         });
       }
-     
     }
     if (selectedIndicator === "EMA50") {
       console.log("Inside EMA50");
-      if (Array.isArray(data))
-      {
+      if (Array.isArray(data)) {
         plots.push({
           x: data.map((d) => d.Date),
           y: data.map((d) => d.EMA50),
@@ -235,13 +212,11 @@ const IndicatorChart = () => {
           line: { color: "orange" },
         });
       }
-      
     }
     if (selectedIndicator === "EMA100") {
       //console.log("ema: ", data);
       console.log("Inside EMA100");
-      if (Array.isArray(data))
-      {
+      if (Array.isArray(data)) {
         plots.push({
           x: data.map((d) => d.Date),
           y: data.map((d) => d.EMA100),
@@ -251,113 +226,97 @@ const IndicatorChart = () => {
           line: { color: "orange" },
         });
       }
-      // plots.push({
-      //   x: data.map((d) => d.Date),
-      //   y: data.map((d) => d.EMA100),
-      //   type: "scatter",
-      //   mode: "lines",
-      //   name: "EMA100",
-      //   line: { color: "orange" },
-      // });
     }
     if (selectedIndicator === "BB20") {
-
       console.log("Inside BB20");
-      if (Array.isArray(data))
-      {
-         console.log("bb");
+      if (Array.isArray(data)) {
+        console.log("bb");
 
-      plots.push(
-        {
-          x: data.map((d) => d.Date),
-          y: data.map((d) => d["Middle Band"]),
-          type: "scatter",
-          mode: "lines",
-          name: "Middle Band",
-          line: { dash: "dash", color: "blue" },
-        },
-        {
-          x: data.map((d) => d.Date),
-          y: data.map((d) => d["Upper Band"]),
-          type: "scatter",
-          mode: "lines",
-          name: "Upper Band",
-          line: { color: "green" },
-        },
-        {
-          x: data.map((d) => d.Date),
-          y: data.map((d) => d["Lower Band"]),
-          type: "scatter",
-          mode: "lines",
-          name: "Lower Band",
-          line: { color: "red" },
-        }
-      );
+        plots.push(
+          {
+            x: data.map((d) => d.Date),
+            y: data.map((d) => d["Middle Band"]),
+            type: "scatter",
+            mode: "lines",
+            name: "Middle Band",
+            line: { dash: "dash", color: "blue" },
+          },
+          {
+            x: data.map((d) => d.Date),
+            y: data.map((d) => d["Upper Band"]),
+            type: "scatter",
+            mode: "lines",
+            name: "Upper Band",
+            line: { color: "green" },
+          },
+          {
+            x: data.map((d) => d.Date),
+            y: data.map((d) => d["Lower Band"]),
+            type: "scatter",
+            mode: "lines",
+            name: "Lower Band",
+            line: { color: "red" },
+          }
+        );
       }
-     
     }
     if (selectedIndicator === "MACD") {
       console.log("Inside MACD");
-      if (Array.isArray(data))
-      {
+      if (Array.isArray(data)) {
         plots.push({
-        x: data.map((d) => d.Date),
-        y: data.map((d) => d.Close),
-        type: "scatter",
-        mode: "lines",
-        name: "Close Price",
-        line: { color: "green" }, // Set a color for the Close price line
-        yaxis: "y", // Assign this trace to the primary y-axis
-      });
-      plots.push({
-        x: data.map((d) => d.Date),
-        y: data.map((d) => d.MACD),
-        type: "scatter",
-        mode: "lines",
-        name: "MACD Line",
-        line: { color: "blue" }, // Set a color for the MACD line
-        yaxis: "y2", // Assign this trace to the secondary y-axis
-      });
-      plots.push({
-        x: data.map((d) => d.Date),
-        y: data.map((d) => d.Signal_line),
-        type: "scatter",
-        mode: "lines",
-        name: "Signal Line",
-        line: { color: "orange" }, // Set a color for the signal line
-        yaxis: "y2", // Assign this trace to the secondary y-axis
-      });
+          x: data.map((d) => d.Date),
+          y: data.map((d) => d.Close),
+          type: "scatter",
+          mode: "lines",
+          name: "Close Price",
+          line: { color: "green" }, // Set a color for the Close price line
+          yaxis: "y", // Assign this trace to the primary y-axis
+        });
+        plots.push({
+          x: data.map((d) => d.Date),
+          y: data.map((d) => d.MACD),
+          type: "scatter",
+          mode: "lines",
+          name: "MACD Line",
+          line: { color: "blue" }, // Set a color for the MACD line
+          yaxis: "y2", // Assign this trace to the secondary y-axis
+        });
+        plots.push({
+          x: data.map((d) => d.Date),
+          y: data.map((d) => d.Signal_line),
+          type: "scatter",
+          mode: "lines",
+          name: "Signal Line",
+          line: { color: "orange" }, // Set a color for the signal line
+          yaxis: "y2", // Assign this trace to the secondary y-axis
+        });
       }
-      
     }
     if (selectedIndicator === "ATR") {
       console.log("Inside ATR");
-      if (Array.isArray(data))
-      {
+      if (Array.isArray(data)) {
         plots.push({
-        x: data.map((d) => d.Date),
-        y: data.map((d) => d.Close),
-        type: "scatter",
-        mode: "lines",
-        name: "Close Price",
-        line: { color: "green" }, // Color for the Close price line
-        yaxis: "y", // Assign this trace to the primary y-axis
-      });
-      plots.push({
-        x: data.map((d) => d.Date),
-        y: data.map((d) => d.ATR || null), // ATR values from the backend
-        type: "scatter",
-        mode: "lines",
-        name: "ATR (14 Days)",
-        line: { color: "purple" }, // Color for the ATR line
-        yaxis: "y2", // Assign this trace to the secondary y-axis
-      });
+          x: data.map((d) => d.Date),
+          y: data.map((d) => d.Close),
+          type: "scatter",
+          mode: "lines",
+          name: "Close Price",
+          line: { color: "green" }, // Color for the Close price line
+          yaxis: "y", // Assign this trace to the primary y-axis
+        });
+        plots.push({
+          x: data.map((d) => d.Date),
+          y: data.map((d) => d.ATR || null), // ATR values from the backend
+          type: "scatter",
+          mode: "lines",
+          name: "ATR (14 Days)",
+          line: { color: "purple" }, // Color for the ATR line
+          yaxis: "y2", // Assign this trace to the secondary y-axis
+        });
       }
-      
     }
 
     if (indicators.length > 0 && selectedIndicator === "FR") {
-      
       console.log("FR Received Data:", data);
 
       // Check for empty data
@@ -397,7 +356,7 @@ const IndicatorChart = () => {
         type: "scatter",
         mode: "lines",
         name: "Close Price",
-        line: { color: "black" },
+        line: { color: darkMode ? "#FF69B4" : "#FF69B4" },
       });
     }
     if (selectedIndicator === "EW00") {
@@ -423,8 +382,8 @@ const IndicatorChart = () => {
         type: "scatter",
         mode: "lines",
         name: "Close Price",
-        line: { color: "black" },
-        //line: { color: darkMode ? 'white' : 'black' },//   // Set marker color and size for buy signals
+        line: { color: darkMode ? "#FF69B4" : "#FF69B4" },
+        //line: { color: darkMode ? 'white' : 'white' },//   // Set marker color and size for buy signals
       });
 
       // Buy and Sell Signals for Elliot Wave
@@ -464,7 +423,7 @@ const IndicatorChart = () => {
           type: "scatter",
           mode: "lines",
           name: "Close Price",
-          line: { color: "black" },
+          line: { color: darkMode ? "#FF69B4" : "#FF69B4" },
         });
 
         // Plotting Fibonacci levels
@@ -478,8 +437,7 @@ const IndicatorChart = () => {
           marker: { color: "red", size: 8 },
         });
       } else {
-        if (Array.isArray(data))
-        {
+        if (Array.isArray(data)) {
           plots.push({
             x: data.map((d) => d.Date),
             y: data.map((d) => d[selectedIndicator]),
@@ -505,9 +463,16 @@ const IndicatorChart = () => {
   };
 
   return (
-    <>
+    <div
+      className={`${darkMode ? "bg-gray-900" : "bg-gray-100"}`}
+      style={{ height: "100vw" }}
+    >
       <Header />
-      <div className="chart-container">
+      <div
+        className={`chart-container ${
+          darkMode ? "bg-gray-800" : "bg-gray-100"
+        }`}
+      >
         <h2>Stock Indicators Chart</h2>
         <div className="input-container">
           {/* Ticker Input */}
@@ -523,8 +488,6 @@ const IndicatorChart = () => {
           <select
             value={selectedIndicator}
             onChange={(e) => setSelectedIndicator(e.target.value)}
-            
-
             className="indicator-dropdown"
           >
             <option value="" disabled>
@@ -551,7 +514,7 @@ const IndicatorChart = () => {
         {error && <p className="error-message">{error}</p>}
 
         {/* Plot */}
-        
+
         {console.log("Plot data:", data)}
 
         {selectedIndicator && (
@@ -561,12 +524,22 @@ const IndicatorChart = () => {
               title: `${ticker} ${
                 indicators.find((ind) => ind.value === selectedIndicator)?.label
               }`,
-              xaxis: { title: "Date" },
+              xaxis: {
+                title: "Date",
+                tickfont: {
+                  color: darkMode ? "white" : "#111827", // Change the font color for the x-axis ticks
+                },
+              },
               yaxis: {
                 title: "Price",
                 side: "left",
                 showgrid: true,
-              }, // Primary y-axis for Close Price
+                gridcolor: darkMode ? "#444" : "#ddd", // Grid color based on dark mode
+                zerolinecolor: darkMode ? "#444" : "#ddd", // Zero line color
+                tickfont: {
+                  color: darkMode ? "white" : "#111827", // Y-axis tick font color
+                },
+              },
               ...(selectedIndicator === "MACD" || selectedIndicator === "ATR"
                 ? {
                     yaxis2: {
@@ -577,15 +550,27 @@ const IndicatorChart = () => {
                       side: "right",
                       overlaying: "y", // Overlay on primary y-axis
                       showgrid: false,
+                      tickfont: {
+                        color: darkMode ? "white" : "#111827", // Y-axis2 tick font color
+                      },
+                      gridcolor: darkMode ? "#444" : "#ddd", // Grid color for y-axis2
                     },
                   }
                 : {}),
               dragmode: "pan",
+              plot_bgcolor: darkMode ? "#111827" : "#ffffff", // Background color of the plot
+              paper_bgcolor: darkMode ? "#111827" : "#ffffff", // Background color of the whole chart
+              font: {
+                color: darkMode ? "white" : "#111827", // Font color for titles and labels
+              },
+              titlefont: {
+                color: darkMode ? "white" : "#111827", // Title font color
+              },
             }}
           />
         )}
       </div>
-    </>
+    </div>
   );
 };
 

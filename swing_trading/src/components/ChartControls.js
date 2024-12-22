@@ -1,86 +1,111 @@
-import React from 'react';
+import React, { useContext } from "react";
+import ThemeContext from "../context/ThemeContext";
 
-const ChartControls = ({ symbol, setSymbol, period, setPeriod, selectedModel, setSelectedModel }) => {
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const inputSymbol = event.target.elements.stockSymbol.value.trim().toUpperCase();
-        if (inputSymbol) {
-            setSymbol(inputSymbol);
-        }
-    };
+const ChartControls = ({
+  symbol,
+  setSymbol,
+  period,
+  setPeriod,
+  selectedModel,
+  setSelectedModel,
+}) => {
+  const { darkMode } = useContext(ThemeContext);
 
-    const handlePeriodChange = (event) => {
-        setPeriod(event.target.value);
-    };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const inputSymbol = event.target.elements.stockSymbol.value
+      .trim()
+      .toUpperCase();
+    if (inputSymbol) {
+      setSymbol(inputSymbol);
+    }
+  };
 
-    const handleModelChange = (event) => {
-        setSelectedModel(event.target.value);
-    };
+  const handlePeriodChange = (event) => {
+    setPeriod(event.target.value);
+  };
 
-    return (
-        <div>
-            <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
-                <label htmlFor="stockSymbol" style={{ marginRight: '10px' }}>
-                    Enter Stock Symbol:
-                </label>
-                <input
-                    type="text"
-                    id="stockSymbol"
-                    name="stockSymbol"
-                    placeholder="e.g., AAPL"
-                    style={{
-                        padding: '5px',
-                        border: '1px solid #ccc',
-                        borderRadius: '4px',
-                        marginRight: '10px',
-                    }}
-                />
-                <button
-                    type="submit"
-                    style={{
-                        padding: '5px 10px',
-                        backgroundColor: '#007bff',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                    }}
-                >
-                    Load Chart
-                </button>
-            </form>
+  const handleModelChange = (event) => {
+    setSelectedModel(event.target.value);
+  };
 
-            <label htmlFor="period" style={{ marginRight: '10px' }}>
-                Select Period:
-            </label>
-            <select
-                id="period"
-                value={period}
-                onChange={handlePeriodChange}
-                style={{ marginBottom: '20px' }}
-            >
-                <option value="1mo">1 Month</option>
-                <option value="6mo">6 Months</option>
-                <option value="1y">1 Year</option>
-                <option value="2y">2 Years</option>
-                <option value="5y">5 Years</option>
-                <option value="10y">10 Years</option>
-            </select>
+  return (
+    <div>
+      <form onSubmit={handleSubmit} className="mb-5">
+        <label
+          htmlFor="stockSymbol"
+          className={`mr-3 ${darkMode ? "text-gray-200" : "text-gray-800"}`}
+        >
+          Enter Stock Symbol:
+        </label>
+        <input
+          type="text"
+          id="stockSymbol"
+          name="stockSymbol"
+          placeholder="e.g., RECLTD.NS"
+          className={`p-2 border rounded-md mr-3 ${
+            darkMode
+              ? "bg-gray-800 text-white border-gray-600"
+              : "bg-gray-100 text-black border-gray-300"
+          }`}
+        />
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        >
+          Load Chart
+        </button>
+      </form>
 
-            <div style={{ marginBottom: '20px' }}>
-                <label htmlFor="model-select">Select Model: </label>
-                <select
-                    id="model-select"
-                    value={selectedModel}
-                    onChange={handleModelChange}
-                    style={{ padding: '5px', fontSize: '16px' }}
-                >
-                    <option value="RNN">RNN</option>
-                    <option value="LSTM">LSTM</option>
-                </select>
-            </div>
-        </div>
-    );
+      <div className="mb-5">
+        <label
+          htmlFor="period"
+          className={`mr-3 ${darkMode ? "text-gray-200" : "text-gray-800"}`}
+        >
+          Select Period:
+        </label>
+        <select
+          id="period"
+          value={period}
+          onChange={handlePeriodChange}
+          className={`p-2 border rounded-md ${
+            darkMode
+              ? "bg-gray-800 text-white border-gray-600"
+              : "bg-gray-100 text-black border-gray-300"
+          }`}
+        >
+          <option value="1mo">1 Month</option>
+          <option value="6mo">6 Months</option>
+          <option value="1y">1 Year</option>
+          <option value="2y">2 Years</option>
+          <option value="5y">5 Years</option>
+          <option value="10y">10 Years</option>
+        </select>
+      </div>
+
+      <div className="mb-5">
+        <label
+          htmlFor="model-select"
+          className={`mr-3 ${darkMode ? "text-gray-200" : "text-gray-800"}`}
+        >
+          Select Model:
+        </label>
+        <select
+          id="model-select"
+          value={selectedModel}
+          onChange={handleModelChange}
+          className={`p-2 border rounded-md ${
+            darkMode
+              ? "bg-gray-800 text-white border-gray-600"
+              : "bg-gray-100 text-black border-gray-300"
+          }`}
+        >
+          <option value="RNN">RNN</option>
+          <option value="LSTM">LSTM</option>
+        </select>
+      </div>
+    </div>
+  );
 };
 
 export default ChartControls;

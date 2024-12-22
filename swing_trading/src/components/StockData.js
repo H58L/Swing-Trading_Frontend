@@ -22,7 +22,7 @@ const StockData = () => {
   const [previousClose, setPreviousClose] = useState(null); // Previous closing price
 
   const { stockSymbol } = useContext(StockContext);
-  const {isValidTicker, setIsValidTicker} = useValidTickerContext(); 
+  const { isValidTicker, setIsValidTicker } = useValidTickerContext();
 
   const dispatch = useDispatch(); //allows the component to send actions to the Redux store.
 
@@ -98,21 +98,20 @@ const StockData = () => {
   //   chartType.charAt(0).toUpperCase() + chartType.slice(1)
   // } Chart (${period})`;
 
-  const chartTitle = `${isValidTicker ? `${stockSymbol.toUpperCase()} - ` : 'Ticker is Invalid: '}${
-    chartType.charAt(0).toUpperCase() + chartType.slice(1)
-  } Chart (${period})`;
-  
+  const chartTitle = `${
+    isValidTicker ? `${stockSymbol.toUpperCase()} - ` : "Ticker is Invalid: "
+  }${chartType.charAt(0).toUpperCase() + chartType.slice(1)} Chart (${period})`;
 
   // Calculate price difference and percentage change
   const priceDifference =
     isValidTicker && realTimePrice && previousClose
       ? (realTimePrice - previousClose).toFixed(2)
-      : 'Invalid';
+      : "Invalid";
 
   const percentageChange =
     isValidTicker && previousClose && realTimePrice
       ? (((realTimePrice - previousClose) / previousClose) * 100).toFixed(2)
-      : 'Inavlid';
+      : "Inavlid";
 
   return (
     <>
@@ -131,7 +130,7 @@ const StockData = () => {
             className={`text-3xl font-bold mb-6 text-center ${
               darkMode ? "text-gray-200" : "text-gray-800"
             }`}
-          >                 
+          >
             {chartTitle}
           </h1>
 
@@ -143,7 +142,11 @@ const StockData = () => {
               }`}
             >
               Current Price:{" "}
-              {isValidTicker ?  (realTimePrice ? `₹${realTimePrice.toFixed(2)}` : "Loading...") : "INVALID"}
+              {isValidTicker
+                ? realTimePrice
+                  ? `₹${realTimePrice.toFixed(2)}`
+                  : "Loading..."
+                : "INVALID"}
             </span>
             {priceDifference !== null && (
               <div className="text-lg">
