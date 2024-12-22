@@ -1,6 +1,10 @@
-/* .table-container {
+.table-container {
     flex: 1;
     overflow-x: auto; 
+    margin: 100px;
+    align-items: center;
+    /* width:50%; */
+    text-align: center;
   }
   
   table {
@@ -24,4 +28,4 @@
       padding: 6px;
     }
   }
-   */
+  

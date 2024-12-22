@@ -40,7 +40,7 @@ const RNN_Chart = ({ symbol, period }) => {
     <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
       <div style={{ flex: 1 }}>
         {tableData && !loading && (
-          <div>
+          <div className="table-container">
             {/* <h3>5-Day Predictions</h3> */}
             <table
               style={{
@@ -78,6 +78,7 @@ const RNN_Chart = ({ symbol, period }) => {
                       style={{
                         border: "1px solid #ddd",
                         padding: "8px",
+                        color: darkMode ? "white" : "black",
                       }}
                     >
                       {date || "N/A"}
@@ -86,6 +87,7 @@ const RNN_Chart = ({ symbol, period }) => {
                       style={{
                         border: "1px solid #ddd",
                         padding: "8px",
+                        color: darkMode ? "white" : "black",
                       }}
                     >
                       {tableData.forecasted_predictions[index].toFixed(2) ||

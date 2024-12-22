@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Plot from "react-plotly.js";
-
+import ThemeContext from "../context/ThemeContext";
 const LSTM_Chart = ({ symbol, period }) => {
   const [chartData, setChartData] = useState(null);
   const [tableData, setTableData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { darkMode } = useContext(ThemeContext);
 
   useEffect(() => {
     setLoading(true);
@@ -76,6 +77,7 @@ const LSTM_Chart = ({ symbol, period }) => {
                       style={{
                         border: "1px solid #ddd",
                         padding: "8px",
+                        color: darkMode ? "white" : "black",
                       }}
                     >
                       {date || "N/A"}
@@ -84,6 +86,7 @@ const LSTM_Chart = ({ symbol, period }) => {
                       style={{
                         border: "1px solid #ddd",
                         padding: "8px",
+                        color: darkMode ? "white" : "black",
                       }}
                     >
                       {tableData.forecasted_predictions[index].toFixed(2) ||

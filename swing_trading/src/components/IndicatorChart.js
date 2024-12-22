@@ -473,7 +473,7 @@ const IndicatorChart = () => {
           darkMode ? "bg-gray-800" : "bg-gray-100"
         }`}
       >
-        <h2>Stock Indicators Chart</h2>
+        {/* <h2>Stock Indicators Chart</h2> */}
         <div className="input-container">
           {/* Ticker Input */}
           <input
