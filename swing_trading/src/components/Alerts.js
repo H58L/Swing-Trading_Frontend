@@ -2,16 +2,16 @@ import React, { useState, useEffect, useContext } from "react";
 import ThemeContext from "../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { useLoginContext } from "../context/LoginContext";
-import { useEmailContext } from "../context/EmailContext";
 import axios from "axios";
 
 const Alerts = () => {
   const { darkMode } = useContext(ThemeContext);
   const { isLoggedin } = useLoginContext();
   const navigate = useNavigate();
-  const [userEmail, setUserEmail] = useState(""); // State for user email
-
+  const [userEmail, setUserEmail] = useState("");
   const [alerts, setAlerts] = useState([]);
+  const [stockPrices, setStockPrices] = useState({}); // Stores real-time prices
+  const [triggeredAlerts, setTriggeredAlerts] = useState([]); // Only triggered alerts
 
   // Retrieve email from sessionStorage on component mount
   useEffect(() => {
@@ -21,6 +21,7 @@ const Alerts = () => {
     }
   }, []);
 
+  // Fetch user alerts
   useEffect(() => {
     const fetchAlerts = async () => {
       if (isLoggedin && userEmail) {
@@ -36,6 +37,69 @@ const Alerts = () => {
     };
     fetchAlerts();
   }, [isLoggedin, userEmail]);
+
+  // Fetch real-time prices for all tickers every 60 seconds
+  useEffect(() => {
+    const fetchStockPrices = async () => {
+      try {
+        const prices = await Promise.all(
+          alerts.map(async (alert) => {
+            const response = await fetch(
+              `https://swing-trading-backend-fdrx.vercel.app/api/stock?ticker=${alert.ticker}`
+            );
+            const data = await response.json();
+            return {
+              ticker: alert.ticker,
+              price: data.close[data.close.length - 1],
+            };
+          })
+        );
+
+        const pricesMap = prices.reduce(
+          (acc, curr) => ({ ...acc, [curr.ticker]: curr.price }),
+          {}
+        );
+        setStockPrices(pricesMap);
+      } catch (error) {
+        console.error("Failed to fetch stock prices:", error);
+      }
+    };
+
+    // Fetch prices initially and every 60 seconds
+    fetchStockPrices();
+    const interval = setInterval(fetchStockPrices, 60000);
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [alerts]);
+
+  // Filter and update triggered alerts
+  useEffect(() => {
+    const checkConditions = () => {
+      const triggered = alerts.filter((alert) => {
+        const currentPrice = stockPrices[alert.ticker];
+        if (currentPrice === undefined) return false;
+
+        switch (alert.operator) {
+          case ">":
+            return currentPrice > alert.alertPrice;
+          case "<":
+            return currentPrice < alert.alertPrice;
+          case ">=":
+            return currentPrice >= alert.alertPrice;
+          case "<=":
+            return currentPrice <= alert.alertPrice;
+          case "=":
+            return currentPrice === alert.alertPrice;
+          default:
+            console.error("Unknown operator:", alert.operator);
+            return false;
+        }
+      });
+      setTriggeredAlerts(triggered);
+    };
+
+    checkConditions();
+  }, [stockPrices, alerts]);
 
   const handleSetAlert = () => {
     if (!isLoggedin) {
@@ -58,7 +122,7 @@ const Alerts = () => {
             darkMode ? "text-gray-200" : "text-gray-800"
           }`}
         >
-          Your Alerts
+          Triggered Alerts
         </div>
         <button
           className={`px-3 py-1 text-sm font-semibold rounded ${
@@ -72,8 +136,8 @@ const Alerts = () => {
         </button>
       </div>
       <ul className="h-full border-gray-300">
-        {alerts.length > 0 ? (
-          alerts.map((alert, index) => (
+        {triggeredAlerts.length > 0 ? (
+          triggeredAlerts.map((alert, index) => (
             <li
               key={index}
               className={`alert-item mb-3 rounded p-4 shadow-sm border border-gray-100 w-full ${
@@ -88,6 +152,9 @@ const Alerts = () => {
               >
                 {alert.operator} {alert.alertPrice}
               </p>
+              <p className="text-sm">
+                Real-time Price: {stockPrices[alert.ticker]}
+              </p>
               <span
                 className={`text-sm ${
                   darkMode
@@ -101,7 +168,7 @@ const Alerts = () => {
           ))
         ) : (
           <p className={darkMode ? "text-gray-200" : "text-gray-800"}>
-            No alerts found.
+            No triggered alerts found.
           </p>
         )}
       </ul>
