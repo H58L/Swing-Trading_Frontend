@@ -206,7 +206,7 @@ const AlertForm = () => {
 
             <div className="mb-4">
               <label htmlFor="currentPrice" className="block font-medium mb-2">
-                Current Price
+                If Current Price
               </label>
               <input
                 type="number"
@@ -227,28 +227,8 @@ const AlertForm = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="alertPrice" className="block font-medium mb-2">
-                Alert Price
-              </label>
-              <input
-                type="number"
-                id="alertPrice"
-                name="alertPrice"
-                value={formData.alertPrice}
-                onChange={handleChange}
-                className={`w-full p-3 border rounded focus:outline-none ${
-                  darkMode
-                    ? "border-gray-700 bg-gray-700 text-gray-100 placeholder-gray-400"
-                    : "border-gray-300 text-gray-900"
-                }`}
-                placeholder="Set alert price"
-                required
-              />
-            </div>
-
-            <div className="mb-4">
               <label htmlFor="operator" className="block font-medium mb-2">
-                Operator
+                Is (Operator)
               </label>
               <select
                 id="operator"
@@ -267,6 +247,26 @@ const AlertForm = () => {
                 <option value=">">&gt; Greater than</option>
                 <option value="<">&lt; Less than</option>
               </select>
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="alertPrice" className="block font-medium mb-2">
+                Alert Price
+              </label>
+              <input
+                type="number"
+                id="alertPrice"
+                name="alertPrice"
+                value={formData.alertPrice}
+                onChange={handleChange}
+                className={`w-full p-3 border rounded focus:outline-none ${
+                  darkMode
+                    ? "border-gray-700 bg-gray-700 text-gray-100 placeholder-gray-400"
+                    : "border-gray-300 text-gray-900"
+                }`}
+                placeholder="Set alert price"
+                required
+              />
             </div>
 
             <button
