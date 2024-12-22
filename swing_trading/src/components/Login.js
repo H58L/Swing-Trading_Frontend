@@ -198,13 +198,6 @@ const Login = () => {
                 </span>
               </button>
             </div> */}
-
-            <p className="mt-4 text-sm text-center text-gray-600">
-              Don’t have an account?{" "}
-              <Link to="/register" className="text-blue-500 hover:underline">
-                Register Here
-              </Link>
-            </p>
           </form>
         </div>
       </div>
